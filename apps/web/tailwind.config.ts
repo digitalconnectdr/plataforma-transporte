@@ -11,8 +11,9 @@ const config: Config = {
     extend: {
       // ─── FONT FAMILIES ──────────────────────────────────────────────────────
       fontFamily: {
-        serif: ['Playfair Display', 'Georgia', 'serif'],
-        sans: ['Inter', 'system-ui', 'sans-serif'],
+        playfair: ['var(--font-playfair)', 'Georgia', 'serif'],
+        serif: ['var(--font-playfair)', 'Georgia', 'serif'],
+        sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
       },
 
       // ─── SILENT LUXURY — Dark Design System ─────────────────────────────────
