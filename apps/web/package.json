@@ -10,9 +10,8 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
-    "@plataforma/database": "workspace:*",
-    "@plataforma/ui": "workspace:*",
-    "@plataforma/config": "workspace:*",
+    "@plataforma/database": "*",
+    "@plataforma/ui": "*",
     "@supabase/ssr": "^0.5.0",
     "@supabase/supabase-js": "^2.43.0",
     "@stripe/react-stripe-js": "^2.7.0",
