@@ -1,6 +1,5 @@
-import type { NextConfig } from 'next'
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   // Transpile workspace packages
   transpilePackages: ['@plataforma/ui', '@plataforma/database'],
 
@@ -50,13 +49,11 @@ const nextConfig: NextConfig = {
     ]
   },
 
-  // Redirect apex → www in production (Vercel handles this, but belt+suspenders)
   async redirects() {
     return []
   },
 
   experimental: {
-    // Server Actions are stable in Next 14
     serverActions: {
       allowedOrigins: [
         process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000',
