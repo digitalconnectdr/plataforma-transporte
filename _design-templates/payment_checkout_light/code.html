@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Checkout | LuxeControl</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "surface-container": "#efeeeb",
+                "on-primary": "#ffffff",
+                "surface-container-low": "#f4f3f0",
+                "inverse-surface": "#2f312f",
+                "on-tertiary-fixed-variant": "#464744",
+                "surface-container-high": "#e9e8e5",
+                "on-tertiary-container": "#525350",
+                "outline": "#7f7667",
+                "on-tertiary-fixed": "#1b1c1a",
+                "on-surface": "#1a1c1a",
+                "on-primary-container": "#6a4e0c",
+                "tertiary": "#5e5f5c",
+                "tertiary-fixed-dim": "#c7c6c3",
+                "primary-container": "#e9c176",
+                "primary": "#775a19",
+                "inverse-on-surface": "#f2f1ee",
+                "surface-tint": "#775a19",
+                "tertiary-container": "#c7c7c3",
+                "on-tertiary": "#ffffff",
+                "secondary": "#5f5e5e",
+                "secondary-container": "#e2dfde",
+                "on-surface-variant": "#4e4639",
+                "on-primary-fixed-variant": "#5d4200",
+                "on-secondary-fixed": "#1c1b1b",
+                "surface-bright": "#faf9f6",
+                "primary-fixed": "#ffdea5",
+                "secondary-fixed-dim": "#c8c6c5",
+                "surface-variant": "#e3e2df",
+                "outline-variant": "#d1c5b4",
+                "surface": "#faf9f6",
+                "on-primary-fixed": "#261900",
+                "secondary-fixed": "#e5e2e1",
+                "error": "#ba1a1a",
+                "on-secondary": "#ffffff",
+                "on-secondary-fixed-variant": "#474746",
+                "inverse-primary": "#e9c176",
+                "background": "#faf9f6",
+                "on-error": "#ffffff",
+                "on-background": "#1a1c1a",
+                "surface-dim": "#dbdad7",
+                "tertiary-fixed": "#e3e2df",
+                "on-secondary-container": "#636262",
+                "surface-container-highest": "#e3e2df",
+                "error-container": "#ffdad6",
+                "primary-fixed-dim": "#e9c176",
+                "surface-container-lowest": "#ffffff",
+                "on-error-container": "#93000a"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "margin-mobile": "16px",
+                "unit": "8px",
+                "container-max": "1200px",
+                "margin-desktop": "64px",
+                "gutter": "24px",
+                "section-gap": "120px"
+        },
+        "fontFamily": {
+                "display-lg": [
+                        "Playfair Display"
+                ],
+                "body-md": [
+                        "Inter"
+                ],
+                "label-caps": [
+                        "Inter"
+                ],
+                "label-md": [
+                        "Inter"
+                ],
+                "label-sm": [
+                        "Inter"
+                ],
+                "headline-sm": [
+                        "Playfair Display"
+                ],
+                "body-lg": [
+                        "Inter"
+                ],
+                "headline-md": [
+                        "Playfair Display"
+                ],
+                "display-lg-mobile": [
+                        "Playfair Display"
+                ]
+        },
+        "fontSize": {
+                "display-lg": [
+                        "48px",
+                        {
+                                "lineHeight": "1.1",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "1.5",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-caps": [
+                        "12px",
+                        {
+                                "lineHeight": "1",
+                                "letterSpacing": "0.1em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "label-md": [
+                        "14px",
+                        {
+                                "lineHeight": "1.4",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "label-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "1.4",
+                                "letterSpacing": "0.03em",
+                                "fontWeight": "500"
+                        }
+                ],
+                "headline-sm": [
+                        "24px",
+                        {
+                                "lineHeight": "1.3",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "1.6",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-md": [
+                        "32px",
+                        {
+                                "lineHeight": "1.2",
+                                "fontWeight": "600"
+                        }
+                ],
+                "display-lg-mobile": [
+                        "32px",
+                        {
+                                "lineHeight": "1.2",
+                                "fontWeight": "700"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Hide scrollbar for bento grid overflow if needed */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* Smooth gradient for primary button */
+        .bg-gold-gradient {
+            background: linear-gradient(180deg, theme('colors.primary') 0%, theme('colors.primary-container') 100%);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md antialiased min-h-screen flex flex-col selection:bg-primary-container selection:text-on-primary-container">
+<!-- Transactional Header (Navigation Suppressed per rules) -->
+<header class="py-gutter px-margin-mobile md:px-margin-desktop flex items-center justify-between border-b border-outline-variant bg-surface/80 backdrop-blur-md sticky top-0 z-50">
+<button class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors group">
+<span class="material-symbols-outlined group-hover:-translate-x-1 transition-transform">arrow_back</span>
+<span class="font-label-md text-label-md hidden md:block">Return to Booking</span>
+</button>
+<div class="font-headline-sm text-headline-sm text-primary tracking-widest uppercase">LuxeControl</div>
+<div class="flex items-center gap-2 text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">lock</span>
+<span class="font-label-sm text-label-sm">Secure Checkout</span>
+</div>
+</header>
+<main class="flex-grow max-w-container-max mx-auto w-full px-margin-mobile md:px-margin-desktop py-12 md:py-section-gap grid grid-cols-1 lg:grid-cols-12 gap-gutter lg:gap-16">
+<!-- Left Column: Payment Integration -->
+<section class="lg:col-span-7 flex flex-col gap-10">
+<div>
+<h1 class="font-headline-md text-headline-md text-on-surface mb-2">Complete Payment</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Select a payment method to finalize your reservation.</p>
+</div>
+<!-- Payment Methods Bento -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Saved Card (Active) -->
+<button class="flex flex-col items-start p-6 rounded-lg border border-primary bg-primary-container/20 relative overflow-hidden group text-left transition-all">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary"></div>
+<div class="flex justify-between items-center w-full mb-4">
+<span class="material-symbols-outlined text-primary text-3xl">credit_card</span>
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface">Corporate Amex</span>
+<span class="font-body-md text-body-md text-on-surface-variant mt-1">•••• 4242</span>
+</button>
+<!-- New Card -->
+<button class="flex flex-col items-start p-6 rounded-lg border border-outline-variant bg-surface-container hover:bg-surface-container-high transition-colors group text-left">
+<div class="flex justify-between items-center w-full mb-4">
+<span class="material-symbols-outlined text-on-surface-variant text-3xl group-hover:text-on-surface transition-colors">add_card</span>
+</div>
+<span class="font-label-md text-label-md text-on-surface group-hover:text-primary transition-colors">Add New Card</span>
+<span class="font-body-md text-body-md text-on-surface-variant mt-1">Credit or Debit</span>
+</button>
+<!-- Corporate Billing -->
+<button class="flex flex-col items-start p-6 rounded-lg border border-outline-variant bg-surface-container hover:bg-surface-container-high transition-colors group text-left md:col-span-2">
+<div class="flex items-center gap-4 w-full">
+<span class="material-symbols-outlined text-on-surface-variant text-3xl group-hover:text-on-surface transition-colors">domain</span>
+<div>
+<span class="font-label-md text-label-md text-on-surface block group-hover:text-primary transition-colors">Invoice Corporate Account</span>
+<span class="font-body-md text-body-md text-on-surface-variant">Bill to Acme Corp (Requires Approval)</span>
+</div>
+</div>
+</button>
+</div>
+<!-- Stripe UI Simulation -->
+<div class="bg-surface-container rounded-lg border border-outline-variant p-6 md:p-8 space-y-6">
+<div class="flex items-center gap-3 mb-2">
+<span class="material-symbols-outlined text-on-surface-variant">lock</span>
+<span class="font-label-md text-label-md text-on-surface-variant">Card Details</span>
+</div>
+<div class="space-y-4">
+<!-- Card Number -->
+<div class="relative">
+<label class="sr-only" for="card-number">Card Number</label>
+<input class="w-full bg-surface-container-highest border border-outline-variant rounded-DEFAULT p-4 pl-12 font-label-md text-label-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors outline-none cursor-not-allowed" id="card-number" readonly="" type="text" value="•••• •••• •••• 4242"/>
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant">credit_card</span>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 flex gap-1">
+<!-- Placeholder for card brand icons, using small styled divs to represent them minimally -->
+<div class="w-8 h-5 bg-surface rounded-sm border border-outline flex items-center justify-center"><span class="text-[8px] font-bold text-on-surface-variant">AMEX</span></div>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<!-- Expiry -->
+<div class="relative">
+<label class="sr-only" for="expiry">Expiry Date</label>
+<input class="w-full bg-surface-container-highest border border-outline-variant rounded-DEFAULT p-4 font-label-md text-label-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors outline-none cursor-not-allowed" id="expiry" readonly="" type="text" value="12 / 25"/>
+</div>
+<!-- CVC -->
+<div class="relative">
+<label class="sr-only" for="cvc">CVC</label>
+<input class="w-full bg-surface-container-highest border border-outline-variant rounded-DEFAULT p-4 font-label-md text-label-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors outline-none cursor-not-allowed" id="cvc" readonly="" type="password" value="•••"/>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">help</span>
+</div>
+</div>
+<!-- Cardholder Name -->
+<div class="relative">
+<label class="sr-only" for="name">Name on Card</label>
+<input class="w-full bg-surface-container-highest border border-outline-variant rounded-DEFAULT p-4 font-label-md text-label-md text-on-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors outline-none cursor-not-allowed uppercase" id="name" readonly="" type="text" value="ALEXANDER WRIGHT"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Right Column: Trip Summary -->
+<aside class="lg:col-span-5">
+<div class="bg-surface-container-low rounded-lg border border-outline-variant overflow-hidden sticky top-24 shadow-lg shadow-surface-variant">
+<!-- Map Snippet -->
+<div class="h-48 w-full relative bg-surface-dim">
+<img alt="Route Map" class="w-full h-full object-cover opacity-60 mix-blend-luminosity" data-alt="A high-fidelity, minimalist dark-mode map interface displaying a route through an upscale urban environment. The map uses deep slate gray and black tones for the terrain and roads, adhering to a silent luxury aesthetic. A crisp, glowing champagne gold line traces the route from a pickup point to a destination. There are no cluttered street names or points of interest, just a clean, sophisticated visualization of the journey, matching the overall dark, premium UI design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAdjEoCE_gyU3N-OGArs6TmlFapAeUdaIbQu4N0J1cOAZbnf5iQmHM8aTOl33vj75dh_-YOh_qFIOfQdUtbjopy3jaCDXYzFf5brh6i6htZ2iAycxgmN7AHCYTLRkW1R_XMjT3yen12x7QUmBvjxQtDPRh3XDzro7Ok4RrcihLhJwXAcJiKLAwSMzYK-5yGQvNi_MMObM0lvqLiir77DHPNE-Q9x7a65teo681t007wfyEdmzcWZRNWp3rqZZNgthmj1-KH6kZEHJo"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-low to-transparent"></div>
+</div>
+<div class="p-6 md:p-8 relative -mt-8 space-y-8">
+<!-- Vehicle Info -->
+<div class="flex items-end justify-between border-b border-outline-variant pb-6">
+<div>
+<span class="inline-block border border-primary text-primary font-label-sm text-label-sm px-2 py-0.5 rounded mb-2 bg-primary-container/30">FIRST CLASS</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Executive Sedan</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">Mercedes-Benz S-Class or similar</p>
+</div>
+<img alt="Vehicle Interior" class="w-20 h-20 object-cover rounded shadow-md border border-outline-variant" data-alt="A sleek, side-profile studio shot of a high-end luxury sedan's interior, specifically focusing on the premium black leather seats and subtle ambient lighting. The lighting is soft and cinematic, highlighting the texture of the leather and the metallic accents. The overall mood is quiet, exclusive, and refined, perfectly aligning with a dark-mode luxury transport service aesthetic. The image conveys comfort and uncompromising quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3yFDYiaSYRpFfIhi5Qwi8CS4VqObGutKlU7coyl_W8tkOnAfj70SllU_Seku_ZJ1XukneiocQCVH5Tn0V-qok8p0ttMGIMI26TYqZWiaMd7m50JOOqB70ZeU8EhHdXxUPbNMO9tSnpazn_4SWon37JErxASbZIwqF_2GDn3Ac77ZeppagLtM7nGeVYn5R2QkxY7tuvNvlyxnYgdnY4gh1jOOOJuEaDEWdb5g9z8m147RsSPbHPtLIPGYPgJUtXcUm9BMgwa0Bbio"/>
+</div>
+<!-- Itinerary Details -->
+<div class="space-y-4">
+<div class="flex gap-4 items-start">
+<span class="material-symbols-outlined text-primary mt-0.5">trip_origin</span>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Oct 24, 2023 • 08:30 AM</p>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">1 Hotel Brooklyn Bridge, Brooklyn, NY</p>
+</div>
+</div>
+<div class="w-px h-6 bg-outline-variant ml-3 -my-2"></div>
+<div class="flex gap-4 items-start">
+<span class="material-symbols-outlined text-on-surface-variant mt-0.5">location_on</span>
+<div>
+<p class="font-label-md text-label-md text-on-surface">Estimated 09:15 AM</p>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">JFK International Airport, Terminal 4</p>
+</div>
+</div>
+</div>
+<!-- Price Breakdown -->
+<div class="bg-surface-container-highest rounded p-6 space-y-4">
+<div class="flex justify-between items-center text-body-md font-body-md text-on-surface-variant">
+<span>Base Rate</span>
+<span>$145.00</span>
+</div>
+<div class="flex justify-between items-center text-body-md font-body-md text-on-surface-variant">
+<span>Gratuity (20%)</span>
+<span>$29.00</span>
+</div>
+<div class="flex justify-between items-center text-body-md font-body-md text-on-surface-variant">
+<span>Taxes &amp; Fees</span>
+<span>$12.45</span>
+</div>
+<div class="pt-4 border-t border-outline-variant flex justify-between items-end">
+<span class="font-label-md text-label-md text-on-surface">Total</span>
+<span class="font-headline-md text-headline-md text-primary">$186.45</span>
+</div>
+</div>
+<!-- Primary Action -->
+<button class="w-full bg-gold-gradient text-on-primary font-label-md text-label-md py-4 rounded-lg flex justify-center items-center gap-2 hover:opacity-90 transition-opacity shadow-lg shadow-primary-container/40">
+<span class="material-symbols-outlined">lock</span>
+                        Confirm &amp; Pay
+                    </button>
+<p class="text-center font-label-sm text-label-sm text-on-surface-variant">Payments are securely processed by Stripe.</p>
+</div>
+</div>
+</aside>
+</main>
+</body></html>

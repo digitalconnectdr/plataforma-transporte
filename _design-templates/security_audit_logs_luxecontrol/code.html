@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LuxeControl - Security &amp; Audit Logs</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-background": "#e5e2e1",
+                        "on-tertiary-fixed": "#1b1c1c",
+                        "secondary": "#e9c176",
+                        "primary-fixed": "#e5e2e1",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-error": "#690005",
+                        "inverse-surface": "#e5e2e1",
+                        "surface-container-highest": "#353434",
+                        "on-secondary-fixed-variant": "#5d4201",
+                        "on-error-container": "#ffdad6",
+                        "surface-bright": "#3a3939",
+                        "on-tertiary-container": "#7a7979",
+                        "on-primary-fixed-variant": "#474646",
+                        "on-secondary-fixed": "#261900",
+                        "on-tertiary": "#303030",
+                        "surface": "#141313",
+                        "on-secondary": "#412d00",
+                        "error": "#ffb4ab",
+                        "secondary-container": "#604403",
+                        "on-tertiary-fixed-variant": "#474747",
+                        "on-secondary-container": "#dab36a",
+                        "surface-container-low": "#1c1b1b",
+                        "on-primary": "#313030",
+                        "secondary-fixed": "#ffdea5",
+                        "secondary-fixed-dim": "#e9c176",
+                        "on-primary-fixed": "#1c1b1b",
+                        "outline": "#8e9192",
+                        "primary-fixed-dim": "#c9c6c5",
+                        "on-surface-variant": "#c4c7c7",
+                        "inverse-on-surface": "#313030",
+                        "background": "#141313",
+                        "inverse-primary": "#5f5e5e",
+                        "tertiary-fixed": "#e4e2e1",
+                        "tertiary": "#c8c6c6",
+                        "outline-variant": "#444748",
+                        "surface-variant": "#353434",
+                        "on-surface": "#e5e2e1",
+                        "primary-container": "#0a0a0a",
+                        "surface-tint": "#c9c6c5",
+                        "surface-dim": "#141313",
+                        "tertiary-container": "#0a0a0a",
+                        "surface-container-high": "#2b2a2a",
+                        "on-primary-container": "#7b7979",
+                        "surface-container": "#201f1f",
+                        "tertiary-fixed-dim": "#c8c6c6",
+                        "primary": "#c9c6c5",
+                        "error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "margin-desktop": "64px",
+                        "unit": "8px",
+                        "margin-mobile": "20px",
+                        "section-gap": "120px",
+                        "gutter": "24px",
+                        "container-max": "1280px"
+                    },
+                    "fontFamily": {
+                        "label-md": ["Inter"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-md": ["Playfair Display"],
+                        "display-lg": ["Playfair Display"],
+                        "body-md": ["Inter"],
+                        "headline-sm": ["Playfair Display"]
+                    },
+                    "fontSize": {
+                        "label-md": ["14px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "1.4", "letterSpacing": "0.03em", "fontWeight": "500" }],
+                        "headline-md": ["32px", { "lineHeight": "1.2", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-sm": ["24px", { "lineHeight": "1.3", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .symbol-filled {
+            font-variation-settings: 'FILL' 1, 'wght' 300;
+        }
+        
+        /* Subtle scrollbar for table */
+        ::-webkit-scrollbar {
+            height: 6px;
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #141313; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #353434; 
+            border-radius: 9999px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #444748; 
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md selection:bg-secondary selection:text-on-secondary">
+<!-- SideNavBar (Shared Component) -->
+<nav class="bg-surface dark:bg-surface h-screen w-64 fixed left-0 top-0 border-r border-outline-variant shadow-sm flex flex-col h-full py-unit px-4 z-50">
+<div class="mb-12 mt-6 px-2">
+<h1 class="font-display-lg text-display-lg text-secondary tracking-tight">LuxeOps</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Enterprise Suite</p>
+</div>
+<div class="flex-grow flex flex-col gap-2">
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-200 cursor-pointer active:scale-95 group" href="#">
+<span class="material-symbols-outlined group-hover:text-secondary transition-colors" data-icon="dashboard">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-200 cursor-pointer active:scale-95 group" href="#">
+<span class="material-symbols-outlined group-hover:text-secondary transition-colors" data-icon="directions_car">directions_car</span>
+<span class="font-label-md text-label-md">Fleet</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-200 cursor-pointer active:scale-95 group" href="#">
+<span class="material-symbols-outlined group-hover:text-secondary transition-colors" data-icon="person">person</span>
+<span class="font-label-md text-label-md">Drivers</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-200 cursor-pointer active:scale-95 group" href="#">
+<span class="material-symbols-outlined group-hover:text-secondary transition-colors" data-icon="route">route</span>
+<span class="font-label-md text-label-md">Trips</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-200 cursor-pointer active:scale-95 group" href="#">
+<span class="material-symbols-outlined group-hover:text-secondary transition-colors" data-icon="business">business</span>
+<span class="font-label-md text-label-md">Companies</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-200 cursor-pointer active:scale-95 group" href="#">
+<span class="material-symbols-outlined group-hover:text-secondary transition-colors" data-icon="analytics">analytics</span>
+<span class="font-label-md text-label-md">Analytics</span>
+</a>
+<!-- Active State: Settings (Maps to Security & Audit) -->
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-secondary font-bold border-r-2 border-secondary bg-surface-container-high cursor-pointer active:scale-95 transition-colors duration-200" href="#">
+<span class="material-symbols-outlined symbol-filled" data-icon="settings">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</div>
+<div class="mt-auto pt-6 border-t border-outline-variant flex items-center gap-3 px-2 mb-4">
+<img alt="Executive Admin Profile" class="w-10 h-10 rounded-full border border-outline-variant object-cover" data-alt="A professional, high-resolution portrait of a corporate executive in a dimly lit, luxury office environment. The subject is framed tightly, with soft, cinematic light emphasizing facial features against a very dark slate background. The image evokes a sense of authority, discretion, and quiet luxury, perfectly suited for an enterprise platform avatar." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDie1aA026isWgHzlfdf17czMDTKsSYdKFm-1GVH4wV5wuVpL4MQGI72Z0xCmu8wBcMre2_2-gsbeDTAR8xx6h_z_EsDqH1iuibBwy9OAcjKRx7RnvHMIh19JzrlXo_xBHquKWra8_OcH1KGU19bwvA5QrdlKgt0R13djs2pkQM76NE_fh2kTgxwbu1QJZegF6Jz9-aEqD7Uqz1sbN63s8cKzd7dXyyCrqzl-p-1QnD95JRVAW-SyvL7akVVqKHBkyLpBQ79YbT8SU"/>
+<div class="flex flex-col">
+<span class="font-label-sm text-label-sm text-on-surface">Admin User</span>
+<span class="text-[10px] text-on-surface-variant tracking-wider uppercase">System Access</span>
+</div>
+</div>
+<button class="w-full bg-gradient-to-b from-[#f3d498] to-secondary text-[#0a0a0a] font-label-md text-label-md py-3 rounded hover:opacity-90 transition-opacity mb-4">Book New Trip</button>
+</nav>
+<!-- TopNavBar (Shared Component) -->
+<header class="bg-surface dark:bg-surface fixed top-0 right-0 left-64 h-16 bg-surface-dim border-b border-outline-variant flex justify-between items-center px-margin-desktop w-[calc(100%-16rem)] z-40 transition-all duration-200 ease-in-out">
+<div class="flex items-center gap-6 w-1/3">
+<span class="font-headline-sm text-headline-sm text-secondary font-bold tracking-tight">LuxeOps Admin</span>
+<div class="relative w-full max-w-md hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-full py-1.5 pl-10 pr-4 text-body-md text-on-surface placeholder:text-on-surface-variant/50 focus:border-secondary focus:ring-1 focus:ring-secondary focus:outline-none transition-colors" placeholder="Search logs, events, or users..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button class="text-on-surface-variant hover:text-secondary transition-opacity duration-300">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-secondary transition-opacity duration-300">
+<span class="material-symbols-outlined" data-icon="help_outline">help_outline</span>
+</button>
+<button class="text-on-surface-variant hover:text-secondary transition-opacity duration-300">
+<span class="material-symbols-outlined" data-icon="account_circle">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 mt-16 p-margin-desktop min-h-screen">
+<!-- Page Header -->
+<div class="flex justify-between items-end mb-12">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-2">Security &amp; Audit Logs</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">System integrity monitoring and compliance records.</p>
+</div>
+<button class="flex items-center gap-2 border border-outline-variant bg-surface hover:bg-surface-container-low text-on-surface px-4 py-2 rounded transition-colors font-label-md text-label-md">
+<span class="material-symbols-outlined text-sm">download</span>
+                Export Report
+            </button>
+</div>
+<!-- Bento Grid: Overview & Access -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter mb-section-gap">
+<!-- Security Overview (Spans 8 cols) -->
+<div class="lg:col-span-8 flex flex-col gap-6">
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest border-b border-outline-variant pb-2">Platform Health</h3>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<!-- MFA Status -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded p-6 relative overflow-hidden group hover:border-secondary/50 transition-colors">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-secondary/5 rounded-full blur-xl group-hover:bg-secondary/10 transition-all"></div>
+<span class="material-symbols-outlined text-secondary text-3xl mb-4" data-icon="verified_user">verified_user</span>
+<h4 class="font-label-sm text-label-sm text-on-surface-variant mb-1">Multi-factor Authentication</h4>
+<p class="font-body-lg text-body-lg text-on-surface">Enabled globally</p>
+<div class="mt-4 flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Enforced for all Admins</span>
+</div>
+</div>
+<!-- Backup Status -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded p-6 relative overflow-hidden group hover:border-secondary/50 transition-colors">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-on-surface/5 rounded-full blur-xl"></div>
+<span class="material-symbols-outlined text-on-surface-variant text-3xl mb-4" data-icon="cloud_done">cloud_done</span>
+<h4 class="font-label-sm text-label-sm text-on-surface-variant mb-1">Last Data Backup</h4>
+<p class="font-body-lg text-body-lg text-on-surface">2 hours ago</p>
+<div class="mt-4 flex items-center gap-2">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Encrypted at rest</span>
+</div>
+</div>
+<!-- API Health -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded p-6 relative overflow-hidden group hover:border-secondary/50 transition-colors">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-secondary/5 rounded-full blur-xl"></div>
+<span class="material-symbols-outlined text-secondary text-3xl mb-4" data-icon="api">api</span>
+<h4 class="font-label-sm text-label-sm text-on-surface-variant mb-1">API Health</h4>
+<p class="font-body-lg text-body-lg text-on-surface">Optimal</p>
+<div class="mt-4 flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant">99.99% Uptime</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Access Management Summary (Spans 4 cols) -->
+<div class="lg:col-span-4 flex flex-col gap-6">
+<div class="flex justify-between items-end border-b border-outline-variant pb-2">
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest">Active Sessions</h3>
+<a class="font-label-sm text-label-sm text-secondary hover:underline" href="#">Manage</a>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant rounded p-4 flex flex-col gap-4">
+<div class="flex items-center justify-between p-2 hover:bg-surface-container-low rounded transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-bright flex items-center justify-center text-on-surface font-label-sm border border-outline-variant">EA</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface">E. Anderson</p>
+<p class="text-[11px] text-on-surface-variant">192.168.1.42 • NY</p>
+</div>
+</div>
+<span class="text-[10px] uppercase tracking-wider text-secondary border border-secondary/30 px-2 py-0.5 rounded">Current</span>
+</div>
+<div class="flex items-center justify-between p-2 hover:bg-surface-container-low rounded transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-bright flex items-center justify-center text-on-surface font-label-sm border border-outline-variant">MR</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface">M. Roberts</p>
+<p class="text-[11px] text-on-surface-variant">10.0.0.15 • LDN</p>
+</div>
+</div>
+<span class="text-[10px] uppercase tracking-wider text-on-surface-variant border border-outline-variant px-2 py-0.5 rounded">1h 12m</span>
+</div>
+<div class="flex items-center justify-between p-2 hover:bg-surface-container-low rounded transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-bright flex items-center justify-center text-on-surface font-label-sm border border-outline-variant">SJ</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface">S. Jenkins</p>
+<p class="text-[11px] text-on-surface-variant">172.16.0.8 • DXB</p>
+</div>
+</div>
+<span class="text-[10px] uppercase tracking-wider text-on-surface-variant border border-outline-variant px-2 py-0.5 rounded">4h 05m</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Audit Log Section -->
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest border-b border-outline-variant pb-2 mb-6">Comprehensive Audit Trail</h3>
+<!-- Filters Toolbar -->
+<div class="flex flex-wrap gap-4 mb-6">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">calendar_today</span>
+<select class="appearance-none bg-surface-container-lowest border border-outline-variant rounded py-2 pl-9 pr-8 text-label-md font-label-md text-on-surface focus:border-secondary focus:ring-1 focus:ring-secondary focus:outline-none cursor-pointer">
+<option>Last 24 Hours</option>
+<option>Last 7 Days</option>
+<option>Last 30 Days</option>
+<option>Custom Range...</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-sm">expand_more</span>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">shield_person</span>
+<select class="appearance-none bg-surface-container-lowest border border-outline-variant rounded py-2 pl-9 pr-8 text-label-md font-label-md text-on-surface focus:border-secondary focus:ring-1 focus:ring-secondary focus:outline-none cursor-pointer">
+<option>All Roles</option>
+<option>Super Admin</option>
+<option>Fleet Manager</option>
+<option>Support Staff</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-sm">expand_more</span>
+</div>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">flag</span>
+<select class="appearance-none bg-surface-container-lowest border border-outline-variant rounded py-2 pl-9 pr-8 text-label-md font-label-md text-on-surface focus:border-secondary focus:ring-1 focus:ring-secondary focus:outline-none cursor-pointer">
+<option>All Severities</option>
+<option>Info</option>
+<option>Warning</option>
+<option>Critical</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none text-sm">expand_more</span>
+</div>
+<div class="flex-grow"></div>
+<div class="relative max-w-xs w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="w-full bg-surface-container-lowest border border-outline-variant rounded py-2 pl-9 pr-4 text-body-md text-on-surface placeholder:text-on-surface-variant/50 focus:border-secondary focus:ring-1 focus:ring-secondary focus:outline-none" placeholder="Search events..." type="text"/>
+</div>
+</div>
+<!-- Table -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-dim border-b border-outline-variant">
+<th class="py-4 px-6 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider whitespace-nowrap">Timestamp</th>
+<th class="py-4 px-6 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">User</th>
+<th class="py-4 px-6 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Action</th>
+<th class="py-4 px-6 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">IP Address</th>
+<th class="py-4 px-6 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Status</th>
+</tr>
+</thead>
+<tbody class="font-body-md text-body-md text-on-surface divide-y divide-outline-variant/50">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-4 px-6 whitespace-nowrap text-on-surface-variant">Oct 24, 14:32:01 UTC</td>
+<td class="py-4 px-6 font-label-md text-label-md">E. Anderson</td>
+<td class="py-4 px-6">Exported Financials (Q3 Report)</td>
+<td class="py-4 px-6 text-on-surface-variant font-mono text-sm">192.168.1.42</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-secondary/30 text-secondary text-xs uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                    Success
+                                </span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-4 px-6 whitespace-nowrap text-on-surface-variant">Oct 24, 14:15:22 UTC</td>
+<td class="py-4 px-6 font-label-md text-label-md">System API</td>
+<td class="py-4 px-6">Automated Database Snapshot</td>
+<td class="py-4 px-6 text-on-surface-variant font-mono text-sm">Internal</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-secondary/30 text-secondary text-xs uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                    Success
+                                </span>
+</td>
+</tr>
+<!-- Row 3 (Warning) -->
+<tr class="hover:bg-surface-container-low transition-colors group bg-error/5">
+<td class="py-4 px-6 whitespace-nowrap text-on-surface-variant">Oct 24, 13:45:10 UTC</td>
+<td class="py-4 px-6 font-label-md text-label-md text-error">Unknown Device</td>
+<td class="py-4 px-6">Failed Login Attempt (Invalid MFA)</td>
+<td class="py-4 px-6 text-on-surface-variant font-mono text-sm">45.22.19.102</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-error/50 text-error text-xs uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span>
+                                    Warning
+                                </span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-4 px-6 whitespace-nowrap text-on-surface-variant">Oct 24, 11:20:05 UTC</td>
+<td class="py-4 px-6 font-label-md text-label-md">M. Roberts</td>
+<td class="py-4 px-6">Updated Pricing Model (Tier 1 Luxury)</td>
+<td class="py-4 px-6 text-on-surface-variant font-mono text-sm">10.0.0.15</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-secondary/30 text-secondary text-xs uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span>
+                                    Success
+                                </span>
+</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-surface-container-low transition-colors group">
+<td class="py-4 px-6 whitespace-nowrap text-on-surface-variant">Oct 24, 09:10:44 UTC</td>
+<td class="py-4 px-6 font-label-md text-label-md">S. Jenkins</td>
+<td class="py-4 px-6">Deleted Driver Profile (ID: DRV-8922)</td>
+<td class="py-4 px-6 text-on-surface-variant font-mono text-sm">172.16.0.8</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full border border-outline-variant text-on-surface-variant text-xs uppercase tracking-wider">
+<span class="w-1.5 h-1.5 rounded-full bg-outline-variant"></span>
+                                    Verified
+                                </span>
+</td>
+</tr>
+</tbody>
+</table>
+<!-- Pagination -->
+<div class="border-t border-outline-variant px-6 py-4 flex items-center justify-between bg-surface-dim/50">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Showing 1 to 5 of 1,248 entries</span>
+<div class="flex gap-2">
+<button class="px-3 py-1 border border-outline-variant rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors disabled:opacity-50" disabled="">Prev</button>
+<button class="px-3 py-1 border border-outline-variant rounded text-on-surface hover:bg-surface-container-low transition-colors bg-surface-container-low border-secondary/50">1</button>
+<button class="px-3 py-1 border border-outline-variant rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors">2</button>
+<button class="px-3 py-1 border border-outline-variant rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors">3</button>
+<span class="px-2 py-1 text-on-surface-variant">...</span>
+<button class="px-3 py-1 border border-outline-variant rounded text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors">Next</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

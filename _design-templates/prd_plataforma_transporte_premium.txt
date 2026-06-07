@@ -1,0 +1,26 @@
+# Especificaciones del Proyecto: Plataforma de Transporte Premium Multi-Compañía
+
+## 1. Visión General
+Plataforma SaaS multi-tenant para empresas de transporte premium (limusinas, chauffeur service, traslados al aeropuerto).
+
+## 2. Componentes Clave
+- **Web Pública Premium:** Enfocada en conversión y SEO.
+- **Sistema Administrativo Multi-compañía:** Gestión de flota, tarifas y conductores.
+- **Motor de Reservas:** Flujo dinámico con integración de Stripe.
+- **Panel Operativo (Dispatcher):** Monitoreo en tiempo real.
+- **Apps Móviles (Cliente/Conductor):** React Native + Expo.
+
+## 3. Stack Tecnológico
+- **Frontend:** Next.js (App Router), Tailwind CSS.
+- **Backend:** Supabase (PostgreSQL, RLS para multi-tenancy).
+- **Pagos:** Stripe Connect.
+- **Mapas:** Google Maps Routes & Optimization API.
+
+## 4. Agentes de Revisión y Flujo
+Cada fase requiere aprobación de los agentes especializados (Cybersecurity, Payments, UX/UI, etc.).
+**Ciclo:** Planificación → Construcción → Revisión → Corrección → Aprobación.
+
+## 5. Próximos Pasos (Fase 1)
+- Definición de Identidad Visual (Premium).
+- Landing Page de Captación.
+- Primer prototipo del motor de reservas.

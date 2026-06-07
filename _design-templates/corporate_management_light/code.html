@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LuxeControl - Corporate Accounts</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "surface-container": "#efeeeb",
+                "on-primary": "#ffffff",
+                "surface-container-low": "#f4f3f0",
+                "inverse-surface": "#2f312f",
+                "on-tertiary-fixed-variant": "#464744",
+                "surface-container-high": "#e9e8e5",
+                "on-tertiary-container": "#525350",
+                "outline": "#7f7667",
+                "on-tertiary-fixed": "#1b1c1a",
+                "on-surface": "#1a1c1a",
+                "on-primary-container": "#6a4e0c",
+                "tertiary": "#5e5f5c",
+                "tertiary-fixed-dim": "#c7c6c3",
+                "primary-container": "#e9c176",
+                "primary": "#775a19",
+                "inverse-on-surface": "#f2f1ee",
+                "surface-tint": "#775a19",
+                "tertiary-container": "#c7c7c3",
+                "on-tertiary": "#ffffff",
+                "secondary": "#5f5e5e",
+                "secondary-container": "#e2dfde",
+                "on-surface-variant": "#4e4639",
+                "on-primary-fixed-variant": "#5d4200",
+                "on-secondary-fixed": "#1c1b1b",
+                "surface-bright": "#faf9f6",
+                "primary-fixed": "#ffdea5",
+                "secondary-fixed-dim": "#c8c6c5",
+                "surface-variant": "#e3e2df",
+                "outline-variant": "#d1c5b4",
+                "surface": "#faf9f6",
+                "on-primary-fixed": "#261900",
+                "secondary-fixed": "#e5e2e1",
+                "error": "#ba1a1a",
+                "on-secondary": "#ffffff",
+                "on-secondary-fixed-variant": "#474746",
+                "inverse-primary": "#e9c176",
+                "background": "#faf9f6",
+                "on-error": "#ffffff",
+                "on-background": "#1a1c1a",
+                "surface-dim": "#dbdad7",
+                "tertiary-fixed": "#e3e2df",
+                "on-secondary-container": "#636262",
+                "surface-container-highest": "#e3e2df",
+                "error-container": "#ffdad6",
+                "primary-fixed-dim": "#e9c176",
+                "surface-container-lowest": "#ffffff",
+                "on-error-container": "#93000a"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "margin-mobile": "16px",
+                "unit": "8px",
+                "container-max": "1200px",
+                "margin-desktop": "64px",
+                "gutter": "24px"
+        },
+        "fontFamily": {
+                "display-lg": [
+                        "Playfair Display"
+                ],
+                "body-md": [
+                        "Inter"
+                ],
+                "label-caps": [
+                        "Inter"
+                ],
+                "headline-sm": [
+                        "Playfair Display"
+                ],
+                "body-lg": [
+                        "Inter"
+                ],
+                "headline-md": [
+                        "Playfair Display"
+                ],
+                "display-lg-mobile": [
+                        "Playfair Display"
+                ],
+                "label-md": [
+                        "Inter"
+                ],
+                "label-sm": [
+                        "Inter"
+                ]
+        },
+        "fontSize": {
+                "display-lg": [
+                        "48px",
+                        {
+                                "lineHeight": "1.1",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "1.5",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-caps": [
+                        "12px",
+                        {
+                                "lineHeight": "1",
+                                "letterSpacing": "0.1em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-sm": [
+                        "24px",
+                        {
+                                "lineHeight": "1.3",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "1.6",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-md": [
+                        "32px",
+                        {
+                                "lineHeight": "1.2",
+                                "fontWeight": "600"
+                        }
+                ],
+                "display-lg-mobile": [
+                        "32px",
+                        {
+                                "lineHeight": "1.2",
+                                "fontWeight": "700"
+                        }
+                ],
+                "label-md": [
+                        "14px",
+                        {
+                                "lineHeight": "1.4",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "label-sm": [
+                        "12px",
+                        {
+                                "lineHeight": "1.4",
+                                "letterSpacing": "0.03em",
+                                "fontWeight": "500"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        body { background-color: theme('colors.background'); color: theme('colors.on-surface'); }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(209, 197, 180, 0.5);
+        }
+        .btn-gold {
+            background: theme('colors.primary');
+            color: theme('colors.on-primary');
+            transition: all 0.2s ease;
+        }
+        .btn-gold:hover {
+            box-shadow: 0 4px 12px rgba(119, 90, 25, 0.2);
+            transform: translateY(-1px);
+        }
+        /* Custom scrollbar for light theme */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: theme('colors.surface-variant'); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: theme('colors.outline-variant'); }
+    </style>
+</head>
+<body class="font-body-md text-body-md min-h-screen flex selection:bg-primary-container selection:text-on-primary-container">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 bg-background border-r border-outline-variant bg-surface-container-low shadow-sm py-gutter px-4 z-50">
+<div class="mb-10 pl-2">
+<h1 class="font-headline-sm text-headline-sm text-primary tracking-tight">LuxeControl</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Premium Management</p>
+</div>
+<ul class="flex flex-col gap-2 flex-grow">
+<li>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant font-normal hover:bg-surface-container-highest hover:text-primary transition-colors duration-200 active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant font-normal hover:bg-surface-container-highest hover:text-primary transition-colors duration-200 active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="directions_car">directions_car</span>
+<span class="font-body-md text-body-md">Fleet</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant font-normal hover:bg-surface-container-highest hover:text-primary transition-colors duration-200 active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="person_pin_circle">person_pin_circle</span>
+<span class="font-body-md text-body-md">Drivers</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant font-normal hover:bg-surface-container-highest hover:text-primary transition-colors duration-200 active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="route">route</span>
+<span class="font-body-md text-body-md">Trips</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-primary border-l-2 border-primary bg-surface-container-high font-semibold active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="business">business</span>
+<span class="font-body-md text-body-md">Companies</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant font-normal hover:bg-surface-container-highest hover:text-primary transition-colors duration-200 active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-body-md text-body-md">Analytics</span>
+</a>
+</li>
+<li class="mt-auto">
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant font-normal hover:bg-surface-container-highest hover:text-primary transition-colors duration-200 active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+</li>
+</ul>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col min-h-screen md:ml-64 w-full bg-background relative">
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 left-0 md:left-64 h-20 bg-background/80 backdrop-blur-md bg-surface/50 border-b border-outline-variant flex justify-between items-center px-6 md:px-margin-desktop z-40">
+<div class="flex items-center gap-4 focus-within:ring-1 focus-within:ring-primary/50 rounded-full px-4 py-2 bg-surface-container-low border border-outline-variant/30 w-64 md:w-96 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-on-surface placeholder:text-on-surface-variant font-body-md w-full p-0" placeholder="Search accounts..." type="text"/>
+</div>
+<div class="flex items-center gap-6 text-primary">
+<button class="hover:text-primary transition-all relative group text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full"></span>
+</button>
+<div class="flex items-center gap-3 cursor-pointer group">
+<div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant flex items-center justify-center overflow-hidden">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="account_circle">account_circle</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<main class="flex-1 pt-28 pb-20 px-6 md:px-margin-desktop w-full max-w-container-max mx-auto overflow-y-auto">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-2">Corporate Accounts</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xl">Manage B2B partnerships, billing cycles, and organizational policies for enterprise clients.</p>
+</div>
+<button class="btn-gold font-label-md text-label-md px-6 py-3 rounded-lg flex items-center justify-center gap-2 whitespace-nowrap shadow-lg shadow-primary/10">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                    Add Partner
+                </button>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left Column: Directory List (4 cols) -->
+<div class="lg:col-span-4 flex flex-col gap-4 h-[calc(100vh-240px)] overflow-y-auto pr-2">
+<!-- Search/Filter small bar -->
+<div class="flex justify-between items-center mb-2 px-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">4 Active Partners</span>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+</button>
+</div>
+<!-- Account Card: Aura Tech (Active) -->
+<div class="glass-panel p-5 rounded-xl border border-primary/30 bg-surface-container-high cursor-pointer relative overflow-hidden group shadow-sm">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline-sm text-[20px] text-on-surface mb-1">Aura Tech</h3>
+<div class="flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span>Monthly Billing</span>
+</div>
+</div>
+<div class="w-10 h-10 rounded bg-surface border border-outline-variant flex items-center justify-center shadow-sm">
+<span class="font-headline-sm text-sm text-primary">AT</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-outline-variant/30">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1">Employees</p>
+<p class="font-body-md text-body-md text-on-surface">124</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1">Current Balance</p>
+<p class="font-body-md text-body-md text-on-surface">$14,250<span class="text-on-surface-variant text-sm">.00</span></p>
+</div>
+</div>
+</div>
+<!-- Account Card: Nexus Corp -->
+<div class="glass-panel p-5 rounded-xl border border-outline-variant hover:border-primary/30 cursor-pointer transition-all group shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline-sm text-[20px] text-on-surface-variant group-hover:text-on-surface transition-colors mb-1">Nexus Corp</h3>
+<div class="flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span>Weekly Billing</span>
+</div>
+</div>
+<div class="w-10 h-10 rounded bg-surface border border-outline-variant flex items-center justify-center opacity-70 group-hover:opacity-100 transition-opacity">
+<span class="font-headline-sm text-sm text-on-surface-variant">NC</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-outline-variant/30">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1">Employees</p>
+<p class="font-body-md text-body-md text-on-surface-variant group-hover:text-on-surface">86</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1">Current Balance</p>
+<p class="font-body-md text-body-md text-on-surface-variant group-hover:text-on-surface">$3,100<span class="text-sm">.00</span></p>
+</div>
+</div>
+</div>
+<!-- Account Card: Horizon Ventures -->
+<div class="glass-panel p-5 rounded-xl border border-outline-variant hover:border-primary/30 cursor-pointer transition-all group shadow-sm">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline-sm text-[20px] text-on-surface-variant group-hover:text-on-surface transition-colors mb-1">Horizon Ventures</h3>
+<div class="flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>
+<span>Net 30</span>
+</div>
+</div>
+<div class="w-10 h-10 rounded bg-surface border border-outline-variant flex items-center justify-center opacity-70 group-hover:opacity-100 transition-opacity">
+<span class="font-headline-sm text-sm text-on-surface-variant">HV</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Detail View (8 cols) -->
+<div class="lg:col-span-8 flex flex-col gap-6">
+<!-- Detail Header -->
+<div class="glass-panel p-8 rounded-xl flex justify-between items-start shadow-sm">
+<div>
+<div class="flex items-center gap-4 mb-2">
+<h2 class="font-headline-md text-[36px] text-on-surface">Aura Tech</h2>
+<span class="px-3 py-1 rounded-full border border-primary/50 text-primary font-label-sm text-[10px] uppercase tracking-widest bg-primary/10">Premium Tier</span>
+</div>
+<p class="font-body-md text-on-surface-variant">Enterprise account established March 2022. Primary contact: Sarah Jenkins.</p>
+</div>
+<button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:text-primary hover:border-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+</div>
+<!-- Tabs/Bento Grid Area -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Policy Bento Box -->
+<div class="glass-panel p-8 rounded-xl flex flex-col h-full shadow-sm">
+<div class="flex items-center gap-3 mb-6 pb-4 border-b border-outline-variant">
+<span class="material-symbols-outlined text-primary">policy</span>
+<h3 class="font-headline-sm text-[20px] text-on-surface">Corporate Policy</h3>
+</div>
+<div class="flex-1 flex flex-col gap-6">
+<div>
+<div class="flex justify-between items-center mb-2">
+<p class="font-label-sm text-on-surface-variant uppercase tracking-wider">Monthly Spend Limit</p>
+<button class="text-primary hover:underline font-label-sm">Edit</button>
+</div>
+<div class="flex items-end gap-2">
+<span class="font-headline-sm text-[28px] text-on-surface">$25,000</span>
+<span class="font-body-md text-on-surface-variant pb-1">/ mo</span>
+</div>
+<div class="w-full bg-surface-variant h-2 rounded-full mt-3 overflow-hidden shadow-inner">
+<div class="bg-primary h-full rounded-full" style="width: 57%;"></div>
+</div>
+<p class="font-label-sm text-on-surface-variant mt-2 text-right">57% utilized</p>
+</div>
+<div>
+<p class="font-label-sm text-on-surface-variant uppercase tracking-wider mb-3">Approved Classes</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1.5 rounded-md border border-outline-variant text-on-surface font-label-sm text-xs bg-surface">Business Class</span>
+<span class="px-3 py-1.5 rounded-md border border-primary/50 text-primary bg-primary/5 font-label-sm text-xs">First Class</span>
+<span class="px-3 py-1.5 rounded-md border border-outline-variant text-on-surface font-label-sm text-xs bg-surface">Executive SUV</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Billing Bento Box -->
+<div class="glass-panel p-8 rounded-xl flex flex-col h-full shadow-sm">
+<div class="flex items-center gap-3 mb-6 pb-4 border-b border-outline-variant">
+<span class="material-symbols-outlined text-primary">receipt_long</span>
+<h3 class="font-headline-sm text-[20px] text-on-surface">Billing &amp; Invoices</h3>
+</div>
+<div class="flex-1 flex flex-col gap-6">
+<div class="p-4 rounded-lg bg-surface border border-outline-variant flex justify-between items-center shadow-sm">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+</div>
+<div>
+<p class="font-label-md text-on-surface">Stripe Connect</p>
+<p class="font-label-sm text-on-surface-variant">Active • Auto-charge</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px] cursor-pointer hover:text-primary transition-colors">open_in_new</span>
+</div>
+<div>
+<p class="font-label-sm text-on-surface-variant uppercase tracking-wider mb-3">Recent Invoices</p>
+<ul class="flex flex-col gap-3">
+<li class="flex justify-between items-center py-2 border-b border-outline-variant/50">
+<div>
+<p class="font-label-md text-on-surface">INV-2023-08</p>
+<p class="font-label-sm text-on-surface-variant">Aug 1, 2023</p>
+</div>
+<div class="text-right">
+<p class="font-body-md text-on-surface">$12,450.00</p>
+<span class="font-label-sm text-emerald-600">Paid</span>
+</div>
+</li>
+<li class="flex justify-between items-center py-2">
+<div>
+<p class="font-label-md text-on-surface">INV-2023-07</p>
+<p class="font-label-sm text-on-surface-variant">Jul 1, 2023</p>
+</div>
+<div class="text-right">
+<p class="font-body-md text-on-surface">$14,100.00</p>
+<span class="font-label-sm text-emerald-600">Paid</span>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

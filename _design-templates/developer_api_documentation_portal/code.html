@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LuxeOps Admin - Developer Documentation</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#e9c176",
+                        "on-secondary-fixed": "#261900",
+                        "surface-variant": "#353434",
+                        "on-error": "#690005",
+                        "surface-container": "#201f1f",
+                        "surface-container-highest": "#353434",
+                        "primary-container": "#0a0a0a",
+                        "on-tertiary-container": "#7a7979",
+                        "inverse-primary": "#5f5e5e",
+                        "primary": "#c9c6c5",
+                        "secondary-fixed": "#ffdea5",
+                        "on-surface": "#e5e2e1",
+                        "on-secondary-container": "#dab36a",
+                        "on-primary-fixed": "#1c1b1b",
+                        "surface-container-low": "#1c1b1b",
+                        "on-secondary-fixed-variant": "#5d4201",
+                        "surface-container-high": "#2b2a2a",
+                        "tertiary-container": "#0a0a0a",
+                        "on-error-container": "#ffdad6",
+                        "on-background": "#e5e2e1",
+                        "surface-dim": "#141313",
+                        "error-container": "#93000a",
+                        "error": "#ffb4ab",
+                        "surface-bright": "#3a3939",
+                        "surface-container-lowest": "#0e0e0e",
+                        "tertiary": "#c8c6c6",
+                        "tertiary-fixed": "#e4e2e1",
+                        "secondary-container": "#604403",
+                        "on-tertiary-fixed-variant": "#474747",
+                        "on-tertiary-fixed": "#1b1c1c",
+                        "on-primary": "#313030",
+                        "tertiary-fixed-dim": "#c8c6c6",
+                        "surface": "#141313",
+                        "secondary": "#e9c176",
+                        "on-secondary": "#412d00",
+                        "primary-fixed-dim": "#c9c6c5",
+                        "surface-tint": "#c9c6c5",
+                        "on-surface-variant": "#c4c7c7",
+                        "inverse-on-surface": "#313030",
+                        "on-primary-fixed-variant": "#474646",
+                        "inverse-surface": "#e5e2e1",
+                        "on-primary-container": "#7b7979",
+                        "primary-fixed": "#e5e2e1",
+                        "outline": "#8e9192",
+                        "on-tertiary": "#303030",
+                        "outline-variant": "#444748",
+                        "background": "#141313"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "container-max": "1280px",
+                        "margin-mobile": "20px",
+                        "section-gap": "120px",
+                        "margin-desktop": "64px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Playfair Display"],
+                        "display-lg": ["Playfair Display"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "body-md": ["Inter"],
+                        "headline-sm": ["Playfair Display"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "1.4", "letterSpacing": "0.03em", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-md": ["32px", { "lineHeight": "1.2", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-sm": ["24px", { "lineHeight": "1.3", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(26, 26, 26, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid #2D2D2D;
+        }
+        
+        /* Syntax Highlighting Mock */
+        .token.keyword { color: #e9c176; }
+        .token.string { color: #c4c7c7; }
+        .token.punctuation { color: #8e9192; }
+        .token.property { color: #c9c6c5; }
+        
+        pre code {
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, Courier, monospace;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased min-h-screen font-body-md">
+<!-- SideNavBar Component -->
+<nav class="h-screen w-64 fixed left-0 top-0 bg-surface dark:bg-surface border-r border-outline-variant shadow-sm flex flex-col h-full py-unit px-4 z-50 hidden md:flex">
+<!-- Brand Header -->
+<div class="mb-8 mt-4 px-2">
+<h1 class="font-display-lg text-display-lg text-secondary tracking-tight">LuxeOps</h1>
+<p class="font-label-md text-label-md text-on-surface-variant mt-1">Enterprise Suite</p>
+</div>
+<!-- Navigation Links -->
+<div class="flex-1 overflow-y-auto space-y-1">
+<a class="flex items-center px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-200 cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined mr-3 text-on-surface-variant" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-200 cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined mr-3 text-on-surface-variant" style="font-variation-settings: 'FILL' 0;">directions_car</span>
+<span class="font-label-md text-label-md">Fleet</span>
+</a>
+<a class="flex items-center px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-200 cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined mr-3 text-on-surface-variant" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="font-label-md text-label-md">Drivers</span>
+</a>
+<a class="flex items-center px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-200 cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined mr-3 text-on-surface-variant" style="font-variation-settings: 'FILL' 0;">route</span>
+<span class="font-label-md text-label-md">Trips</span>
+</a>
+<a class="flex items-center px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-200 cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined mr-3 text-on-surface-variant" style="font-variation-settings: 'FILL' 0;">business</span>
+<span class="font-label-md text-label-md">Companies</span>
+</a>
+<a class="flex items-center px-3 py-2 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-200 cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined mr-3 text-on-surface-variant" style="font-variation-settings: 'FILL' 0;">analytics</span>
+<span class="font-label-md text-label-md">Analytics</span>
+</a>
+<a class="flex items-center px-3 py-2 rounded-lg text-secondary font-bold border-r-2 border-secondary bg-surface-container-high cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined mr-3 text-secondary" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</div>
+<!-- Footer / CTA -->
+<div class="mt-auto pt-4 border-t border-outline-variant px-2 pb-4">
+<button class="w-full bg-secondary text-on-secondary font-label-md text-label-md py-3 rounded-lg flex items-center justify-center space-x-2 bg-gradient-to-b from-secondary to-secondary-container hover:from-secondary-fixed hover:to-secondary transition-all">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+<span>Book New Trip</span>
+</button>
+<div class="mt-4 flex items-center space-x-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant">
+<img alt="Executive Admin Profile" class="w-full h-full object-cover" data-alt="A close-up portrait of a professional in a dark tailored suit against a subtle, dark gray studio background. Soft, dramatic lighting highlights the face, conveying confidence and authority. The overall image aligns with a premium, silent luxury aesthetic characterized by deep blacks and refined textures." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDXvatJBc0LXKh4FyR1-gjHoLZ7PFOjJiab5seyyjdSgXTFP56euyjBI44-kGxqNm_yw8XfYP5kw2ptnrMxcc2bGXc7SnzQTHIlzcqb10qYqfDgD0R7ggHKmuujCoQdHuFt2kksT1HRwglkpMCEZzXiUgSt8DOSdCemPm0CZSHW2E2LbkxVzj_-5ey3-ePaoeFeA4nbljHgHhtrNK4A5UD23hhQ2JZ8m3FeXntrTA6wYv7if8ygfhjrShmLAtg7YAU5IDrCJmeom9A"/>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface">Admin User</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant opacity-70">admin@luxeops.com</p>
+</div>
+</div>
+</div>
+</nav>
+<!-- TopNavBar Component -->
+<header class="fixed top-0 right-0 left-64 h-16 bg-surface dark:bg-surface border-b border-outline-variant flex justify-between items-center px-margin-desktop w-full ml-64 z-40 hidden md:flex">
+<!-- Left Area: Product Name & Search -->
+<div class="flex items-center space-x-8">
+<h2 class="font-headline-sm text-headline-sm text-secondary">LuxeOps Admin</h2>
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 transform -translate-y-1/2 text-on-surface-variant pointer-events-none" style="font-variation-settings: 'FILL' 0;">search</span>
+<input class="bg-surface-container-low border border-outline-variant text-on-surface font-label-md text-label-md rounded-full py-1.5 pl-10 pr-4 w-64 focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-all duration-200 ease-in-out placeholder-on-surface-variant" placeholder="Search documentation..." type="text"/>
+</div>
+</div>
+<!-- Right Area: Actions -->
+<div class="flex items-center space-x-6">
+<button class="text-on-surface-variant hover:text-secondary transition-opacity duration-300 relative">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-secondary rounded-full"></span>
+</button>
+<button class="text-on-surface-variant hover:text-secondary transition-opacity duration-300">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">help_outline</span>
+</button>
+<button class="text-on-surface-variant hover:text-secondary transition-opacity duration-300">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 pt-16 min-h-screen flex">
+<!-- Inner Doc Sidebar Navigation -->
+<aside class="w-64 border-r border-outline-variant bg-surface-dim h-[calc(100vh-4rem)] overflow-y-auto hidden lg:block py-8 px-6 sticky top-16">
+<nav class="space-y-8">
+<div>
+<h3 class="font-label-md text-label-md text-secondary uppercase tracking-widest mb-4">Getting Started</h3>
+<ul class="space-y-2">
+<li><a class="font-body-md text-body-md text-on-surface hover:text-secondary transition-colors block py-1" href="#">Introduction</a></li>
+<li><a class="font-body-md text-body-md text-secondary font-medium block py-1" href="#">Authentication</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors block py-1" href="#">Environments</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors block py-1" href="#">Errors</a></li>
+</ul>
+</div>
+<div>
+<h3 class="font-label-md text-label-md text-secondary uppercase tracking-widest mb-4">Resources</h3>
+<ul class="space-y-2">
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors block py-1" href="#">Vehicles</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors block py-1" href="#">Bookings</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors block py-1" href="#">Drivers</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary transition-colors block py-1" href="#">Webhooks</a></li>
+</ul>
+</div>
+</nav>
+</aside>
+<!-- Documentation Content -->
+<article class="flex-1 max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop py-12 lg:py-16 overflow-y-auto">
+<div class="mb-12">
+<h1 class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-4">Authentication</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+                    The LuxeControl API uses API keys to authenticate requests. You can view and manage your API keys in the LuxeOps Dashboard.
+                </p>
+</div>
+<!-- Content Split Layout -->
+<div class="grid grid-cols-1 xl:grid-cols-2 gap-12 xl:gap-24">
+<!-- Left Column: Prose & Explanations -->
+<div class="space-y-10">
+<section>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-4 border-b border-outline-variant pb-2">Bearer Tokens</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">
+                            Authentication to the API is performed via HTTP Bearer Auth. Provide your API key as the bearer token value in the <code>Authorization</code> header.
+                        </p>
+<div class="bg-surface-container-low border-l-4 border-secondary p-4 rounded-r-lg">
+<p class="font-label-md text-label-md text-on-surface flex items-start">
+<span class="material-symbols-outlined text-secondary mr-2" style="font-variation-settings: 'FILL' 1;">info</span>
+                                All API requests must be made over HTTPS. Calls made over plain HTTP will fail. API requests without authentication will also fail.
+                            </p>
+</div>
+</section>
+<section>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-4 border-b border-outline-variant pb-2">Manage API Keys</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">
+                            Use the panel below to generate or revoke access keys for your application. Keep your keys secure and do not share them in publicly accessible areas such as GitHub, client-side code, etc.
+                        </p>
+<!-- API Key Management Card (Glassmorphism) -->
+<div class="glass-panel rounded-xl p-6">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-label-md text-label-md text-on-surface uppercase tracking-widest">Active Keys</h3>
+<button class="text-secondary font-label-sm text-label-sm hover:underline flex items-center">
+<span class="material-symbols-outlined text-[16px] mr-1" style="font-variation-settings: 'FILL' 0;">add</span>
+                                    Generate New Key
+                                </button>
+</div>
+<div class="space-y-4">
+<!-- Key Item 1 -->
+<div class="bg-surface-container-lowest p-4 rounded-lg border border-outline-variant flex items-center justify-between group">
+<div>
+<div class="flex items-center space-x-2 mb-1">
+<span class="font-label-md text-label-md text-on-surface">Production Main</span>
+<span class="px-2 py-0.5 border border-secondary text-secondary font-label-sm text-label-sm rounded uppercase text-[10px]">Live</span>
+</div>
+<div class="flex items-center space-x-2">
+<code class="font-mono text-[13px] text-on-surface-variant">sk_live_51Mxxxxxxxxxxxxxxxxxxx</code>
+</div>
+</div>
+<div class="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-surface-container-high rounded text-on-surface-variant hover:text-on-surface transition-colors" title="Copy Key">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">content_copy</span>
+</button>
+<button class="p-2 hover:bg-error-container rounded text-on-surface-variant hover:text-error transition-colors" title="Revoke Key">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">delete</span>
+</button>
+</div>
+</div>
+<!-- Key Item 2 -->
+<div class="bg-surface-container-lowest p-4 rounded-lg border border-outline-variant flex items-center justify-between group">
+<div>
+<div class="flex items-center space-x-2 mb-1">
+<span class="font-label-md text-label-md text-on-surface">Staging Environment</span>
+<span class="px-2 py-0.5 border border-outline text-on-surface-variant font-label-sm text-label-sm rounded uppercase text-[10px]">Test</span>
+</div>
+<div class="flex items-center space-x-2">
+<code class="font-mono text-[13px] text-on-surface-variant">sk_test_51Mxxxxxxxxxxxxxxxxxxx</code>
+</div>
+</div>
+<div class="flex items-center space-x-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-2 hover:bg-surface-container-high rounded text-on-surface-variant hover:text-on-surface transition-colors" title="Copy Key">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">content_copy</span>
+</button>
+<button class="p-2 hover:bg-error-container rounded text-on-surface-variant hover:text-error transition-colors" title="Revoke Key">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 0;">delete</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+<!-- Right Column: Code Snippets & Interactive Tester -->
+<div class="space-y-8 xl:sticky xl:top-24 self-start">
+<!-- Code Block Terminal -->
+<div class="bg-[#111111] rounded-xl border border-[#333333] shadow-lg overflow-hidden">
+<!-- Terminal Header -->
+<div class="flex items-center justify-between px-4 py-3 border-b border-[#333333] bg-[#1a1a1a]">
+<div class="flex space-x-2">
+<div class="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
+<div class="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
+<div class="w-3 h-3 rounded-full bg-[#27c93f]"></div>
+</div>
+<div class="flex space-x-4">
+<button class="font-label-sm text-label-sm text-secondary border-b border-secondary pb-1">cURL</button>
+<button class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface pb-1">Python</button>
+<button class="font-label-sm text-label-sm text-on-surface-variant hover:text-on-surface pb-1">Node.js</button>
+</div>
+</div>
+<!-- Code Content -->
+<div class="p-4 overflow-x-auto">
+<pre class="m-0"><code class="language-bash text-on-surface-variant">
+<span class="token comment"># Authenticate via Bearer Token</span>
+curl https://api.luxeops.com/v1/vehicles \
+  -H <span class="token string">"Authorization: Bearer sk_live_YOUR_API_KEY"</span> \
+  -H <span class="token string">"Content-Type: application/json"</span>
+</code></pre>
+</div>
+</div>
+<!-- Interactive Endpoint Tester -->
+<div class="glass-panel rounded-xl border border-outline-variant p-1">
+<div class="bg-surface-container-low rounded-lg p-5">
+<h3 class="font-label-md text-label-md text-on-surface mb-4 flex items-center">
+<span class="material-symbols-outlined text-secondary mr-2 text-[20px]" style="font-variation-settings: 'FILL' 0;">api</span>
+                                Try it out
+                            </h3>
+<form class="space-y-4">
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-1">API Endpoint</label>
+<div class="flex">
+<span class="inline-flex items-center px-3 rounded-l-md border border-r-0 border-outline-variant bg-surface-container-highest text-on-surface-variant font-mono text-[13px]">
+                                            GET
+                                        </span>
+<input class="flex-1 bg-surface-container border border-outline-variant text-on-surface font-mono text-[13px] rounded-r-md py-2 px-3 focus:outline-none" readonly="" type="text" value="/v1/account/status"/>
+</div>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-1">Authorization Header</label>
+<input class="w-full bg-surface-container border border-outline-variant text-on-surface font-mono text-[13px] rounded-md py-2 px-3 focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-all" placeholder="Bearer sk_test_..." type="text"/>
+</div>
+<button class="w-full bg-surface-container-highest border border-outline-variant text-on-surface font-label-md text-label-md py-2 rounded-md hover:border-secondary hover:text-secondary transition-colors flex items-center justify-center" type="button">
+<span class="material-symbols-outlined text-[18px] mr-2" style="font-variation-settings: 'FILL' 1;">play_arrow</span>
+                                    Send Test Request
+                                </button>
+</form>
+<!-- Mock Response Area -->
+<div class="mt-4 pt-4 border-t border-outline-variant hidden">
+<span class="font-label-sm text-label-sm text-on-surface-variant block mb-2">Response: <span class="text-[#27c93f]">200 OK</span></span>
+<div class="bg-[#111111] rounded p-3 overflow-x-auto">
+<pre class="m-0"><code class="language-json">
+{
+  <span class="token property">"status"</span>: <span class="token string">"active"</span>,
+  <span class="token property">"environment"</span>: <span class="token string">"test"</span>,
+  <span class="token property">"organization"</span>: <span class="token string">"org_12345"</span>
+}
+</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="h-section-gap"></div> <!-- Bottom Spacing -->
+</article>
+</main>
+<script>
+        // Simple script to toggle the mock response in the interactive tester
+        document.querySelector('button[type="button"]').addEventListener('click', function(e) {
+            e.preventDefault();
+            const btn = this;
+            const originalText = btn.innerHTML;
+            
+            // Loading state
+            btn.innerHTML = `<span class="material-symbols-outlined animate-spin text-[18px] mr-2" style="font-variation-settings: 'FILL' 0;">sync</span> Sending...`;
+            btn.classList.add('opacity-70');
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.classList.remove('opacity-70');
+                const responseArea = document.querySelector('.mt-4.pt-4.border-t.border-outline-variant.hidden');
+                if(responseArea) {
+                    responseArea.classList.remove('hidden');
+                }
+            }, 800);
+        });
+    </script>
+</body></html>

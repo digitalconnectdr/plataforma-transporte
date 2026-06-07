@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Chauffeur Dashboard - LuxeControl</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "secondary-container": "#604403",
+                      "inverse-on-surface": "#313030",
+                      "outline": "#8e9192",
+                      "on-secondary": "#412d00",
+                      "surface-container-highest": "#353434",
+                      "on-surface": "#e5e2e1",
+                      "secondary": "#e9c176",
+                      "surface-dim": "#141313",
+                      "on-tertiary-fixed": "#1b1c1c",
+                      "surface-container-high": "#2b2a2a",
+                      "on-primary-fixed-variant": "#474646",
+                      "tertiary": "#c8c6c6",
+                      "on-primary": "#313030",
+                      "background": "#141313",
+                      "surface-container-low": "#1c1b1b",
+                      "surface-container": "#201f1f",
+                      "primary-fixed": "#e5e2e1",
+                      "outline-variant": "#444748",
+                      "on-tertiary-container": "#7a7979",
+                      "on-tertiary": "#303030",
+                      "primary": "#c9c6c5",
+                      "tertiary-fixed": "#e4e2e1",
+                      "on-error": "#690005",
+                      "surface-container-lowest": "#0e0e0e",
+                      "secondary-fixed-dim": "#e9c176",
+                      "on-tertiary-fixed-variant": "#474747",
+                      "on-primary-container": "#7b7979",
+                      "primary-fixed-dim": "#c9c6c5",
+                      "tertiary-container": "#0a0a0a",
+                      "on-secondary-fixed-variant": "#5d4201",
+                      "surface-variant": "#353434",
+                      "surface-tint": "#c9c6c5",
+                      "surface-bright": "#3a3939",
+                      "inverse-surface": "#e5e2e1",
+                      "secondary-fixed": "#ffdea5",
+                      "on-secondary-fixed": "#261900",
+                      "error-container": "#93000a",
+                      "tertiary-fixed-dim": "#c8c6c6",
+                      "on-secondary-container": "#dab36a",
+                      "on-error-container": "#ffdad6",
+                      "surface": "#141313",
+                      "on-surface-variant": "#c4c7c7",
+                      "error": "#ffb4ab",
+                      "on-primary-fixed": "#1c1b1b",
+                      "primary-container": "#0a0a0a",
+                      "on-background": "#e5e2e1",
+                      "inverse-primary": "#5f5e5e"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "section-gap": "120px",
+                      "gutter": "24px",
+                      "unit": "8px",
+                      "margin-mobile": "20px",
+                      "container-max": "1280px",
+                      "margin-desktop": "64px"
+              },
+              "fontFamily": {
+                      "headline-sm": ["Playfair Display"],
+                      "headline-md": ["Playfair Display"],
+                      "label-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "display-lg-mobile": ["Playfair Display"],
+                      "display-lg": ["Playfair Display"],
+                      "label-sm": ["Inter"],
+                      "body-md": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-sm": ["24px", {"lineHeight": "1.3", "fontWeight": "500"}],
+                      "headline-md": ["32px", {"lineHeight": "1.2", "fontWeight": "500"}],
+                      "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "display-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                      "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "label-sm": ["12px", {"lineHeight": "1.4", "letterSpacing": "0.03em", "fontWeight": "500"}],
+                      "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}]
+              }
+            }
+          }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-filled {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom map overlay gradient */
+        .map-gradient {
+            background: linear-gradient(to bottom, rgba(20, 19, 19, 0.2) 0%, rgba(20, 19, 19, 1) 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md antialiased min-h-screen flex flex-col overflow-x-hidden">
+<!-- Top Navigation / Header (Mobile Optimized) -->
+<header class="bg-surface/80 backdrop-blur-md fixed top-0 w-full z-50 border-b border-outline-variant px-margin-mobile h-16 flex justify-between items-center">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-2xl icon-filled">local_taxi</span>
+<span class="font-headline-sm text-headline-sm text-secondary uppercase tracking-tighter">LuxeControl</span>
+</div>
+<!-- Status Toggle -->
+<button class="flex items-center gap-2 bg-surface-container-high border border-outline-variant rounded-full py-1.5 px-3 transition-colors duration-300" id="statusToggle">
+<div class="w-2.5 h-2.5 rounded-full bg-secondary shadow-[0_0_8px_rgba(233,193,118,0.6)] transition-all duration-300" id="statusDot"></div>
+<span class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider" id="statusText">Online</span>
+</button>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 pt-24 pb-24 px-margin-mobile flex flex-col gap-8 max-w-lg mx-auto w-full">
+<!-- Current Trip Hero Section -->
+<section class="relative rounded-xl overflow-hidden border border-outline-variant shadow-lg">
+<!-- Map Background -->
+<div class="absolute inset-0 bg-cover bg-center" data-alt="A dark, minimalist map interface showing the streets of central London at night. The map uses a monochrome dark grey and black color palette, typical of high-end automotive navigation systems. A subtle gold route line is barely visible, emphasizing a luxurious, high-contrast digital display aesthetic." data-location="London" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAu7628cXF4x2BkR7ruOHWbQeRoxrNzlwOxWGGypOPsIQOL2lsiTV28e5-w649_cVeke_9DD1EW-CCokQw_9ekDx197YDwu5o7wcCAqWEeFgUGoJJuZNTykyXqWiX4AQ3FQPHNyEM-KcTMcEoam7ex-HAvnxj-cbMdfubs_owBYsCbUwveYrTVrKD2PkyOSjn_08wUgN4clpCy8iV6gQjSwCOXIgZAmtOCobH3gfbUGPa3X_6UEXYQ-mGC0079Q0fOvc4VI-NHz8vs');">
+</div>
+<div class="absolute inset-0 map-gradient"></div>
+<!-- Trip Details Card (Glassmorphism) -->
+<div class="relative z-10 p-6 flex flex-col gap-6 bg-surface-container-lowest/40 backdrop-blur-md">
+<!-- Passenger Info -->
+<div class="flex justify-between items-start">
+<div>
+<p class="font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-1">Current Assignment</p>
+<h2 class="font-headline-md text-headline-md text-on-surface">Alexander Pierce</h2>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[16px]">star</span> 4.9 • First Class
+                        </p>
+</div>
+<div class="bg-secondary-container/30 border border-secondary/50 rounded-full w-12 h-12 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary icon-filled">person</span>
+</div>
+</div>
+<!-- Locations Timeline -->
+<div class="flex flex-col gap-0 relative mt-2">
+<!-- Line connector -->
+<div class="absolute left-[11px] top-[24px] bottom-[24px] w-[2px] bg-outline-variant"></div>
+<!-- Pickup -->
+<div class="flex gap-4 items-start relative z-10 bg-background/20 p-2 rounded-lg backdrop-blur-sm mb-4">
+<div class="w-6 h-6 rounded-full bg-secondary flex items-center justify-center shrink-0 mt-0.5 shadow-[0_0_10px_rgba(233,193,118,0.3)]">
+<div class="w-2 h-2 rounded-full bg-on-secondary"></div>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Pickup • 10:30 AM</p>
+<p class="font-body-lg text-body-lg text-on-surface mt-0.5">The Savoy Hotel</p>
+<p class="font-body-md text-body-md text-outline">Strand, London WC2R 0EZ</p>
+</div>
+</div>
+<!-- Drop-off -->
+<div class="flex gap-4 items-start relative z-10 bg-background/20 p-2 rounded-lg backdrop-blur-sm">
+<div class="w-6 h-6 rounded-full border-2 border-secondary bg-surface flex items-center justify-center shrink-0 mt-0.5">
+<span class="material-symbols-outlined text-[14px] text-secondary">location_on</span>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Drop-off</p>
+<p class="font-body-lg text-body-lg text-on-surface mt-0.5">Heathrow Airport (LHR)</p>
+<p class="font-body-md text-body-md text-outline">Terminal 5 VIP Drop-off</p>
+</div>
+</div>
+</div>
+<!-- Action Button -->
+<button class="w-full mt-4 bg-gradient-to-b from-secondary to-[#cba65f] text-on-secondary font-label-md text-label-md py-4 rounded-lg uppercase tracking-widest shadow-[0_4px_14px_rgba(233,193,118,0.2)] active:scale-[0.98] transition-transform duration-200 flex items-center justify-center gap-2">
+                    Start Trip
+                    <span class="material-symbols-outlined">navigation</span>
+</button>
+</div>
+</section>
+<!-- Earnings Bento Box -->
+<section class="grid grid-cols-2 gap-4">
+<div class="col-span-2 bg-surface-container rounded-xl p-5 border border-outline-variant flex justify-between items-center">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-1">Today's Earnings</p>
+<h3 class="font-display-lg-mobile text-display-lg-mobile text-secondary">£420.50</h3>
+</div>
+<div class="bg-surface-container-high rounded-full p-3">
+<span class="material-symbols-outlined text-on-surface text-3xl">account_balance_wallet</span>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-xl p-4 border border-outline-variant">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">Trips</p>
+<div class="flex items-end gap-2">
+<span class="font-headline-md text-headline-md text-on-surface">3</span>
+<span class="font-body-md text-body-md text-outline mb-1">Completed</span>
+</div>
+</div>
+<div class="bg-surface-container-low rounded-xl p-4 border border-outline-variant">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider mb-2">Online Hours</p>
+<div class="flex items-end gap-2">
+<span class="font-headline-md text-headline-md text-on-surface">4.5</span>
+<span class="font-body-md text-body-md text-outline mb-1">Hrs</span>
+</div>
+</div>
+</section>
+<!-- Upcoming Schedule -->
+<section class="flex flex-col gap-4">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Upcoming Schedule</h3>
+<div class="flex flex-col gap-3">
+<!-- Schedule Item 1 -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-4 flex items-center gap-4 active:bg-surface-container-high transition-colors">
+<div class="flex flex-col items-center justify-center min-w-[60px] border-r border-outline-variant pr-4">
+<span class="font-label-md text-label-md text-on-surface">14:00</span>
+<span class="font-label-sm text-label-sm text-secondary">PM</span>
+</div>
+<div class="flex-1">
+<p class="font-body-lg text-body-lg text-on-surface">Emma Thompson</p>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[14px]">location_on</span> Mayfair to Soho
+                        </p>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+<!-- Schedule Item 2 -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-4 flex items-center gap-4 opacity-75">
+<div class="flex flex-col items-center justify-center min-w-[60px] border-r border-outline-variant pr-4">
+<span class="font-label-md text-label-md text-on-surface">16:30</span>
+<span class="font-label-sm text-label-sm text-secondary">PM</span>
+</div>
+<div class="flex-1">
+<p class="font-body-lg text-body-lg text-on-surface">Corporate Account</p>
+<p class="font-body-md text-body-md text-on-surface-variant flex items-center gap-1 mt-0.5">
+<span class="material-symbols-outlined text-[14px]">location_on</span> Canary Wharf
+                        </p>
+</div>
+<span class="material-symbols-outlined text-outline">chevron_right</span>
+</div>
+</div>
+</section>
+</main>
+<script>
+        // Micro-interaction for Status Toggle
+        const toggleBtn = document.getElementById('statusToggle');
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        let isOnline = true;
+
+        toggleBtn.addEventListener('click', () => {
+            isOnline = !isOnline;
+            if (isOnline) {
+                statusDot.classList.replace('bg-outline', 'bg-secondary');
+                statusDot.classList.add('shadow-[0_0_8px_rgba(233,193,118,0.6)]');
+                statusText.textContent = 'Online';
+                statusText.classList.replace('text-outline', 'text-on-surface');
+            } else {
+                statusDot.classList.replace('bg-secondary', 'bg-outline');
+                statusDot.classList.remove('shadow-[0_0_8px_rgba(233,193,118,0.6)]');
+                statusText.textContent = 'Offline';
+                statusText.classList.replace('text-on-surface', 'text-outline');
+            }
+        });
+    </script>
+</body></html>

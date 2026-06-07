@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LuxeControl - Corporate Accounts</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                            "background": "#141313",
+                            "tertiary-container": "#0a0a0a",
+                            "on-tertiary-container": "#7a7979",
+                            "on-error-container": "#ffdad6",
+                            "inverse-on-surface": "#313030",
+                            "on-surface-variant": "#c4c7c7",
+                            "on-secondary-fixed": "#261900",
+                            "outline": "#8e9192",
+                            "inverse-surface": "#e5e2e1",
+                            "on-primary-fixed-variant": "#474646",
+                            "error-container": "#93000a",
+                            "surface-container-lowest": "#0e0e0e",
+                            "tertiary-fixed": "#e4e2e1",
+                            "on-primary-container": "#7b7979",
+                            "surface-container-high": "#2b2a2a",
+                            "inverse-primary": "#5f5e5e",
+                            "tertiary-fixed-dim": "#c8c6c6",
+                            "primary": "#c9c6c5",
+                            "outline-variant": "#444748",
+                            "on-tertiary-fixed": "#1b1c1c",
+                            "on-background": "#e5e2e1",
+                            "surface-bright": "#3a3939",
+                            "secondary-fixed-dim": "#e9c176",
+                            "secondary": "#e9c176",
+                            "surface-container": "#201f1f",
+                            "surface-variant": "#353434",
+                            "surface-tint": "#c9c6c5",
+                            "primary-container": "#0a0a0a",
+                            "on-primary": "#313030",
+                            "tertiary": "#c8c6c6",
+                            "on-tertiary-fixed-variant": "#474747",
+                            "on-secondary-container": "#dab36a",
+                            "primary-fixed": "#e5e2e1",
+                            "on-secondary": "#412d00",
+                            "on-secondary-fixed-variant": "#5d4201",
+                            "surface": "#141313",
+                            "secondary-fixed": "#ffdea5",
+                            "surface-container-highest": "#353434",
+                            "secondary-container": "#604403",
+                            "error": "#ffb4ab",
+                            "on-error": "#690005",
+                            "primary-fixed-dim": "#c9c6c5",
+                            "on-tertiary": "#303030",
+                            "on-primary-fixed": "#1c1b1b",
+                            "surface-container-low": "#1c1b1b",
+                            "surface-dim": "#141313",
+                            "on-surface": "#e5e2e1"
+                    },
+                    "borderRadius": {
+                            "DEFAULT": "0.25rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+                    },
+                    "spacing": {
+                            "gutter": "24px",
+                            "margin-desktop": "64px",
+                            "container-max": "1280px",
+                            "section-gap": "120px",
+                            "unit": "8px",
+                            "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                            "headline-md": [
+                                    "Playfair Display"
+                            ],
+                            "headline-sm": [
+                                    "Playfair Display"
+                            ],
+                            "body-md": [
+                                    "Inter"
+                            ],
+                            "label-md": [
+                                    "Inter"
+                            ],
+                            "body-lg": [
+                                    "Inter"
+                            ],
+                            "display-lg-mobile": [
+                                    "Playfair Display"
+                            ],
+                            "label-sm": [
+                                    "Inter"
+                            ],
+                            "display-lg": [
+                                    "Playfair Display"
+                            ]
+                    },
+                    "fontSize": {
+                            "headline-md": [
+                                    "32px",
+                                    {
+                                            "lineHeight": "1.2",
+                                            "fontWeight": "500"
+                                    }
+                            ],
+                            "headline-sm": [
+                                    "24px",
+                                    {
+                                            "lineHeight": "1.3",
+                                            "fontWeight": "500"
+                                    }
+                            ],
+                            "body-md": [
+                                    "16px",
+                                    {
+                                            "lineHeight": "1.5",
+                                            "fontWeight": "400"
+                                    }
+                            ],
+                            "label-md": [
+                                    "14px",
+                                    {
+                                            "lineHeight": "1.4",
+                                            "letterSpacing": "0.05em",
+                                            "fontWeight": "600"
+                                    }
+                            ],
+                            "body-lg": [
+                                    "18px",
+                                    {
+                                            "lineHeight": "1.6",
+                                            "fontWeight": "400"
+                                    }
+                            ],
+                            "display-lg-mobile": [
+                                    "32px",
+                                    {
+                                            "lineHeight": "1.2",
+                                            "fontWeight": "600"
+                                    }
+                            ],
+                            "label-sm": [
+                                    "12px",
+                                    {
+                                            "lineHeight": "1.4",
+                                            "letterSpacing": "0.03em",
+                                            "fontWeight": "500"
+                                    }
+                            ],
+                            "display-lg": [
+                                    "48px",
+                                    {
+                                            "lineHeight": "1.1",
+                                            "letterSpacing": "-0.02em",
+                                            "fontWeight": "600"
+                                    }
+                            ]
+                    }
+            },
+                },
+        }
+    </script>
+<style>
+        body { background-color: theme('colors.background'); color: theme('colors.on-surface'); }
+        .glass-panel {
+            background: rgba(26, 26, 26, 0.4);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(45, 45, 45, 0.5);
+        }
+        .btn-gold {
+            background: linear-gradient(180deg, #e9c176 0%, #d4a955 100%);
+            color: #0A0A0A;
+            transition: all 0.2s ease;
+        }
+        .btn-gold:hover {
+            box-shadow: 0 0 15px rgba(233, 193, 118, 0.3);
+            transform: translateY(-1px);
+        }
+        /* Custom scrollbar for dark theme */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #2D2D2D; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #444748; }
+    </style>
+</head>
+<body class="font-body-md text-body-md min-h-screen flex selection:bg-secondary/30 selection:text-secondary">
+<!-- SideNavBar -->
+<nav class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 bg-background dark:bg-background border-r border-outline-variant bg-surface-container-low shadow-sm py-gutter px-4 z-50">
+<div class="mb-10 pl-2">
+<h1 class="font-headline-sm text-headline-sm text-secondary tracking-tight">LuxeControl</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Premium Management</p>
+</div>
+<ul class="flex flex-col gap-2 flex-grow">
+<li>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant font-normal hover:bg-surface-container-highest hover:text-secondary transition-colors duration-200 active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant font-normal hover:bg-surface-container-highest hover:text-secondary transition-colors duration-200 active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="directions_car">directions_car</span>
+<span class="font-body-md text-body-md">Fleet</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant font-normal hover:bg-surface-container-highest hover:text-secondary transition-colors duration-200 active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="person_pin_circle">person_pin_circle</span>
+<span class="font-body-md text-body-md">Drivers</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant font-normal hover:bg-surface-container-highest hover:text-secondary transition-colors duration-200 active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="route">route</span>
+<span class="font-body-md text-body-md">Trips</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-secondary border-l-2 border-secondary bg-surface-container-high font-semibold active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="business">business</span>
+<span class="font-body-md text-body-md">Companies</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant font-normal hover:bg-surface-container-highest hover:text-secondary transition-colors duration-200 active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span class="font-body-md text-body-md">Analytics</span>
+</a>
+</li>
+<li class="mt-auto">
+<a class="flex items-center gap-3 px-3 py-3 rounded-lg text-on-surface-variant font-normal hover:bg-surface-container-highest hover:text-secondary transition-colors duration-200 active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+</li>
+</ul>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 flex flex-col min-h-screen md:ml-64 w-full bg-background relative">
+<!-- TopNavBar -->
+<header class="fixed top-0 right-0 left-0 md:left-64 h-20 bg-background/80 backdrop-blur-md dark:bg-background/80 bg-surface/50 border-b border-outline-variant flex justify-between items-center px-6 md:px-margin-desktop z-40">
+<div class="flex items-center gap-4 focus-within:ring-1 focus-within:ring-secondary/50 rounded-full px-4 py-2 bg-surface-container-low border border-outline-variant/30 w-64 md:w-96 transition-all">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-on-surface placeholder:text-on-surface-variant font-body-md w-full p-0" placeholder="Search accounts..." type="text"/>
+</div>
+<div class="flex items-center gap-6 text-secondary dark:text-secondary">
+<button class="hover:text-secondary transition-all relative group text-on-surface-variant">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-secondary rounded-full"></span>
+</button>
+<div class="flex items-center gap-3 cursor-pointer group">
+<div class="w-8 h-8 rounded-full bg-surface-container-high border border-outline-variant flex items-center justify-center overflow-hidden">
+<span class="material-symbols-outlined text-on-surface-variant" data-icon="account_circle">account_circle</span>
+</div>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<main class="flex-1 pt-28 pb-20 px-6 md:px-margin-desktop w-full max-w-container-max mx-auto overflow-y-auto">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-2">Corporate Accounts</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-xl">Manage B2B partnerships, billing cycles, and organizational policies for enterprise clients.</p>
+</div>
+<button class="btn-gold font-label-md text-label-md px-6 py-3 rounded-lg flex items-center justify-center gap-2 whitespace-nowrap shadow-lg shadow-secondary/10">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                    Add Partner
+                </button>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left Column: Directory List (4 cols) -->
+<div class="lg:col-span-4 flex flex-col gap-4 h-[calc(100vh-240px)] overflow-y-auto pr-2">
+<!-- Search/Filter small bar -->
+<div class="flex justify-between items-center mb-2 px-1">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">4 Active Partners</span>
+<button class="text-on-surface-variant hover:text-secondary transition-colors">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+</button>
+</div>
+<!-- Account Card: Aura Tech (Active) -->
+<div class="glass-panel p-5 rounded-xl border border-secondary/30 bg-surface-container-high cursor-pointer relative overflow-hidden group">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-secondary"></div>
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline-sm text-[20px] text-on-surface mb-1">Aura Tech</h3>
+<div class="flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span>Monthly Billing</span>
+</div>
+</div>
+<div class="w-10 h-10 rounded bg-surface border border-outline-variant flex items-center justify-center">
+<span class="font-headline-sm text-sm text-secondary">AT</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-outline-variant/30">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1">Employees</p>
+<p class="font-body-md text-body-md text-on-surface">124</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1">Current Balance</p>
+<p class="font-body-md text-body-md text-on-surface">$14,250<span class="text-on-surface-variant text-sm">.00</span></p>
+</div>
+</div>
+</div>
+<!-- Account Card: Nexus Corp -->
+<div class="glass-panel p-5 rounded-xl border border-outline-variant/30 hover:border-secondary/30 cursor-pointer transition-all group">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline-sm text-[20px] text-on-surface-variant group-hover:text-on-surface transition-colors mb-1">Nexus Corp</h3>
+<div class="flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+<span>Weekly Billing</span>
+</div>
+</div>
+<div class="w-10 h-10 rounded bg-surface border border-outline-variant flex items-center justify-center opacity-70 group-hover:opacity-100 transition-opacity">
+<span class="font-headline-sm text-sm text-on-surface-variant">NC</span>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-4 pt-4 border-t border-outline-variant/30">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1">Employees</p>
+<p class="font-body-md text-body-md text-on-surface-variant group-hover:text-on-surface">86</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-1">Current Balance</p>
+<p class="font-body-md text-body-md text-on-surface-variant group-hover:text-on-surface">$3,100<span class="text-sm">.00</span></p>
+</div>
+</div>
+</div>
+<!-- Account Card: Horizon Ventures -->
+<div class="glass-panel p-5 rounded-xl border border-outline-variant/30 hover:border-secondary/30 cursor-pointer transition-all group">
+<div class="flex justify-between items-start mb-4">
+<div>
+<h3 class="font-headline-sm text-[20px] text-on-surface-variant group-hover:text-on-surface transition-colors mb-1">Horizon Ventures</h3>
+<div class="flex items-center gap-2 text-on-surface-variant font-label-sm text-label-sm">
+<span class="w-2 h-2 rounded-full bg-amber-500"></span>
+<span>Net 30</span>
+</div>
+</div>
+<div class="w-10 h-10 rounded bg-surface border border-outline-variant flex items-center justify-center opacity-70 group-hover:opacity-100 transition-opacity">
+<span class="font-headline-sm text-sm text-on-surface-variant">HV</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Detail View (8 cols) -->
+<div class="lg:col-span-8 flex flex-col gap-6">
+<!-- Detail Header -->
+<div class="glass-panel p-8 rounded-xl flex justify-between items-start">
+<div>
+<div class="flex items-center gap-4 mb-2">
+<h2 class="font-headline-md text-[36px] text-on-surface">Aura Tech</h2>
+<span class="px-3 py-1 rounded-full border border-secondary/50 text-secondary font-label-sm text-[10px] uppercase tracking-widest bg-secondary/10">Premium Tier</span>
+</div>
+<p class="font-body-md text-on-surface-variant">Enterprise account established March 2022. Primary contact: Sarah Jenkins.</p>
+</div>
+<button class="w-10 h-10 rounded-full border border-outline-variant flex items-center justify-center text-on-surface-variant hover:text-secondary hover:border-secondary transition-colors">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+</div>
+<!-- Tabs/Bento Grid Area -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Policy Bento Box -->
+<div class="glass-panel p-8 rounded-xl flex flex-col h-full">
+<div class="flex items-center gap-3 mb-6 pb-4 border-b border-outline-variant/30">
+<span class="material-symbols-outlined text-secondary">policy</span>
+<h3 class="font-headline-sm text-[20px] text-on-surface">Corporate Policy</h3>
+</div>
+<div class="flex-1 flex flex-col gap-6">
+<div>
+<div class="flex justify-between items-center mb-2">
+<p class="font-label-sm text-on-surface-variant uppercase tracking-wider">Monthly Spend Limit</p>
+<button class="text-secondary hover:underline font-label-sm">Edit</button>
+</div>
+<div class="flex items-end gap-2">
+<span class="font-headline-sm text-[28px] text-on-surface">$25,000</span>
+<span class="font-body-md text-on-surface-variant pb-1">/ mo</span>
+</div>
+<div class="w-full bg-surface h-2 rounded-full mt-3 overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 57%;"></div>
+</div>
+<p class="font-label-sm text-on-surface-variant mt-2 text-right">57% utilized</p>
+</div>
+<div>
+<p class="font-label-sm text-on-surface-variant uppercase tracking-wider mb-3">Approved Classes</p>
+<div class="flex flex-wrap gap-2">
+<span class="px-3 py-1.5 rounded-md border border-outline-variant text-on-surface font-label-sm text-xs">Business Class</span>
+<span class="px-3 py-1.5 rounded-md border border-secondary/50 text-secondary bg-secondary/5 font-label-sm text-xs">First Class</span>
+<span class="px-3 py-1.5 rounded-md border border-outline-variant text-on-surface font-label-sm text-xs">Executive SUV</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Billing Bento Box -->
+<div class="glass-panel p-8 rounded-xl flex flex-col h-full">
+<div class="flex items-center gap-3 mb-6 pb-4 border-b border-outline-variant/30">
+<span class="material-symbols-outlined text-secondary">receipt_long</span>
+<h3 class="font-headline-sm text-[20px] text-on-surface">Billing &amp; Invoices</h3>
+</div>
+<div class="flex-1 flex flex-col gap-6">
+<div class="p-4 rounded-lg bg-surface border border-outline-variant/50 flex justify-between items-center">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-indigo-500/10 flex items-center justify-center text-indigo-400">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+</div>
+<div>
+<p class="font-label-md text-on-surface">Stripe Connect</p>
+<p class="font-label-sm text-on-surface-variant">Active • Auto-charge</p>
+</div>
+</div>
+<span class="material-symbols-outlined text-on-surface-variant text-[18px]">open_in_new</span>
+</div>
+<div>
+<p class="font-label-sm text-on-surface-variant uppercase tracking-wider mb-3">Recent Invoices</p>
+<ul class="flex flex-col gap-3">
+<li class="flex justify-between items-center py-2 border-b border-outline-variant/20">
+<div>
+<p class="font-label-md text-on-surface">INV-2023-08</p>
+<p class="font-label-sm text-on-surface-variant">Aug 1, 2023</p>
+</div>
+<div class="text-right">
+<p class="font-body-md text-on-surface">$12,450.00</p>
+<span class="font-label-sm text-emerald-500">Paid</span>
+</div>
+</li>
+<li class="flex justify-between items-center py-2">
+<div>
+<p class="font-label-md text-on-surface">INV-2023-07</p>
+<p class="font-label-sm text-on-surface-variant">Jul 1, 2023</p>
+</div>
+<div class="text-right">
+<p class="font-body-md text-on-surface">$14,100.00</p>
+<span class="font-label-sm text-emerald-500">Paid</span>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

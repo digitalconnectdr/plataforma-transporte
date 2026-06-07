@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dynamic Booking Engine - Luxe Transport</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-container": "#7b7979",
+                        "inverse-on-surface": "#313030",
+                        "error-container": "#93000a",
+                        "primary-fixed": "#e5e2e1",
+                        "on-surface-variant": "#c4c7c7",
+                        "surface-container-low": "#1c1b1b",
+                        "on-secondary-container": "#dab36a",
+                        "primary-container": "#0a0a0a",
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-container-high": "#2b2a2a",
+                        "on-primary-fixed-variant": "#474646",
+                        "surface": "#141313",
+                        "tertiary-fixed": "#e4e2e1",
+                        "surface-variant": "#353434",
+                        "on-primary-fixed": "#1c1b1b",
+                        "inverse-primary": "#5f5e5e",
+                        "on-tertiary-container": "#7a7979",
+                        "outline-variant": "#444748",
+                        "on-secondary": "#412d00",
+                        "on-secondary-fixed": "#261900",
+                        "background": "#141313",
+                        "secondary-fixed": "#ffdea5",
+                        "surface-container": "#201f1f",
+                        "on-secondary-fixed-variant": "#5d4201",
+                        "on-tertiary-fixed": "#1b1c1c",
+                        "secondary-fixed-dim": "#e9c176",
+                        "inverse-surface": "#e5e2e1",
+                        "surface-dim": "#141313",
+                        "primary": "#c9c6c5",
+                        "on-error-container": "#ffdad6",
+                        "on-tertiary-fixed-variant": "#474747",
+                        "on-error": "#690005",
+                        "tertiary": "#c8c6c6",
+                        "tertiary-container": "#0a0a0a",
+                        "error": "#ffb4ab",
+                        "secondary": "#e9c176",
+                        "primary-fixed-dim": "#c9c6c5",
+                        "on-primary": "#313030",
+                        "tertiary-fixed-dim": "#c8c6c6",
+                        "secondary-container": "#604403",
+                        "surface-bright": "#3a3939",
+                        "on-surface": "#e5e2e1",
+                        "on-tertiary": "#303030",
+                        "surface-tint": "#c9c6c5",
+                        "on-background": "#e5e2e1",
+                        "outline": "#8e9192",
+                        "surface-container-highest": "#353434"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "section-gap": "120px",
+                        "margin-mobile": "20px",
+                        "container-max": "1280px",
+                        "margin-desktop": "64px",
+                        "unit": "8px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Playfair Display"],
+                        "display-lg": ["Playfair Display"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "headline-sm": ["Playfair Display"],
+                        "body-lg": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "label-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["32px", { "lineHeight": "1.2", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                        "headline-sm": ["24px", { "lineHeight": "1.3", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "1.4", "letterSpacing": "0.03em", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #0A0A0A; /* Deep Midnight Black */
+            color: #e5e2e1;
+        }
+        
+        /* Custom Input Styles */
+        input[type="text"], input[type="date"], input[type="time"], select {
+            background-color: #1A1A1A;
+            border: 1px solid #2D2D2D;
+            color: #e5e2e1;
+            font-family: "Playfair Display", serif;
+            transition: all 0.3s ease;
+        }
+        
+        input[type="text"]:focus, input[type="date"]:focus, input[type="time"]:focus, select:focus {
+            border-color: #e9c176; /* Champagne Gold */
+            box-shadow: 0 0 0 1px #e9c176;
+            outline: none;
+        }
+
+        /* Checkbox Styles */
+        input[type="checkbox"] {
+            appearance: none;
+            background-color: #1A1A1A;
+            border: 1px solid #2D2D2D;
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        input[type="checkbox"]:checked {
+            background-color: #e9c176;
+            border-color: #e9c176;
+        }
+        
+        input[type="checkbox"]:checked::after {
+            content: "✓";
+            color: #0A0A0A;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        /* Gold Gradient Text */
+        .text-gold-gradient {
+            background: linear-gradient(to bottom, #ffdea5, #e9c176);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Luxury Button */
+        .btn-luxury {
+            background: linear-gradient(to bottom, #ffdea5, #e9c176);
+            color: #0A0A0A;
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-luxury:hover {
+            box-shadow: 0 4px 15px rgba(233, 193, 118, 0.3);
+            transform: translateY(-1px);
+        }
+
+        /* Card Hover */
+        .luxury-card {
+            background-color: #1A1A1A;
+            border: 1px solid #2D2D2D;
+            transition: all 0.4s ease;
+        }
+        
+        .luxury-card:hover {
+            border-color: rgba(233, 193, 118, 0.5);
+            box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        .luxury-card.selected {
+            border-color: #e9c176;
+            box-shadow: 0 0 20px rgba(233, 193, 118, 0.1) inset, 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Stepper Styles */
+        .stepper-line {
+            height: 2px;
+            background-color: #2D2D2D;
+            flex-grow: 1;
+            margin: 0 16px;
+            position: relative;
+        }
+        
+        .stepper-line.active::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background-color: #e9c176;
+            animation: fillLine 0.5s ease forwards;
+        }
+
+        @keyframes fillLine {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        .step-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #2D2D2D;
+            background-color: #1A1A1A;
+            color: #7b7979;
+            font-family: "Inter", sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .step-circle.active {
+            border-color: #e9c176;
+            color: #e9c176;
+            box-shadow: 0 0 10px rgba(233, 193, 118, 0.2);
+        }
+
+        .step-circle.completed {
+            background-color: #e9c176;
+            border-color: #e9c176;
+            color: #0A0A0A;
+        }
+
+        /* Map styling simulation */
+        .dark-map-bg {
+            background-image: radial-gradient(circle at center, #1A1A1A 0%, #0A0A0A 100%);
+            border: 1px solid #2D2D2D;
+        }
+
+    </style>
+</head>
+<body class="antialiased min-h-screen flex flex-col relative bg-background text-on-background pt-24">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface/80 backdrop-blur-md shadow-sm border-b-0" id="main-nav">
+<div class="flex justify-between items-center px-margin-mobile md:px-margin-desktop py-4 w-full max-w-container-max mx-auto">
+<!-- Brand -->
+<a class="font-display-lg text-display-lg-mobile md:text-display-lg tracking-tighter text-on-surface dark:text-on-surface" href="#">
+                LUXE TRANSPORT
+            </a>
+<!-- Navigation Links (Desktop) -->
+<nav aria-label="Main Navigation" class="hidden md:flex gap-8 items-center">
+<a class="text-on-surface-variant dark:text-on-surface-variant font-headline-sm text-headline-sm font-medium hover:text-secondary transition-colors duration-300" href="#">Fleet</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-headline-sm text-headline-sm font-medium hover:text-secondary transition-colors duration-300" href="#">Corporate</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-headline-sm text-headline-sm font-medium hover:text-secondary transition-colors duration-300" href="#">Partners</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-headline-sm text-headline-sm font-medium hover:text-secondary transition-colors duration-300" href="#">Support</a>
+</nav>
+<!-- Actions -->
+<div class="flex items-center gap-4">
+<a class="hidden md:block text-on-surface-variant font-label-md text-label-md hover:text-secondary transition-colors duration-300 uppercase tracking-widest" href="#">Login</a>
+<!-- We suppress the FAB/Primary action on the booking flow itself as per intent logic, but keeping the button structure styled differently as an exit or help -->
+<button class="px-6 py-2 rounded-full border border-outline-variant text-on-surface font-label-md text-label-md uppercase tracking-widest hover:border-secondary hover:text-secondary transition-colors">
+<span class="material-symbols-outlined align-middle mr-2 text-[18px]">close</span>Cancel
+                </button>
+</div>
+</div>
+<div class="h-[1px] w-full bg-surface/10"></div>
+</header>
+<!-- Main Booking Canvas -->
+<main class="flex-grow flex flex-col items-center w-full px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto pb-section-gap">
+<!-- Progress Stepper -->
+<div class="w-full max-w-3xl mb-16 pt-8">
+<div class="flex items-center justify-between">
+<!-- Step 1 -->
+<div class="flex flex-col items-center gap-2 relative z-10 w-24">
+<div class="step-circle completed">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest text-center">Details</span>
+</div>
+<div class="stepper-line active"></div>
+<!-- Step 2 -->
+<div class="flex flex-col items-center gap-2 relative z-10 w-24">
+<div class="step-circle completed">
+<span class="material-symbols-outlined text-[18px]">check</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest text-center">Vehicle</span>
+</div>
+<div class="stepper-line active"></div>
+<!-- Step 3 -->
+<div class="flex flex-col items-center gap-2 relative z-10 w-24">
+<div class="step-circle active">
+                        3
+                    </div>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest text-center">Extras</span>
+</div>
+<div class="stepper-line"></div>
+<!-- Step 4 -->
+<div class="flex flex-col items-center gap-2 relative z-10 w-24">
+<div class="step-circle">
+                        4
+                    </div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest text-center">Payment</span>
+</div>
+</div>
+</div>
+<!-- Content Area: Step 3 (Extras & Passenger Info) -->
+<div class="w-full max-w-4xl grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Form -->
+<div class="lg:col-span-7 space-y-12">
+<div>
+<h1 class="font-headline-md text-headline-md mb-2">Passenger Details</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mb-8">Please provide information for the primary passenger.</p>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">First Name</label>
+<input class="px-4 py-3 rounded-md w-full" placeholder="John" type="text" value="Alexander"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Last Name</label>
+<input class="px-4 py-3 rounded-md w-full" placeholder="Doe" type="text" value="Sterling"/>
+</div>
+<div class="flex flex-col gap-2 md:col-span-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Phone Number</label>
+<div class="flex">
+<select class="px-4 py-3 rounded-l-md border-r-0 w-24 border-[#2D2D2D]">
+<option>+1</option>
+<option>+44</option>
+<option>+33</option>
+</select>
+<input class="px-4 py-3 rounded-r-md w-full" placeholder="(555) 000-0000" type="text" value="555-019-2834"/>
+</div>
+</div>
+<div class="flex flex-col gap-2 md:col-span-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Email Address</label>
+<input class="px-4 py-3 rounded-md w-full" placeholder="john@example.com" type="text" value="a.sterling@example.com"/>
+</div>
+</div>
+</div>
+<div class="h-px w-full bg-outline-variant/30"></div>
+<div>
+<h2 class="font-headline-sm text-headline-sm mb-6">Trip Requirements</h2>
+<div class="grid grid-cols-2 gap-6 mb-8">
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Passengers</label>
+<select class="px-4 py-3 rounded-md w-full">
+<option>1 Passenger</option>
+<option selected="">2 Passengers</option>
+<option>3 Passengers</option>
+<option>4 Passengers</option>
+</select>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Luggage</label>
+<select class="px-4 py-3 rounded-md w-full">
+<option>Carry-on Only</option>
+<option selected="">2 Standard Bags</option>
+<option>3+ Bags / Oversized</option>
+</select>
+</div>
+</div>
+<h3 class="font-label-md text-label-md text-on-surface mb-4">Complimentary Amenities</h3>
+<div class="space-y-4">
+<label class="flex items-center gap-4 cursor-pointer p-4 rounded-lg luxury-card">
+<input checked="" type="checkbox"/>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">water_bottle</span>
+<span class="font-body-md text-body-md">Sparkling Water (San Pellegrino)</span>
+</div>
+</label>
+<label class="flex items-center gap-4 cursor-pointer p-4 rounded-lg luxury-card">
+<input type="checkbox"/>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">newspaper</span>
+<span class="font-body-md text-body-md">Daily Newspaper (WSJ / FT)</span>
+</div>
+</label>
+<label class="flex items-center gap-4 cursor-pointer p-4 rounded-lg luxury-card">
+<input type="checkbox"/>
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">child_care</span>
+<span class="font-body-md text-body-md">Child Seat (Forward Facing)</span>
+</div>
+</label>
+</div>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm mb-4">Special Requests</h2>
+<textarea class="w-full h-32 px-4 py-3 bg-[#1A1A1A] border border-[#2D2D2D] rounded-md text-on-surface focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors font-body-md" placeholder="Flight number, preferred route, or specific instructions for the chauffeur..."></textarea>
+</div>
+<div class="flex justify-end gap-4 pt-8">
+<button class="px-8 py-3 rounded-md border border-outline-variant text-on-surface font-label-md text-label-md uppercase tracking-widest hover:border-secondary transition-colors">
+                        Back
+                    </button>
+<button class="px-8 py-3 rounded-md btn-luxury font-label-md text-label-md uppercase tracking-widest flex items-center gap-2">
+                        Continue to Payment
+                        <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Right Column: Summary Sticky Panel -->
+<div class="lg:col-span-5 relative">
+<div class="sticky top-32 luxury-card rounded-xl p-8 overflow-hidden">
+<!-- Decorative subtle glow -->
+<div class="absolute -top-24 -right-24 w-48 h-48 bg-secondary/10 rounded-full blur-3xl pointer-events-none"></div>
+<h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-6">Trip Summary</h3>
+<!-- Selected Vehicle Snippet -->
+<div class="flex items-center gap-4 mb-8 pb-8 border-b border-outline-variant/30">
+<div class="w-24 h-16 bg-[#0A0A0A] rounded flex items-center justify-center overflow-hidden border border-[#2D2D2D]">
+<img alt="Luxury Sedan" class="w-full h-full object-cover opacity-80" data-alt="A side-profile shot of a sleek, black luxury sedan parked in a dimly lit, high-end underground garage. The lighting highlights the metallic sheen of the car's paint and the elegant curves of its design. The aesthetic is dark, moody, and premium, utilizing deep midnight blacks and subtle champagne gold reflections to convey silent luxury and exclusivity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuANTTj11s1uaHYy7xzl7sGBS0rcYVrpNI5aAnvMTQGqY9UP2__OMiSsgNVXe8aR6et7lniu9Z6DRUrGboAYvD1uT8w-Dex0D5Sr4km5fbfHWQEW0IASCZG7xQh8F0USK5lRpEXPl6h4JPjZIIw4womjBQPCUqIqcs3YX0ZVh9hYjhHjniLTQahF4igvm9NbVX7sKBMd0P-4ZqB2_ntBBbVpDO9B4HAQ90DUFk4DOnmJrbFzHcvmNK50F0BqRpZxY4bVgPkipcEfx_M"/>
+</div>
+<div>
+<div class="font-label-sm text-label-sm text-secondary uppercase tracking-widest mb-1 border border-secondary/30 bg-secondary/5 px-2 py-0.5 rounded inline-block">FIRST CLASS</div>
+<div class="font-headline-sm text-headline-sm">S-Class Sedan</div>
+</div>
+</div>
+<!-- Route Details -->
+<div class="space-y-6 mb-8">
+<div class="flex gap-4">
+<div class="flex flex-col items-center mt-1">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<div class="w-0.5 h-12 bg-outline-variant/50 my-1"></div>
+<div class="w-2 h-2 rounded-sm bg-surface-variant border border-secondary"></div>
+</div>
+<div class="flex flex-col justify-between py-0.5">
+<div>
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Pickup • Oct 24, 08:30 AM</div>
+<div class="font-body-md text-body-md mt-1">The Ritz-Carlton, Central Park</div>
+</div>
+<div class="mt-4">
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Drop-off</div>
+<div class="font-body-md text-body-md mt-1">JFK International Airport (T4)</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Map Preview -->
+<div class="w-full h-32 rounded-lg dark-map-bg mb-8 flex items-center justify-center relative overflow-hidden" data-location="New York City" style="">
+<div class="absolute w-full h-full opacity-30 bg-[url('https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&amp;fit=crop&amp;q=80&amp;w=600')] bg-cover bg-center mix-blend-overlay" data-alt="A dark, monochrome styled map view of a metropolitan city grid. The map is primarily black and charcoal gray, with subtle, thin golden lines tracing the main arterial roads and a glowing champagne gold route line connecting two points. The style is abstract, high-tech, and luxurious, fitting a premium dark-mode interface."></div>
+<span class="material-symbols-outlined text-secondary z-10" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+<!-- Pricing -->
+<div class="space-y-3 mb-6 font-body-md text-body-md border-b border-outline-variant/30 pb-6">
+<div class="flex justify-between">
+<span class="text-on-surface-variant">Base Rate</span>
+<span>$185.00</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">Airport Fee</span>
+<span>$25.00</span>
+</div>
+<div class="flex justify-between">
+<span class="text-on-surface-variant">Taxes &amp; Surcharges</span>
+<span>$18.50</span>
+</div>
+</div>
+<div class="flex justify-between items-end">
+<span class="font-label-md text-label-md uppercase tracking-widest text-on-surface-variant">Total Estimated</span>
+<span class="font-display-lg-mobile text-display-lg-mobile text-gold-gradient">$228.50</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-primary-container dark:bg-surface-container-lowest border-t border-outline-variant py-section-gap w-full mt-auto">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<div class="col-span-1 md:col-span-4 flex justify-between items-center mb-8 border-b border-outline-variant/30 pb-8">
+<span class="font-headline-sm text-headline-sm text-secondary">LUXE TRANSPORT</span>
+</div>
+<!-- Links -->
+<div class="flex flex-col gap-4">
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary underline decoration-secondary/30 transition-all opacity-80 hover:opacity-100" href="#">Privacy Policy</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary underline decoration-secondary/30 transition-all opacity-80 hover:opacity-100" href="#">Terms of Service</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary underline decoration-secondary/30 transition-all opacity-80 hover:opacity-100" href="#">Sustainability</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary underline decoration-secondary/30 transition-all opacity-80 hover:opacity-100" href="#">Accessibility</a>
+<a class="font-body-md text-body-md text-on-surface-variant hover:text-secondary underline decoration-secondary/30 transition-all opacity-80 hover:opacity-100" href="#">Press Kit</a>
+</div>
+<div class="col-span-1 md:col-span-4 mt-8 pt-8 border-t border-outline-variant/30">
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest opacity-60">
+                    © 2024 LUXE TRANSPORT PLATFORM. ALL RIGHTS RESERVED.
+                </p>
+</div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Fleet Management - LuxeControl</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-on-surface": "#313030",
+                    "surface-container-lowest": "#0e0e0e",
+                    "surface-container-low": "#1c1b1b",
+                    "on-surface": "#e5e2e1",
+                    "error-container": "#93000a",
+                    "on-secondary-fixed": "#261900",
+                    "outline-variant": "#444748",
+                    "surface-tint": "#c9c6c5",
+                    "on-secondary": "#412d00",
+                    "background": "#141313",
+                    "surface-bright": "#3a3939",
+                    "on-tertiary": "#303030",
+                    "on-secondary-fixed-variant": "#5d4201",
+                    "outline": "#8e9192",
+                    "surface-container-highest": "#353434",
+                    "inverse-surface": "#e5e2e1",
+                    "surface-dim": "#141313",
+                    "tertiary-container": "#0a0a0a",
+                    "surface": "#141313",
+                    "primary-fixed-dim": "#c9c6c5",
+                    "on-primary-fixed": "#1c1b1b",
+                    "surface-container": "#201f1f",
+                    "primary-fixed": "#e5e2e1",
+                    "secondary-fixed-dim": "#e9c176",
+                    "on-secondary-container": "#dab36a",
+                    "secondary-container": "#604403",
+                    "primary-container": "#0a0a0a",
+                    "tertiary-fixed": "#e4e2e1",
+                    "on-error": "#690005",
+                    "on-tertiary-fixed": "#1b1c1c",
+                    "on-error-container": "#ffdad6",
+                    "on-primary": "#313030",
+                    "on-tertiary-fixed-variant": "#474747",
+                    "primary": "#c9c6c5",
+                    "on-tertiary-container": "#7a7979",
+                    "inverse-primary": "#5f5e5e",
+                    "secondary-fixed": "#ffdea5",
+                    "on-surface-variant": "#c4c7c7",
+                    "on-primary-fixed-variant": "#474646",
+                    "on-background": "#e5e2e1",
+                    "error": "#ffb4ab",
+                    "tertiary-fixed-dim": "#c8c6c6",
+                    "surface-variant": "#353434",
+                    "on-primary-container": "#7b7979",
+                    "surface-container-high": "#2b2a2a",
+                    "secondary": "#e9c176",
+                    "tertiary": "#c8c6c6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "section-gap": "120px",
+                    "margin-desktop": "64px",
+                    "unit": "8px",
+                    "container-max": "1280px",
+                    "margin-mobile": "20px"
+            },
+            "fontFamily": {
+                    "label-md": ["Inter"],
+                    "display-lg-mobile": ["Playfair Display"],
+                    "display-lg": ["Playfair Display"],
+                    "headline-sm": ["Playfair Display"],
+                    "body-lg": ["Inter"],
+                    "headline-md": ["Playfair Display"],
+                    "label-sm": ["Inter"],
+                    "body-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-md": ["14px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                    "display-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                    "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                    "headline-sm": ["24px", { "lineHeight": "1.3", "fontWeight": "500" }],
+                    "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                    "headline-md": ["32px", { "lineHeight": "1.2", "fontWeight": "500" }],
+                    "label-sm": ["12px", { "lineHeight": "1.4", "letterSpacing": "0.03em", "fontWeight": "500" }],
+                    "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        body { background-color: #141313; color: #e5e2e1; }
+        /* Custom scrollbar for sleek look */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #353434; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #444748; }
+    </style>
+</head>
+<body class="font-body-md text-body-md antialiased overflow-x-hidden">
+<!-- SideNavBar Component -->
+<nav class="hidden md:flex flex-col h-full py-gutter h-screen w-64 fixed left-0 top-0 border-r border-outline-variant bg-surface-container-lowest z-40">
+<!-- Header -->
+<div class="px-gutter mb-8">
+<h1 class="font-headline-sm text-headline-sm text-secondary tracking-widest uppercase mb-1">LuxeControl</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant flex items-center gap-2">
+<img alt="Admin profile photo" class="w-6 h-6 rounded-full object-cover border border-outline-variant" data-alt="A close-up, high-quality portrait of a professional in a dark tailored suit, conveying authority and trust. The lighting is soft and cinematic, highlighting crisp details against a deep charcoal background, perfectly matching a dark-mode luxury interface aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFGVuTGi4c6pHaC5oKORcaTmEmL8WEZy9VaeC_0v9G0Q6NJh3f5io_gBOprbpnWziz8EIm9DNfKwhHaKoQsDM0CKZxpgG5MC0sUGQ_swWFeov6DNA_L_a7g6yBX8wkHj54hPTgPYAIjw0Od8ve2MJWVSfReVA_PDDj2PpobsCtvz9FHuhYV7jmbW3UqTUWsLbhO_6u3Im7kE81s7ioNCeiAl_2a6R5jw879WmJHXCtAKccEN36mhhzx_4b44A35077WUdKgt-IPKk"/>
+                Global Admin
+            </p>
+</div>
+<!-- Main Navigation -->
+<div class="flex-1 flex flex-col gap-2 px-4">
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-secondary hover:bg-surface-container-low transition-colors duration-300 ease-in-out font-label-md text-label-md group" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-secondary font-bold border-r-2 border-secondary bg-secondary-container/10 hover:text-secondary hover:bg-surface-container-low transition-colors duration-300 ease-in-out font-label-md text-label-md group" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">directions_car</span>
+                Fleet
+            </a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-secondary hover:bg-surface-container-low transition-colors duration-300 ease-in-out font-label-md text-label-md group" href="#">
+<span class="material-symbols-outlined text-[20px]">route</span>
+                Trips
+            </a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-secondary hover:bg-surface-container-low transition-colors duration-300 ease-in-out font-label-md text-label-md group" href="#">
+<span class="material-symbols-outlined text-[20px]">corporate_fare</span>
+                Companies
+            </a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-secondary hover:bg-surface-container-low transition-colors duration-300 ease-in-out font-label-md text-label-md group" href="#">
+<span class="material-symbols-outlined text-[20px]">leaderboard</span>
+                Analytics
+            </a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-secondary hover:bg-surface-container-low transition-colors duration-300 ease-in-out font-label-md text-label-md group" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+                Settings
+            </a>
+</div>
+<!-- CTA -->
+<div class="px-gutter mb-6">
+<button class="w-full bg-secondary text-on-secondary font-label-md text-label-md py-3 rounded-lg flex justify-center items-center gap-2 hover:opacity-90 transition-opacity bg-gradient-to-b from-secondary to-[#d4a85a] shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] border border-[#f3ce8a]/30">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                New Fleet Entry
+            </button>
+</div>
+<!-- Footer Navigation -->
+<div class="px-4 flex flex-col gap-2 mt-auto border-t border-outline-variant/30 pt-4">
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-secondary hover:bg-surface-container-low transition-colors duration-300 ease-in-out font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-[20px]">help_outline</span>
+                Support
+            </a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-secondary hover:bg-surface-container-low transition-colors duration-300 ease-in-out font-label-md text-label-md" href="#">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+                Sign Out
+            </a>
+</div>
+</nav>
+<!-- TopNavBar Component -->
+<header class="hidden md:flex justify-between items-center h-16 px-margin-desktop fixed top-0 right-0 w-[calc(100%-16rem)] z-50 bg-surface/80 backdrop-blur-md border-b border-outline-variant shadow-sm transition-transform duration-300 ease-in-out">
+<!-- Left: Navigation Links -->
+<nav class="flex gap-8 items-center h-full">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-all flex items-center h-full" href="#">Network</a>
+<a class="font-label-md text-label-md text-secondary border-b-2 border-secondary pb-1 flex items-center h-full mt-1" href="#">Operations</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-all flex items-center h-full" href="#">Reports</a>
+</nav>
+<!-- Right: Actions & Profile -->
+<div class="flex items-center gap-6">
+<!-- Search Bar placeholder from JSON instructions -->
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-secondary transition-colors text-[18px]">search</span>
+<input class="bg-surface-container-low border border-outline-variant rounded-full py-2 pl-10 pr-4 text-body-md text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary transition-all w-64 placeholder-on-surface-variant/50 font-label-md" placeholder="Search vehicles..." type="text"/>
+</div>
+<button class="font-label-md text-label-md text-secondary border border-secondary rounded-full px-5 py-2 hover:bg-secondary/10 transition-colors scale-98 active:opacity-80">
+                Deploy Fleet
+            </button>
+<div class="flex items-center gap-4 border-l border-outline-variant pl-6">
+<button class="text-on-surface-variant hover:text-secondary transition-colors scale-98 active:opacity-80">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-secondary transition-colors scale-98 active:opacity-80">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+<img alt="User avatar" class="w-8 h-8 rounded-full border border-outline-variant cursor-pointer hover:border-secondary transition-colors" data-alt="A close-up, high-quality portrait of a professional in a dark tailored suit, conveying authority and trust. The lighting is soft and cinematic, highlighting crisp details against a deep charcoal background, perfectly matching a dark-mode luxury interface aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOJgkGnELqCmQHgYzea3AjigTfz1cJqXdW2PKL4LobyD0FaohEiVQXLkLWQtaTYJHiov_aw8TqYFRCNWfLo7IN4X1byBfBElnWKgJ6ySM-di5JLZQPLaxZzYtRw5Bt4FfeC4MURInz5saBieq65KTLg9U84RpMRVTQpEOMkuWHBkb8BeAk4zXOLBE22AtLwopn3cJDi05mYutADtVXNuOLzVORbuTf7QnniHizQAfPO9CJnNnmuurEfC561zv8vtkl-pYc79Xb-IA"/>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="md:ml-64 pt-16 min-h-screen bg-background">
+<div class="max-w-[1440px] mx-auto p-margin-mobile md:p-margin-desktop">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+<div>
+<h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-2">Fleet Roster</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Manage your global inventory of luxury vehicles, track real-time status, and oversee driver assignments.</p>
+</div>
+<!-- Quick Stats -->
+<div class="flex gap-8 bg-surface-container-low p-6 rounded-xl border border-outline-variant/50">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-1">Total Fleet</p>
+<p class="font-headline-md text-headline-md text-on-surface">142</p>
+</div>
+<div class="w-px bg-outline-variant/50"></div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-1">Active</p>
+<p class="font-headline-md text-headline-md text-secondary">98</p>
+</div>
+<div class="w-px bg-outline-variant/50"></div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-1">Maintenance</p>
+<p class="font-headline-md text-headline-md text-error">12</p>
+</div>
+</div>
+</div>
+<!-- Filters Toolbar -->
+<div class="flex flex-wrap items-center justify-between gap-4 mb-8 bg-surface-container p-4 rounded-lg border border-outline-variant/30">
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-2 font-label-md text-label-md text-on-surface bg-surface-container-high px-4 py-2 rounded-md hover:bg-surface-variant transition-colors border border-outline-variant/50">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+                        All Classes
+                    </button>
+<button class="flex items-center gap-2 font-label-md text-label-md text-on-surface bg-surface-container-high px-4 py-2 rounded-md hover:bg-surface-variant transition-colors border border-outline-variant/50">
+                        Status: Any
+                        <span class="material-symbols-outlined text-[18px]">expand_more</span>
+</button>
+<button class="flex items-center gap-2 font-label-md text-label-md text-on-surface bg-surface-container-high px-4 py-2 rounded-md hover:bg-surface-variant transition-colors border border-outline-variant/50">
+                        Location: Global
+                        <span class="material-symbols-outlined text-[18px]">expand_more</span>
+</button>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:text-secondary transition-colors" title="Grid View">
+<span class="material-symbols-outlined">grid_view</span>
+</button>
+<button class="p-2 text-secondary bg-secondary-container/10 rounded-md transition-colors" title="List View">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">view_list</span>
+</button>
+</div>
+</div>
+<!-- Elegant List View -->
+<div class="flex flex-col gap-4">
+<!-- List Header (Hidden on small screens) -->
+<div class="hidden lg:grid grid-cols-12 gap-6 px-6 py-3 border-b border-outline-variant/50 font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">
+<div class="col-span-4">Vehicle Model</div>
+<div class="col-span-2">License / ID</div>
+<div class="col-span-2">Status</div>
+<div class="col-span-2">Assigned Driver</div>
+<div class="col-span-2 text-right">Mileage</div>
+</div>
+<!-- Row 1 -->
+<div class="group grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-center p-4 lg:px-6 lg:py-5 bg-surface-container-low hover:bg-surface-variant/50 rounded-xl border border-transparent hover:border-outline-variant/50 transition-all duration-300">
+<div class="col-span-1 lg:col-span-4 flex items-center gap-6">
+<div class="w-32 h-20 bg-surface-container-highest rounded-lg overflow-hidden relative border border-outline-variant/30 flex-shrink-0">
+<img alt="Mercedes S-Class" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" data-alt="A sleek, black Mercedes S-Class luxury sedan shown in a dynamic side profile. It is parked in an elegant, modern underground garage with minimal concrete pillars and dramatic, high-contrast lighting that catches the curves of the metallic paint. The mood is sophisticated and exclusive, fitting a premium dark-mode interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhSzvvYY54LMmAvp4hYM7oPFqGIwrwe8tQjJ6qqOUDT4UOOr1aSqd48IEBHhreK_meVp4GYniLGt9iUsh1Tt7aSVLNDOUkTEeEpYswA19RHrgoaJuy-4F3XbYdH2BhAANpSwmSFvFOpnH_qCPTXBYzLp-WxxzFnrkkP7PVMbgyW89nxBz1aYPvgwukfeDtwwlnXwvI1bVrEiwqcuXrpUY0UUNTjcZA5WYDL-G0ppsKc-_SKOm7H8iuLSEZ8ZL4Er6k2fuLxVJYseY"/>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Mercedes-Benz S580</h3>
+<span class="inline-block px-2 py-0.5 rounded border border-outline text-label-sm font-label-sm text-on-surface-variant">FIRST CLASS</span>
+</div>
+</div>
+<div class="col-span-1 lg:col-span-2 flex lg:block items-center justify-between">
+<span class="lg:hidden font-label-sm text-on-surface-variant">ID:</span>
+<p class="font-body-md text-on-surface">NY-8824-LC</p>
+</div>
+<div class="col-span-1 lg:col-span-2 flex lg:block items-center justify-between">
+<span class="lg:hidden font-label-sm text-on-surface-variant">Status:</span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-secondary/30 bg-secondary-container/20 text-secondary font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> Active
+                        </span>
+</div>
+<div class="col-span-1 lg:col-span-2 flex lg:block items-center justify-between">
+<span class="lg:hidden font-label-sm text-on-surface-variant">Driver:</span>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center text-on-surface font-label-sm">JD</div>
+<p class="font-body-md text-on-surface">J. Doe</p>
+</div>
+</div>
+<div class="col-span-1 lg:col-span-2 flex items-center justify-between lg:justify-end gap-4">
+<span class="lg:hidden font-label-sm text-on-surface-variant">Mileage:</span>
+<p class="font-body-md text-on-surface">12,450 mi</p>
+<button class="text-on-surface-variant hover:text-secondary opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="group grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-center p-4 lg:px-6 lg:py-5 bg-surface-container-low hover:bg-surface-variant/50 rounded-xl border border-transparent hover:border-outline-variant/50 transition-all duration-300">
+<div class="col-span-1 lg:col-span-4 flex items-center gap-6">
+<div class="w-32 h-20 bg-surface-container-highest rounded-lg overflow-hidden relative border border-outline-variant/30 flex-shrink-0">
+<img alt="Cadillac Escalade" class="w-full h-full object-cover opacity-80 group-hover:opacity-100 transition-opacity" data-alt="A massive, imposing black Cadillac Escalade ESV SUV positioned confidently against a sleek, dark architectural background. The vehicle is lit with sophisticated studio lighting that highlights its strong, angular lines and chrome accents, creating a feeling of commanding luxury and security for a dark-mode layout." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOrqcdFJ49uhbptDnLi3RGBzqCjLvctqsaE0FU2J53tLOMXfKYUyQaA9xfrFKZvhiFXEJLFZ2P1tMGYLToa3nyRY9x9ZOF-fRlKvR0otBCKOduQbVdfGz0YCnYObMJPsIYSvCVC-DEBij1sZa8EpQroo4dSxQSzJ8cPxtFQLNd-zOENz6EsxdLpIPg97EgMuc4p2clnuBQxVQVjbWkjIjxhZU6dweSG14xgQNXYH7T9Rb5Y6G8zi5iMS44_8abYxZ2ce__i-59DGg"/>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Cadillac Escalade ESV</h3>
+<span class="inline-block px-2 py-0.5 rounded border border-outline text-label-sm font-label-sm text-on-surface-variant">EXECUTIVE SUV</span>
+</div>
+</div>
+<div class="col-span-1 lg:col-span-2 flex lg:block items-center justify-between">
+<span class="lg:hidden font-label-sm text-on-surface-variant">ID:</span>
+<p class="font-body-md text-on-surface">LA-9912-EX</p>
+</div>
+<div class="col-span-1 lg:col-span-2 flex lg:block items-center justify-between">
+<span class="lg:hidden font-label-sm text-on-surface-variant">Status:</span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-outline/30 bg-surface-container-highest text-on-surface-variant font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span> Reserved
+                        </span>
+</div>
+<div class="col-span-1 lg:col-span-2 flex lg:block items-center justify-between">
+<span class="lg:hidden font-label-sm text-on-surface-variant">Driver:</span>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center text-on-surface font-label-sm">MS</div>
+<p class="font-body-md text-on-surface">M. Smith</p>
+</div>
+</div>
+<div class="col-span-1 lg:col-span-2 flex items-center justify-between lg:justify-end gap-4">
+<span class="lg:hidden font-label-sm text-on-surface-variant">Mileage:</span>
+<p class="font-body-md text-on-surface">8,200 mi</p>
+<button class="text-on-surface-variant hover:text-secondary opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Row 3 -->
+<div class="group grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-center p-4 lg:px-6 lg:py-5 bg-surface-container-low hover:bg-surface-variant/50 rounded-xl border border-transparent hover:border-outline-variant/50 transition-all duration-300">
+<div class="col-span-1 lg:col-span-4 flex items-center gap-6">
+<div class="w-32 h-20 bg-surface-container-highest rounded-lg overflow-hidden relative border border-outline-variant/30 flex-shrink-0">
+<div class="absolute inset-0 bg-background/40 z-10 flex items-center justify-center backdrop-blur-[2px]">
+<span class="material-symbols-outlined text-error">build</span>
+</div>
+<img alt="Range Rover" class="w-full h-full object-cover opacity-50 grayscale transition-opacity" data-alt="A high-end Land Rover Range Rover SV parked in a pristine, minimalist service bay. The environment is dark with sharp, cool overhead lighting focusing on the vehicle's hood. The overall tone is clinical, luxurious, and precision-oriented, adhering to a sophisticated dark color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJA5sUHYs35rsgaPQE_J8OQuhLbL-cK9a7CkLtWhlKIf-SoQCVZzcSnYI7xZLih64XO7x8v7RXwYHzZnF1b5MKqM2IBmDwa0QU9murxn2EoZlTXHlJLUjsplOcLZPc14QRp_9HcxvX6_qc5zH3GGsXSWpcw3NzbOy2-p4nmVuvGo5qqKLo4HvshOe2YbGFIroShFQt7DPAWJfBBUZ4ooEBj2_kR5c_uSLNWqz43BIVd8CdtpwlZZAvHZiq7hQQDTRYpC09yKht3mM"/>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1 text-on-surface-variant">Range Rover SV</h3>
+<span class="inline-block px-2 py-0.5 rounded border border-outline/50 text-label-sm font-label-sm text-on-surface-variant/50">LUXURY SUV</span>
+</div>
+</div>
+<div class="col-span-1 lg:col-span-2 flex lg:block items-center justify-between">
+<span class="lg:hidden font-label-sm text-on-surface-variant">ID:</span>
+<p class="font-body-md text-on-surface-variant">LDN-004-RR</p>
+</div>
+<div class="col-span-1 lg:col-span-2 flex lg:block items-center justify-between">
+<span class="lg:hidden font-label-sm text-on-surface-variant">Status:</span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-error/30 bg-error-container/20 text-error font-label-sm text-label-sm">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span> Maintenance
+                        </span>
+</div>
+<div class="col-span-1 lg:col-span-2 flex lg:block items-center justify-between">
+<span class="lg:hidden font-label-sm text-on-surface-variant">Driver:</span>
+<div class="flex items-center gap-3">
+<p class="font-body-md text-on-surface-variant italic">Unassigned</p>
+</div>
+</div>
+<div class="col-span-1 lg:col-span-2 flex items-center justify-between lg:justify-end gap-4">
+<span class="lg:hidden font-label-sm text-on-surface-variant">Mileage:</span>
+<p class="font-body-md text-on-surface-variant">24,100 mi</p>
+<button class="text-on-surface-variant hover:text-secondary opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Pagination / Load More -->
+<div class="mt-8 flex justify-center">
+<button class="font-label-md text-label-md text-on-surface border border-outline-variant px-6 py-3 rounded-full hover:bg-surface-variant transition-colors">
+                    Load More Vehicles
+                </button>
+</div>
+</div>
+</main>
+</body></html>

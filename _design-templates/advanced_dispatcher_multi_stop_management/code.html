@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Dispatcher Interface - LuxeControl</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed-dim": "#e9c176",
+                        "on-secondary-fixed": "#261900",
+                        "surface-variant": "#353434",
+                        "on-error": "#690005",
+                        "surface-container": "#201f1f",
+                        "surface-container-highest": "#353434",
+                        "primary-container": "#0a0a0a",
+                        "on-tertiary-container": "#7a7979",
+                        "inverse-primary": "#5f5e5e",
+                        "primary": "#c9c6c5",
+                        "secondary-fixed": "#ffdea5",
+                        "on-surface": "#e5e2e1",
+                        "on-secondary-container": "#dab36a",
+                        "on-primary-fixed": "#1c1b1b",
+                        "surface-container-low": "#1c1b1b",
+                        "on-secondary-fixed-variant": "#5d4201",
+                        "surface-container-high": "#2b2a2a",
+                        "tertiary-container": "#0a0a0a",
+                        "on-error-container": "#ffdad6",
+                        "on-background": "#e5e2e1",
+                        "surface-dim": "#141313",
+                        "error-container": "#93000a",
+                        "error": "#ffb4ab",
+                        "surface-bright": "#3a3939",
+                        "surface-container-lowest": "#0e0e0e",
+                        "tertiary": "#c8c6c6",
+                        "tertiary-fixed": "#e4e2e1",
+                        "secondary-container": "#604403",
+                        "on-tertiary-fixed-variant": "#474747",
+                        "on-tertiary-fixed": "#1b1c1c",
+                        "on-primary": "#313030",
+                        "tertiary-fixed-dim": "#c8c6c6",
+                        "surface": "#141313",
+                        "secondary": "#e9c176",
+                        "on-secondary": "#412d00",
+                        "primary-fixed-dim": "#c9c6c5",
+                        "surface-tint": "#c9c6c5",
+                        "on-surface-variant": "#c4c7c7",
+                        "inverse-on-surface": "#313030",
+                        "on-primary-fixed-variant": "#474646",
+                        "inverse-surface": "#e5e2e1",
+                        "on-primary-container": "#7b7979",
+                        "primary-fixed": "#e5e2e1",
+                        "outline": "#8e9192",
+                        "on-tertiary": "#303030",
+                        "outline-variant": "#444748",
+                        "background": "#141313"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "unit": "8px",
+                        "container-max": "1280px",
+                        "margin-mobile": "20px",
+                        "section-gap": "120px",
+                        "margin-desktop": "64px",
+                        "gutter": "24px"
+                    },
+                    "fontFamily": {
+                        "label-sm": ["Inter"],
+                        "body-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-md": ["Playfair Display"],
+                        "display-lg": ["Playfair Display"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "body-md": ["Inter"],
+                        "headline-sm": ["Playfair Display"]
+                    },
+                    "fontSize": {
+                        "label-sm": ["12px", { "lineHeight": "1.4", "letterSpacing": "0.03em", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-md": ["14px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-md": ["32px", { "lineHeight": "1.2", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-sm": ["24px", { "lineHeight": "1.3", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Custom scrollbar for silent luxury feel */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #353434; border-radius: 9999px; }
+        ::-webkit-scrollbar-thumb:hover { background: #5f5e5e; }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md antialiased selection:bg-secondary/30 selection:text-secondary">
+<!-- SideNavBar Component -->
+<nav class="h-screen w-64 fixed left-0 top-0 bg-surface-container-lowest dark:bg-surface-container-lowest border-r border-outline-variant flex flex-col h-full py-gutter z-40">
+<div class="px-6 mb-8">
+<h1 class="font-headline-sm text-headline-sm text-secondary tracking-widest uppercase">LuxeControl</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Global Admin</p>
+</div>
+<div class="px-6 mb-8">
+<button class="w-full bg-surface-container text-on-surface font-label-md text-label-md py-3 px-4 rounded border border-outline-variant hover:border-secondary transition-colors duration-300 ease-in-out flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                New Fleet Entry
+            </button>
+</div>
+<ul class="flex-1 flex flex-col space-y-1">
+<li><a class="flex items-center gap-4 px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-secondary hover:bg-surface-container-low transition-colors duration-300 ease-in-out" href="#"><span class="material-symbols-outlined">dashboard</span>Dashboard</a></li>
+<li><a class="flex items-center gap-4 px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-secondary hover:bg-surface-container-low transition-colors duration-300 ease-in-out" href="#"><span class="material-symbols-outlined">directions_car</span>Fleet</a></li>
+<li><a class="flex items-center gap-4 px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-secondary hover:bg-surface-container-low transition-colors duration-300 ease-in-out" href="#"><span class="material-symbols-outlined">person</span>Drivers</a></li>
+<li><a class="flex items-center gap-4 px-6 py-3 font-label-md text-label-md text-secondary font-bold border-r-2 border-secondary bg-secondary-container/10 duration-300 ease-in-out" href="#"><span class="material-symbols-outlined">route</span>Trips</a></li>
+<li><a class="flex items-center gap-4 px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-secondary hover:bg-surface-container-low transition-colors duration-300 ease-in-out" href="#"><span class="material-symbols-outlined">corporate_fare</span>Companies</a></li>
+<li><a class="flex items-center gap-4 px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-secondary hover:bg-surface-container-low transition-colors duration-300 ease-in-out" href="#"><span class="material-symbols-outlined">leaderboard</span>Analytics</a></li>
+<li><a class="flex items-center gap-4 px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-secondary hover:bg-surface-container-low transition-colors duration-300 ease-in-out" href="#"><span class="material-symbols-outlined">settings</span>Settings</a></li>
+</ul>
+<div class="mt-auto pt-4 border-t border-outline-variant/50">
+<ul class="flex flex-col space-y-1">
+<li><a class="flex items-center gap-4 px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-secondary hover:bg-surface-container-low transition-colors duration-300 ease-in-out" href="#"><span class="material-symbols-outlined">help_outline</span>Support</a></li>
+<li><a class="flex items-center gap-4 px-6 py-3 font-label-md text-label-md text-on-surface-variant hover:text-secondary hover:bg-surface-container-low transition-colors duration-300 ease-in-out" href="#"><span class="material-symbols-outlined">logout</span>Sign Out</a></li>
+</ul>
+</div>
+</nav>
+<!-- TopNavBar Component -->
+<header class="fixed top-0 right-0 w-[calc(100%-16rem)] z-50 bg-surface/80 backdrop-blur-md border-b border-outline-variant shadow-sm flex justify-between items-center h-16 px-margin-desktop">
+<div class="flex items-center gap-8">
+<h2 class="font-headline-sm text-headline-sm text-secondary uppercase tracking-tighter hidden">LuxeControl</h2>
+<nav class="hidden md:flex gap-6">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-all scale-98 active:opacity-80" href="#">Network</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-all scale-98 active:opacity-80" href="#">Operations</a>
+<a class="font-label-md text-label-md text-secondary border-b-2 border-secondary pb-1 scale-98 active:opacity-80" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<button class="bg-gradient-to-b from-secondary to-secondary-fixed-dim text-on-secondary font-label-md text-label-md px-4 py-2 rounded shadow-[0_4px_14px_0_rgba(0,0,0,0.39)] hover:brightness-110 transition-all">Deploy Fleet</button>
+<div class="flex items-center gap-4 text-on-surface-variant">
+<button class="hover:text-secondary transition-colors"><span class="material-symbols-outlined">notifications</span></button>
+<button class="hover:text-secondary transition-colors"><span class="material-symbols-outlined">dark_mode</span></button>
+<div class="h-8 w-8 rounded-full bg-surface-container-high border border-outline-variant overflow-hidden ml-2">
+<img alt="Admin profile photo" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaw_55N-Rbnt_7kdci6dhXbkR_TxZFsPNxPCBUpkk75IttMKOAEAochxdEqlelSKI10KIrhYl3_MQItfN5eTQ-70znfQaSeqE_3U-bu_g-hQN2DTAL3FfQFru2B0Rc0cv2t_q30ymKzoeDBeVu_zIRt7gRlfybOlB4zBp1fGimJcNsF9H9L9x7TA5jzAlAF2VKJ5YM8haShp6jBSF-0AaHlkzBbap0cJYmbVzzAOtujU7KY8zoaR2LLdAS44hHVnM2z8hLAwruLQY"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="ml-64 pt-16 min-h-screen">
+<div class="px-margin-desktop py-12 max-w-[1600px] mx-auto">
+<!-- Page Header -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<div class="flex items-center gap-3 mb-2">
+<span class="px-2 py-1 rounded border border-secondary/30 bg-secondary/10 text-secondary font-label-sm text-label-sm uppercase tracking-widest">First Class</span>
+<span class="px-2 py-1 rounded border border-surface-variant bg-surface-container text-on-surface-variant font-label-sm text-label-sm flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">schedule</span> Multi-stop</span>
+</div>
+<h1 class="font-display-lg text-display-lg text-on-surface">Trip #TRP-892A</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mt-2">VIP Client • Alexander Sterling</p>
+</div>
+<div class="text-right">
+<p class="font-label-md text-label-md text-secondary animate-pulse mb-1">● En Route to Stop 2</p>
+<p class="font-body-md text-body-md text-on-surface-variant">Driver: Marcus V.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Left Column: Map & Timeline -->
+<div class="lg:col-span-8 flex flex-col gap-gutter">
+<!-- Map Visualization -->
+<div class="h-80 w-full rounded-xl border border-outline-variant bg-surface-container-lowest overflow-hidden relative shadow-[0_8px_30px_rgb(0,0,0,0.4)]">
+<div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1524661135-423995f22d0b?q=80&amp;w=1200&amp;auto=format&amp;fit=crop')] bg-cover bg-center opacity-40 grayscale contrast-125" data-alt="A highly detailed, desaturated satellite map of a major metropolitan city at night. The map has a dark, minimalist aesthetic with subtle, glowing golden lines indicating major arterial roads and a specific, complex route winding through the urban center. The lighting is moody and cinematic, emphasizing the sophisticated, high-end 'Silent Luxury' design language with deep blacks and champagne gold accents." data-location="London" style=""></div>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent"></div>
+<!-- Map Markers Overlay -->
+<div class="absolute top-[30%] left-[20%] flex flex-col items-center">
+<span class="material-symbols-outlined text-secondary text-3xl drop-shadow-[0_0_8px_rgba(233,193,118,0.8)]" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</div>
+<div class="absolute top-[45%] left-[50%] flex flex-col items-center">
+<span class="material-symbols-outlined text-on-surface text-2xl drop-shadow-md">trip_origin</span>
+</div>
+<svg class="absolute inset-0 w-full h-full pointer-events-none" xmlns="http://www.w3.org/2000/svg">
+<path class="opacity-70" d="M 240 100 Q 400 150 600 144" fill="transparent" stroke="#e9c176" stroke-dasharray="6 4" stroke-width="3"></path>
+</svg>
+<div class="absolute bottom-4 right-4 bg-surface-container/90 backdrop-blur border border-outline-variant rounded p-3 flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">traffic</span>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface">Traffic Update</p>
+<p class="text-[11px] text-on-surface-variant">+4 mins on M4 corridor</p>
+</div>
+</div>
+</div>
+<!-- Timeline Detail -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-8 shadow-sm">
+<h3 class="font-headline-sm text-headline-sm text-on-surface border-b border-outline-variant/50 pb-4 mb-6">Itinerary &amp; Execution</h3>
+<div class="relative pl-6 space-y-10 before:absolute before:inset-0 before:ml-8 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-secondary before:via-outline-variant before:to-outline-variant/30">
+<!-- Node 1: Completed -->
+<div class="relative flex items-start gap-6 group">
+<div class="absolute left-[-24px] top-1 h-3 w-3 rounded-full bg-secondary shadow-[0_0_10px_rgba(233,193,118,0.5)] z-10"></div>
+<div class="flex-1">
+<div class="flex justify-between items-baseline mb-1">
+<h4 class="font-label-md text-label-md text-on-surface">Origin: Claridge's Hotel</h4>
+<span class="font-label-sm text-label-sm text-secondary">18:00 (Completed)</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Passenger boarded. Luggage loaded.</p>
+</div>
+</div>
+<!-- Node 2: Active/En Route -->
+<div class="relative flex items-start gap-6 group">
+<div class="absolute left-[-24px] top-1 h-3 w-3 rounded-full bg-secondary animate-ping opacity-75 z-10"></div>
+<div class="absolute left-[-24px] top-1 h-3 w-3 rounded-full bg-secondary z-10"></div>
+<div class="flex-1 bg-surface-container-high border border-secondary/20 rounded-lg p-5 -mt-4 shadow-[0_4px_20px_-4px_rgba(0,0,0,0.5)]">
+<div class="flex justify-between items-start mb-3">
+<div>
+<h4 class="font-headline-sm text-headline-sm text-secondary">Stop 1: Royal Opera House</h4>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm mt-1">Covent Garden, London WC2E 9DD</p>
+</div>
+<div class="text-right">
+<span class="font-label-md text-label-md text-on-surface block">ETA 18:24</span>
+<span class="font-label-sm text-label-sm text-error flex items-center justify-end gap-1"><span class="material-symbols-outlined text-[14px]">warning</span> +4m Traffic</span>
+</div>
+</div>
+<div class="mt-4 pt-4 border-t border-outline-variant flex items-start gap-3">
+<span class="material-symbols-outlined text-secondary mt-0.5" style="font-variation-settings: 'FILL' 1;">assignment</span>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider mb-1">Passenger Note</p>
+<p class="font-body-md text-body-md text-on-surface-variant italic">"Please have chilled Laurent-Perrier ready upon re-boarding after the performance."</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Node 3: Pending -->
+<div class="relative flex items-start gap-6 group opacity-60 hover:opacity-100 transition-opacity">
+<div class="absolute left-[-24px] top-1 h-3 w-3 rounded-full bg-surface-variant border border-outline z-10"></div>
+<div class="flex-1">
+<div class="flex justify-between items-baseline mb-1">
+<h4 class="font-label-md text-label-md text-on-surface">Stop 2: The Connaught Bar</h4>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Est. 21:45</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Standby duration: Flexible (~2 hrs).</p>
+</div>
+</div>
+<!-- Node 4: Destination -->
+<div class="relative flex items-start gap-6 group opacity-60">
+<div class="absolute left-[-24px] top-1 h-3 w-3 rounded-full bg-surface-variant border border-outline z-10"></div>
+<div class="flex-1">
+<div class="flex justify-between items-baseline mb-1">
+<h4 class="font-label-md text-label-md text-on-surface">Destination: Private Residence</h4>
+<span class="font-label-sm text-label-sm text-on-surface-variant">Est. 23:30</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Context & Actions -->
+<div class="lg:col-span-4 flex flex-col gap-gutter">
+<!-- Quick Actions -->
+<div class="bg-surface-container border border-outline-variant rounded-xl p-6">
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest mb-4">Dispatcher Actions</h3>
+<div class="flex flex-col gap-3">
+<button class="w-full flex items-center justify-between px-4 py-3 bg-surface-container-high hover:bg-surface-bright border border-outline-variant rounded transition-colors group">
+<span class="font-label-md text-label-md text-on-surface group-hover:text-secondary transition-colors">Re-route Leg</span>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors">alt_route</span>
+</button>
+<button class="w-full flex items-center justify-between px-4 py-3 bg-surface-container-high hover:bg-surface-bright border border-outline-variant rounded transition-colors group">
+<span class="font-label-md text-label-md text-on-surface group-hover:text-secondary transition-colors">Add Mid-Trip Stop</span>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors">add_location_alt</span>
+</button>
+<button class="w-full flex items-center justify-between px-4 py-3 bg-surface-container-high hover:bg-surface-bright border border-outline-variant rounded transition-colors group">
+<span class="font-label-md text-label-md text-on-surface group-hover:text-secondary transition-colors">Direct Message Driver</span>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors">chat</span>
+</button>
+</div>
+</div>
+<!-- Vehicle Context -->
+<div class="bg-surface-container border border-outline-variant rounded-xl overflow-hidden relative">
+<div class="h-32 w-full bg-surface-variant relative">
+<div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1563720223185-11003d516935?q=80&amp;w=800&amp;auto=format&amp;fit=crop')] bg-cover bg-center opacity-60" data-alt="The luxurious interior of a premium black car, focusing on the plush leather back seats and subtle ambient lighting. The aesthetic is dark, quiet, and exclusive, fitting a 'Silent Luxury' theme. The lighting is soft and moody, highlighting the high-quality textures of the leather and metallic accents within the cabin."></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container to-transparent"></div>
+</div>
+<div class="p-6 -mt-8 relative z-10">
+<div class="flex items-center gap-4 mb-4">
+<div class="h-12 w-12 rounded bg-surface-container-highest border border-outline-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary text-2xl">directions_car</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface">Mercedes-Benz S-Class</h4>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Plate: LX 8829</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-4 border-t border-outline-variant/50 pt-4">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Temperature</p>
+<p class="font-body-md text-body-md text-on-surface">21°C (Requested)</p>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase">Music</p>
+<p class="font-body-md text-body-md text-on-surface">Classical / Low</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</body></html>

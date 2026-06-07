@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Luxe Transport - London Edition</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "secondary-fixed-dim": "#e9c176",
+                    "on-secondary-fixed": "#261900",
+                    "surface-variant": "#353434",
+                    "on-error": "#690005",
+                    "surface-container": "#201f1f",
+                    "surface-container-highest": "#353434",
+                    "primary-container": "#0a0a0a",
+                    "on-tertiary-container": "#7a7979",
+                    "inverse-primary": "#5f5e5e",
+                    "primary": "#c9c6c5",
+                    "secondary-fixed": "#ffdea5",
+                    "on-surface": "#e5e2e1",
+                    "on-secondary-container": "#dab36a",
+                    "on-primary-fixed": "#1c1b1b",
+                    "surface-container-low": "#1c1b1b",
+                    "on-secondary-fixed-variant": "#5d4201",
+                    "surface-container-high": "#2b2a2a",
+                    "tertiary-container": "#0a0a0a",
+                    "on-error-container": "#ffdad6",
+                    "on-background": "#e5e2e1",
+                    "surface-dim": "#141313",
+                    "error-container": "#93000a",
+                    "error": "#ffb4ab",
+                    "surface-bright": "#3a3939",
+                    "surface-container-lowest": "#0e0e0e",
+                    "tertiary": "#c8c6c6",
+                    "tertiary-fixed": "#e4e2e1",
+                    "secondary-container": "#604403",
+                    "on-tertiary-fixed-variant": "#474747",
+                    "on-tertiary-fixed": "#1b1c1c",
+                    "on-primary": "#313030",
+                    "tertiary-fixed-dim": "#c8c6c6",
+                    "surface": "#141313",
+                    "secondary": "#e9c176",
+                    "on-secondary": "#412d00",
+                    "primary-fixed-dim": "#c9c6c5",
+                    "surface-tint": "#c9c6c5",
+                    "on-surface-variant": "#c4c7c7",
+                    "inverse-on-surface": "#313030",
+                    "on-primary-fixed-variant": "#474646",
+                    "inverse-surface": "#e5e2e1",
+                    "on-primary-container": "#7b7979",
+                    "primary-fixed": "#e5e2e1",
+                    "outline": "#8e9192",
+                    "on-tertiary": "#303030",
+                    "outline-variant": "#444748",
+                    "background": "#141313"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "unit": "8px",
+                    "container-max": "1280px",
+                    "margin-mobile": "20px",
+                    "section-gap": "120px",
+                    "margin-desktop": "64px",
+                    "gutter": "24px"
+            },
+            "fontFamily": {
+                    "label-sm": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-md": ["Playfair Display"],
+                    "display-lg": ["Playfair Display"],
+                    "display-lg-mobile": ["Playfair Display"],
+                    "body-md": ["Inter"],
+                    "headline-sm": ["Playfair Display"]
+            },
+            "fontSize": {
+                    "label-sm": ["12px", {"lineHeight": "1.4", "letterSpacing": "0.03em", "fontWeight": "500"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-md": ["32px", {"lineHeight": "1.2", "fontWeight": "500"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                    "display-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "headline-sm": ["24px", {"lineHeight": "1.3", "fontWeight": "500"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        /* Custom minimal scrollbar to match luxury aesthetic */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #353434; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #5f5e5e; }
+        
+        .gold-gradient-text {
+            background: linear-gradient(to bottom, #ffdea5, #e9c176);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .gold-button-gradient {
+            background: linear-gradient(to bottom, #e9c176, #c5a059);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md antialiased overflow-x-hidden selection:bg-secondary selection:text-on-secondary">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 dark:bg-surface/80 backdrop-blur-md shadow-sm transition-all duration-500 ease-in-out">
+<div class="bg-surface/10">
+<div class="flex justify-between items-center px-margin-mobile md:px-margin-desktop py-4 w-full max-w-container-max mx-auto">
+<!-- Brand -->
+<div class="flex items-center">
+<a class="font-display-lg text-display-lg-mobile md:font-display-lg md:text-display-lg tracking-tighter text-on-surface dark:text-on-surface" href="#">
+                        LUXE TRANSPORT
+                    </a>
+</div>
+<!-- Navigation Links (Desktop) -->
+<div class="hidden md:flex items-center gap-8">
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-secondary transition-colors duration-300 font-label-md text-label-md uppercase" href="#">Fleet</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-secondary transition-colors duration-300 font-label-md text-label-md uppercase" href="#">Corporate</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-secondary transition-colors duration-300 font-label-md text-label-md uppercase" href="#">Partners</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant hover:text-secondary transition-colors duration-300 font-label-md text-label-md uppercase" href="#">Support</a>
+</div>
+<!-- Actions -->
+<div class="flex items-center gap-4 md:gap-6">
+<a class="hidden md:block font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-colors duration-300" href="#">Login</a>
+<button class="gold-button-gradient text-on-secondary px-6 py-2.5 rounded-DEFAULT font-label-md text-label-md shadow-[0_4px_14px_0_rgba(233,193,118,0.15)] hover:shadow-[0_6px_20px_rgba(233,193,118,0.23)] transition-all duration-300 scale-98 active:scale-95">
+                        Book Now
+                    </button>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="pt-[88px]"> <!-- Offset for fixed nav -->
+<!-- Hero Section -->
+<section class="relative w-full min-h-[870px] flex items-center justify-center px-margin-mobile md:px-margin-desktop">
+<!-- Background Image with Overlay -->
+<div class="absolute inset-0 z-0">
+<img alt="London Night Hero" class="w-full h-full object-cover object-center opacity-60" data-alt="A cinematic, high-quality photograph of a sleek, black luxury sedan driving smoothly across a wet bridge in London at night. The iconic London skyline, including a subtly blurred Big Ben, forms the backdrop. The scene is illuminated by the soft, golden glow of streetlights reflecting off the polished Midnight Black paintwork of the vehicle and the damp asphalt. The overall aesthetic embodies 'Silent Luxury' with a rich, dark tonal palette accented by warm champagne gold lighting, conveying a mood of exclusive, quiet sophistication." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOrfDEseilX2WlR0Zq6Tw6IELFvdOSlhvh1l1NvJSZEwYuvRcROdnEt1Rl_pCIyhdCWjqZYHLqFRNNNhSyF1LCYbRMFEEXFAGT7nOB8vkePTUh0rwlRM5rqBEXEq5XdOJWElYUAfnQgUiOQf09zCm6Yk9lONYJBAvhFirk31LTdE9vFM0Kg3dcMGqKPTqIdaMOdlExSbhCf5zeBSxH2z4tYTXfJep2F2BAagA1RkYXcavfTHKEUd35GQ_lLfF3coBxbAxwSQPorCQ"/>
+<div class="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-transparent"></div>
+<div class="absolute inset-0 bg-gradient-to-r from-background via-background/50 to-transparent"></div>
+</div>
+<div class="relative z-10 w-full max-w-container-max mx-auto flex flex-col md:flex-row items-center justify-between gap-12">
+<div class="max-w-2xl">
+<div class="inline-flex items-center gap-2 px-3 py-1 mb-6 border border-secondary/30 rounded-full bg-secondary/5 backdrop-blur-sm">
+<span class="material-symbols-outlined text-secondary text-sm" style="font-variation-settings: 'FILL' 1;">location_on</span>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">London Edition</span>
+</div>
+<h1 class="font-display-lg text-display-lg-mobile md:font-display-lg md:text-display-lg text-on-surface mb-6">
+                        Uncompromising <br/> Elegance in the Capital.
+                    </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-10 max-w-xl">
+                        Discreet, punctual, and flawlessly executed chauffeur services across London. From Mayfair meetings to Heathrow departures, experience the standard of Silent Luxury.
+                    </p>
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="gold-button-gradient text-on-secondary px-8 py-4 rounded-DEFAULT font-label-md text-label-md flex items-center justify-center gap-2 shadow-[0_4px_20px_rgba(233,193,118,0.2)] hover:shadow-[0_4px_25px_rgba(233,193,118,0.3)] transition-all">
+                            Reserve your Chauffeur
+                            <span class="material-symbols-outlined text-lg">arrow_right_alt</span>
+</button>
+<button class="px-8 py-4 rounded-DEFAULT font-label-md text-label-md border border-outline-variant text-on-surface hover:bg-surface-container transition-colors flex items-center justify-center gap-2">
+                            View London Fleet
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Trust Signals & Services Bento Grid -->
+<section class="py-section-gap px-margin-mobile md:px-margin-desktop w-full max-w-container-max mx-auto">
+<div class="mb-16">
+<h2 class="font-headline-md text-headline-md text-on-surface mb-4">Tailored for London</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+                    Operating at the highest echelon of executive transport within the M25 and beyond. Fully licensed, rigorously vetted, and exceptionally appointed.
+                </p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[300px]">
+<!-- Bento Item 1: Large Asymmetric Image -->
+<div class="md:col-span-2 relative rounded-xl overflow-hidden group border border-outline-variant/30">
+<img alt="Heathrow Transfer" class="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A meticulously composed, high-resolution interior shot of a luxury vehicle cabin, looking out towards the terminal building at London Heathrow Airport. The focus is on the plush, tactile Slate Gray leather seating and Champagne Gold metallic accents on the door panel. Outside the window, a subtle blur of the airport drop-off zone conveys motion and efficiency. The lighting is soft and ambient, adhering to the 'Silent Luxury' aesthetic with deep shadows and refined highlights, evoking a sense of calm before a flight." src="https://lh3.googleusercontent.com/aida-public/AB6AXuChBs3Y6g55Z_buIYpemT3BFeRtfXHlcMxkWMAeriZXiqOWYnS4dcm4wWfWrPw4XfKc_gnkIC3xsdFi9BuNW32fJ2Dm3pV3PSeGFMCsZ63JFV-B95BqMIwJAIwOV23546puR7SeTL7dRBw1D_35t61P9IMihZPcMpS-LMazB_LyUW0qoSqiCnUOBK5cjbc6dMaRIGV0kTiiG26p0sp4Jn7HjkuVVlz2vj3vguhphb_dQv6N1sprlvOOMZB6cJSX7BUSFUFUyZz4YlU"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container via-surface-container/40 to-transparent"></div>
+<div class="absolute bottom-0 left-0 p-8">
+<span class="material-symbols-outlined text-secondary mb-3" style="font-variation-settings: 'FILL' 1;">flight_takeoff</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Priority Airport Transfers</h3>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-md">
+                            Seamless connections to Heathrow, Gatwick, and private aviation terminals (Farnborough, Biggin Hill).
+                        </p>
+</div>
+</div>
+<!-- Bento Item 2: TfL Licensing -->
+<div class="bg-surface-container rounded-xl p-8 border border-outline-variant flex flex-col justify-between hover:bg-surface-container-high transition-colors">
+<div>
+<div class="w-12 h-12 rounded-full bg-secondary/10 flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-secondary text-2xl" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-3">TfL Licensed Operators</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                            Fully compliant with Transport for London regulations. Every chauffeur undergoes enhanced background checks and rigorous situational driving assessments.
+                        </p>
+</div>
+</div>
+<!-- Bento Item 3: Discretion -->
+<div class="bg-surface-container rounded-xl p-8 border border-outline-variant flex flex-col justify-between hover:bg-surface-container-high transition-colors">
+<div>
+<div class="w-12 h-12 rounded-full bg-surface-variant flex items-center justify-center mb-6">
+<span class="material-symbols-outlined text-on-surface text-2xl" style="font-variation-settings: 'FILL' 1;">visibility_off</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-3">Absolute Discretion</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                            Non-disclosure agreements are standard. Our presence is felt only in the flawless execution of your itinerary through the City and West End.
+                        </p>
+</div>
+</div>
+<!-- Bento Item 4: Wide info -->
+<div class="md:col-span-2 bg-gradient-to-br from-surface-container to-surface-container-low rounded-xl p-8 border border-outline-variant flex items-center">
+<div class="flex-1 pr-8">
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-2">Corporate Accounts</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6 max-w-lg">
+                            Streamlined booking, consolidated GBP invoicing, and dedicated account management for London-based enterprises.
+                        </p>
+<a class="font-label-md text-label-md text-secondary hover:text-secondary-fixed flex items-center gap-1 transition-colors" href="#">
+                            Inquire about corporate rates <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</a>
+</div>
+</div>
+</div>
+</section>
+<!-- Pricing / Fleet List (London Specific) -->
+<section class="py-section-gap px-margin-mobile md:px-margin-desktop bg-surface-container-lowest border-y border-outline-variant/30">
+<div class="w-full max-w-container-max mx-auto">
+<div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+<div>
+<h2 class="font-headline-md text-headline-md text-on-surface mb-4">The London Fleet</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl">
+                            Curated for the demands of the capital. Transparent hourly and point-to-point pricing in GBP.
+                        </p>
+</div>
+<div class="flex gap-2">
+<span class="px-3 py-1 rounded border border-outline-variant bg-surface font-label-sm text-label-sm text-on-surface">Hourly</span>
+<span class="px-3 py-1 rounded border border-transparent text-on-surface-variant font-label-sm text-label-sm hover:text-on-surface cursor-pointer">Transfer</span>
+</div>
+</div>
+<div class="space-y-6">
+<!-- Fleet Item 1 -->
+<div class="bg-surface rounded-xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-8 border border-outline-variant hover:border-secondary/50 transition-colors group">
+<div class="w-full md:w-1/3 aspect-[16/9] relative rounded-lg overflow-hidden bg-surface-container-high">
+<img alt="Executive Sedan" class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" data-alt="A sleek, side-profile studio shot of a Midnight Black luxury executive sedan (resembling a Mercedes S-Class) against a dark, Slate Gray backdrop. The lighting is meticulously controlled, highlighting the subtle Champagne Gold reflections along the car's shoulder line and chrome accents. The image is minimalist, focusing entirely on the elegant silhouette and tactile quality of the vehicle, perfectly embodying the 'Silent Luxury' design aesthetic. No distracting elements in the background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAQVJ5NtogB2lK_AUFuAqEb97AiF6WR33EyfeI9vKvcllSOlvbJiFqNVE37tW9AdJG38dzCunP6j1OUnDh__nO_2sqY7w6-rIUMo_7DjYTIozgY0IIltV0zch4puVIfD5e182z3bAfI9-tu_A7r7oY_UPlTSFi00MYknB-HJ8RoAPjmGZ5MD2sUz2h_v-28mjnzLOTA_9FPCICemHfwBX6g3jb41RRl2871bX6HFgd8vhupx9TmP5zpKlWCvphZ-tMed4Iq6CSfAKA"/>
+</div>
+<div class="flex-1 flex flex-col justify-between h-full w-full">
+<div>
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Business Class</h3>
+<span class="font-label-md text-label-md text-secondary border border-secondary/30 bg-secondary/5 px-2 py-1 rounded">MERCEDES E-CLASS</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">
+                                    The standard for executive travel in the city. Unobtrusive, comfortable, and reliable.
+                                </p>
+<div class="flex gap-4 mb-6">
+<div class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">person</span> Max 3
+                                    </div>
+<div class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">work</span> 2 Bags
+                                    </div>
+</div>
+</div>
+<div class="flex justify-between items-center border-t border-outline-variant pt-4 mt-auto">
+<div>
+<span class="font-body-md text-body-md text-on-surface-variant">From</span>
+<span class="font-headline-sm text-headline-sm text-on-surface ml-2">£85</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">/ hour</span>
+</div>
+<button class="text-secondary hover:text-secondary-fixed font-label-md text-label-md uppercase tracking-wider transition-colors">Select</button>
+</div>
+</div>
+</div>
+<!-- Fleet Item 2 -->
+<div class="bg-surface rounded-xl p-6 md:p-8 flex flex-col md:flex-row items-center gap-8 border border-outline-variant hover:border-secondary/50 transition-colors group">
+<div class="w-full md:w-1/3 aspect-[16/9] relative rounded-lg overflow-hidden bg-surface-container-high">
+<img alt="First Class SUV" class="absolute inset-0 w-full h-full object-cover opacity-90 group-hover:scale-105 transition-transform duration-700" data-alt="A highly detailed, cinematic side-profile image of a premium, large luxury SUV (like a Range Rover Autobiography) finished in deep Midnight Black, parked in a minimalist, dimly lit studio setting. Soft, diffuse lighting cascades from above, creating a smooth gradient across the vehicle's dark panels and accentuating the sophisticated Champagne Gold details on the wheels and trim. The composition is clean, authoritative, and speaks to high-end 'Silent Luxury' and commanding road presence." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTaCIxADErMC2HpHW6pMVAUwH6Tfh7-XEGUQWawDxMa1nVPE4uG4Dot2XaWOi5XAVQuVV1aINJFhBTYaOxNUbomLZ1FKXoA1iGBM4c9B11x6DV7RmrX_Xk-2_Pth5RHz_ED6tBGiYnvUEoRdYEZpQjxT9bWO9fgV70NXhrHEJakB8fOd2vVrclrjyxzwGn_hMYwk89CTBLBrDca2l9IYoeE7TAQEHmUicT6Moe8yuVXbhAyVIKkTO9eCz-Kao1AGCpwds9_wbHGYk"/>
+</div>
+<div class="flex-1 flex flex-col justify-between h-full w-full">
+<div>
+<div class="flex justify-between items-start mb-2">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">First Class SUV</h3>
+<span class="font-label-md text-label-md text-secondary border border-secondary/30 bg-secondary/5 px-2 py-1 rounded">RANGE ROVER</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">
+                                    Commanding presence and ultimate comfort. Ideal for roadshows, high-profile events, or extra luggage capacity.
+                                </p>
+<div class="flex gap-4 mb-6">
+<div class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">person</span> Max 4
+                                    </div>
+<div class="flex items-center gap-1 text-on-surface-variant font-label-sm text-label-sm">
+<span class="material-symbols-outlined text-[16px]">work</span> 4 Bags
+                                    </div>
+</div>
+</div>
+<div class="flex justify-between items-center border-t border-outline-variant pt-4 mt-auto">
+<div>
+<span class="font-body-md text-body-md text-on-surface-variant">From</span>
+<span class="font-headline-sm text-headline-sm text-on-surface ml-2">£145</span>
+<span class="font-label-sm text-label-sm text-on-surface-variant">/ hour</span>
+</div>
+<button class="text-secondary hover:text-secondary-fixed font-label-md text-label-md uppercase tracking-wider transition-colors">Select</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-section-gap bg-primary-container dark:bg-surface-container-lowest border-t border-outline-variant">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto">
+<!-- Brand Column -->
+<div class="col-span-1 md:col-span-1 mb-8 md:mb-0">
+<span class="font-headline-sm text-headline-sm text-secondary block mb-4">LUXE TRANSPORT</span>
+<p class="font-label-sm text-label-sm text-on-surface-variant mb-6 uppercase tracking-widest">
+                    London Edition
+                </p>
+</div>
+<!-- Links -->
+<div class="col-span-1 md:col-span-2 grid grid-cols-2 sm:grid-cols-3 gap-8">
+<div class="flex flex-col gap-3">
+<a class="text-on-surface-variant hover:text-secondary underline decoration-secondary/30 transition-all opacity-80 hover:opacity-100 font-body-md text-body-md" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant hover:text-secondary underline decoration-secondary/30 transition-all opacity-80 hover:opacity-100 font-body-md text-body-md" href="#">Terms of Service</a>
+</div>
+<div class="flex flex-col gap-3">
+<a class="text-on-surface-variant hover:text-secondary underline decoration-secondary/30 transition-all opacity-80 hover:opacity-100 font-body-md text-body-md" href="#">Sustainability</a>
+<a class="text-on-surface-variant hover:text-secondary underline decoration-secondary/30 transition-all opacity-80 hover:opacity-100 font-body-md text-body-md" href="#">Accessibility</a>
+</div>
+<div class="flex flex-col gap-3">
+<a class="text-on-surface-variant hover:text-secondary underline decoration-secondary/30 transition-all opacity-80 hover:opacity-100 font-body-md text-body-md" href="#">Press Kit</a>
+</div>
+</div>
+<!-- Copyright -->
+<div class="col-span-1 md:col-span-1 flex flex-col justify-end mt-8 md:mt-0">
+<p class="font-body-md text-body-md text-on-surface-variant text-left md:text-right">
+                    © 2024 LUXE TRANSPORT PLATFORM. ALL RIGHTS RESERVED.
+                </p>
+<p class="font-label-sm text-label-sm text-outline mt-2 text-left md:text-right">
+                    Licensed by Transport for London. Operator No. 00000.
+                </p>
+</div>
+</div>
+</footer>
+</body></html>

@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+
+<html class="" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LuxeControl - Partner Dashboard</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Theme Config -->
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "surface-container": "#efeeeb",
+                "on-primary": "#ffffff",
+                "surface-container-low": "#f4f3f0",
+                "inverse-surface": "#2f312f",
+                "on-tertiary-fixed-variant": "#464744",
+                "surface-container-high": "#e9e8e5",
+                "on-tertiary-container": "#525350",
+                "outline": "#7f7667",
+                "on-tertiary-fixed": "#1b1c1a",
+                "on-surface": "#1a1c1a",
+                "on-primary-container": "#6a4e0c",
+                "tertiary": "#5e5f5c",
+                "tertiary-fixed-dim": "#c7c6c3",
+                "primary-container": "#e9c176",
+                "primary": "#775a19",
+                "inverse-on-surface": "#f2f1ee",
+                "surface-tint": "#775a19",
+                "tertiary-container": "#c7c7c3",
+                "on-tertiary": "#ffffff",
+                "secondary": "#5f5e5e",
+                "secondary-container": "#e2dfde",
+                "on-surface-variant": "#4e4639",
+                "on-primary-fixed-variant": "#5d4200",
+                "on-secondary-fixed": "#1c1b1b",
+                "surface-bright": "#faf9f6",
+                "primary-fixed": "#ffdea5",
+                "secondary-fixed-dim": "#c8c6c5",
+                "surface-variant": "#e3e2df",
+                "outline-variant": "#d1c5b4",
+                "surface": "#faf9f6",
+                "on-primary-fixed": "#261900",
+                "secondary-fixed": "#e5e2e1",
+                "error": "#ba1a1a",
+                "on-secondary": "#ffffff",
+                "on-secondary-fixed-variant": "#474746",
+                "inverse-primary": "#e9c176",
+                "background": "#faf9f6",
+                "on-error": "#ffffff",
+                "on-background": "#1a1c1a",
+                "surface-dim": "#dbdad7",
+                "tertiary-fixed": "#e3e2df",
+                "on-secondary-container": "#636262",
+                "surface-container-highest": "#e3e2df",
+                "error-container": "#ffdad6",
+                "primary-fixed-dim": "#e9c176",
+                "surface-container-lowest": "#ffffff",
+                "on-error-container": "#93000a"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "margin-mobile": "16px",
+                "unit": "8px",
+                "container-max": "1200px",
+                "margin-desktop": "64px",
+                "gutter": "24px"
+        },
+        "fontFamily": {
+                "display-lg": [
+                        "Playfair Display"
+                ],
+                "body-md": [
+                        "Inter"
+                ],
+                "label-caps": [
+                        "Inter"
+                ],
+                "headline-sm": [
+                        "Playfair Display"
+                ],
+                "body-lg": [
+                        "Inter"
+                ],
+                "headline-md": [
+                        "Playfair Display"
+                ],
+                "display-lg-mobile": [
+                        "Playfair Display"
+                ]
+        },
+        "fontSize": {
+                "display-lg": [
+                        "48px",
+                        {
+                                "lineHeight": "1.1",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "1.5",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-caps": [
+                        "12px",
+                        {
+                                "lineHeight": "1",
+                                "letterSpacing": "0.1em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-sm": [
+                        "24px",
+                        {
+                                "lineHeight": "1.3",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "1.6",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-md": [
+                        "32px",
+                        {
+                                "lineHeight": "1.2",
+                                "fontWeight": "600"
+                        }
+                ],
+                "display-lg-mobile": [
+                        "32px",
+                        {
+                                "lineHeight": "1.2",
+                                "fontWeight": "700"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        /* Custom scrollbar for webkit to match light luxury theme */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: #faf9f6; }
+        ::-webkit-scrollbar-thumb { background: #d1c5b4; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #7f7667; }
+        
+        /* Subtle glow animation for interactive elements */
+        @keyframes subtle-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(119, 90, 25, 0.1); }
+            70% { box-shadow: 0 0 0 6px rgba(119, 90, 25, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(119, 90, 25, 0); }
+        }
+        .hover-glow:hover {
+            animation: subtle-pulse 1.5s infinite;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased overflow-x-hidden selection:bg-primary-container selection:text-on-primary-container">
+<!-- JSON Component: SideNavBar -->
+<nav class="h-screen w-64 fixed left-0 top-0 border-r border-outline-variant bg-surface-container-lowest flex flex-col py-gutter z-40 hidden md:flex shadow-sm">
+<!-- Header -->
+<div class="px-6 mb-8 flex items-center gap-4">
+<div class="h-10 w-10 rounded-full bg-surface-container-highest overflow-hidden border border-outline-variant flex-shrink-0 shadow-sm">
+<img alt="Admin profile photo" class="w-full h-full object-cover" data-alt="Close-up portrait of a professional individual in a sharp, dark bespoke suit against a minimalist charcoal background. The lighting is dramatic and cinematic, highlighting sophisticated features, evoking a sense of calm authority and high-end exclusivity typical of a luxury brand executive." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAb7UpES1JLOCpgd8t76nOfDTFYZgglsnGgSar5YwZwXdL0yU1XIzQpOIPW0oHH2SHDcvXkbejmmGR0zVntCCo05_yTtSP1w3EpNuw5P7_FyhQuvLJ0dTm6zxUfioaxOz16wc9VaD3-VQVihQ2-uM693OrS8gKtlBSKqBpvJrwhgP0svbAx9DPZ9QkkFnUVa8AEBYZ2GcqkMHsR2OIINiWygwU45sGnYss2k5tjk8VlqLrceqR5IvU4vDHeU-AjanoX7BQDJLFSTpI"/>
+</div>
+<div>
+<h1 class="font-headline-sm text-headline-sm text-primary tracking-widest uppercase">LuxeControl</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant">Global Admin</p>
+</div>
+</div>
+<!-- CTA -->
+<div class="px-6 mb-6">
+<button class="w-full py-3 px-4 bg-primary text-on-primary font-label-caps text-label-caps rounded-DEFAULT hover:opacity-90 transition-opacity flex items-center justify-center gap-2 shadow-sm hover-glow">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                New Fleet Entry
+            </button>
+</div>
+<!-- Main Navigation -->
+<div class="flex-1 overflow-y-auto px-4 space-y-1">
+<!-- Active Tab: Dashboard (Mapped to intent) -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-DEFAULT font-label-caps text-label-caps duration-300 ease-in-out text-primary border-r-2 border-primary bg-primary-container/20" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-DEFAULT font-label-caps text-label-caps duration-300 ease-in-out text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">directions_car</span>
+                Fleet
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-DEFAULT font-label-caps text-label-caps duration-300 ease-in-out text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">person</span>
+                Drivers
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-DEFAULT font-label-caps text-label-caps duration-300 ease-in-out text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">route</span>
+                Trips
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-DEFAULT font-label-caps text-label-caps duration-300 ease-in-out text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">corporate_fare</span>
+                Companies
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-DEFAULT font-label-caps text-label-caps duration-300 ease-in-out text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+                Analytics
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-DEFAULT font-label-caps text-label-caps duration-300 ease-in-out text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Settings
+            </a>
+</div>
+<!-- Footer Navigation -->
+<div class="px-4 mt-auto space-y-1 pt-4 border-t border-outline-variant/50">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-DEFAULT font-label-caps text-label-caps duration-300 ease-in-out text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+                Support
+            </a>
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-DEFAULT font-label-caps text-label-caps duration-300 ease-in-out text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+                Sign Out
+            </a>
+</div>
+</nav>
+<!-- JSON Component: TopNavBar -->
+<header class="fixed top-0 right-0 w-full md:w-[calc(100%-16rem)] z-50 border-b border-outline-variant shadow-sm bg-surface/90 backdrop-blur-md flex justify-between items-center h-16 px-4 md:px-margin-desktop">
+<!-- Mobile Menu Toggle & Brand (Visible on mobile mostly) -->
+<div class="flex items-center gap-4 md:hidden">
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<span class="font-headline-sm text-headline-sm text-primary uppercase tracking-tighter">LuxeControl</span>
+</div>
+<!-- Center/Left Links (Active: Network) -->
+<div class="hidden md:flex items-center gap-8 h-full">
+<a class="h-full flex items-center font-label-caps text-label-caps text-primary border-b-2 border-primary pb-1 scale-98 active:opacity-80 transition-transform" href="#">
+                Network
+            </a>
+<a class="h-full flex items-center font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-all scale-98 active:opacity-80 transition-transform" href="#">
+                Operations
+            </a>
+<a class="h-full flex items-center font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-all scale-98 active:opacity-80 transition-transform" href="#">
+                Reports
+            </a>
+</div>
+<!-- Right Actions -->
+<div class="flex items-center gap-6">
+<!-- Search Icon (Search Bar context: "on_right") -->
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">search</span>
+</button>
+<button class="hidden md:flex py-2 px-4 border border-outline-variant text-on-surface font-label-caps text-label-caps rounded-DEFAULT hover:border-primary hover:text-primary transition-colors shadow-sm">
+                Deploy Fleet
+            </button>
+<div class="flex items-center gap-3 border-l border-outline-variant pl-6">
+<button class="text-on-surface-variant hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-primary rounded-full"></span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">light_mode</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest ml-2 overflow-hidden border border-outline-variant md:hidden">
+<img alt="User avatar" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUzqWrUEfVaLYjMJDelGQlqu9tC5xOL8sKsAqpfKDHzDWZoKI8ZX4b16izpAmgNGPfpgLM6KtE_PA83iYnr41yZrxFsa0T-jMShhisNEQLufPVUr0r6CqKpWZczfqOX8IupAIA2MZsZ9ghDzNirM637iRsTOLg5wZXcrc3-ylIIxo6u7_dTb1DF17jyfp8ldkH_tr0XZVbnzk9QgIHwQnOHRiBeKNeJsbHxQGpnk-hRtOjQlLdMrZ3KZYDMiz3ggFUQpjQ4A6O_GU"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 mt-16 p-margin-mobile md:p-margin-desktop pt-gutter min-h-screen">
+<div class="max-w-container-max mx-auto space-y-gutter">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4 mb-8">
+<div>
+<h2 class="font-display-lg text-display-lg text-on-surface mb-2">Partner Network</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Manage your active fleet assignments and discover new premium overflow opportunities across the global network.</p>
+</div>
+</div>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+<!-- Featured: Network Opportunities (Glassmorphism Card) -->
+<div class="md:col-span-8 bg-surface-container-lowest border border-outline-variant shadow-sm rounded-xl p-8 relative overflow-hidden group">
+<!-- Atmospheric Background Image -->
+<div class="absolute inset-0 z-0 opacity-5 bg-[url('https://images.unsplash.com/photo-1520110120835-c96534a4c984?auto=format&amp;fit=crop&amp;q=80&amp;w=1200')] bg-cover bg-center transition-transform duration-1000 group-hover:scale-105" data-alt="A sleek, dimly lit nighttime cityscape viewed through the tinted window of a luxury vehicle. Raindrops gently streak the glass, catching the warm, golden glow of distant streetlights against the deep midnight black sky, creating a moody, sophisticated, and high-end cinematic atmosphere."></div>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/90 to-transparent z-0"></div>
+<div class="relative z-10 h-full flex flex-col">
+<div class="flex justify-between items-center mb-6 border-b border-outline-variant pb-4">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">radar</span>
+                                Network Opportunities
+                            </h3>
+<span class="px-3 py-1 bg-primary-container/30 text-primary border border-primary/20 rounded-full font-label-caps text-label-caps uppercase tracking-wider">3 Available Now</span>
+</div>
+<div class="space-y-4 flex-1">
+<!-- Opportunity Item -->
+<div class="bg-surface border border-outline-variant rounded-lg p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:border-primary hover:shadow-md transition-all">
+<div class="flex gap-4">
+<div class="w-12 h-12 bg-surface-container flex items-center justify-center rounded-DEFAULT border border-outline-variant text-on-surface-variant">
+<span class="material-symbols-outlined">flight_land</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-1 text-xl">JFK Airport to Manhattan</h4>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Today, 18:30 EST • VIP Client • Sedan Class</p>
+</div>
+</div>
+<div class="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
+<div class="text-right">
+<p class="font-headline-md text-headline-md text-primary">$185.00</p>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase">Est. Payout</p>
+</div>
+<button class="py-2 px-6 bg-surface text-on-surface font-label-caps text-label-caps rounded-DEFAULT hover:bg-primary hover:text-on-primary hover:border-primary transition-colors border border-outline shadow-sm">Accept</button>
+</div>
+</div>
+<!-- Opportunity Item -->
+<div class="bg-surface border border-outline-variant rounded-lg p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:border-primary hover:shadow-md transition-all">
+<div class="flex gap-4">
+<div class="w-12 h-12 bg-surface-container flex items-center justify-center rounded-DEFAULT border border-outline-variant text-on-surface-variant">
+<span class="material-symbols-outlined">corporate_fare</span>
+</div>
+<div>
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-1 text-xl">Financial District Hourly</h4>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm">Tomorrow, 09:00 EST • 4 Hours • SUV Class</p>
+</div>
+</div>
+<div class="flex items-center gap-6 w-full md:w-auto justify-between md:justify-end">
+<div class="text-right">
+<p class="font-headline-md text-headline-md text-primary">$450.00</p>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase">Est. Payout</p>
+</div>
+<button class="py-2 px-6 bg-surface text-on-surface font-label-caps text-label-caps rounded-DEFAULT hover:bg-primary hover:text-on-primary hover:border-primary transition-colors border border-outline shadow-sm">Accept</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column Stack -->
+<div class="md:col-span-4 flex flex-col gap-6">
+<!-- Quick Stats -->
+<div class="bg-surface-container-lowest rounded-xl p-6 border border-outline-variant shadow-sm">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest mb-4 border-b border-outline-variant pb-2">Current Cycle Earnings</h3>
+<div class="flex items-end gap-2 mb-6 pt-2">
+<span class="font-display-lg text-display-lg text-primary leading-none">$12,450</span>
+<span class="font-body-md text-body-md text-on-surface-variant mb-1 font-semibold">.00</span>
+</div>
+<div class="flex gap-4">
+<div class="flex-1 bg-surface-container p-4 rounded-lg border border-outline-variant">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-1">Completed</p>
+<p class="font-headline-md text-headline-md text-on-surface text-2xl">42 Trips</p>
+</div>
+<div class="flex-1 bg-surface-container p-4 rounded-lg border border-outline-variant">
+<p class="font-label-caps text-label-caps text-on-surface-variant mb-1">Active</p>
+<p class="font-headline-md text-headline-md text-on-surface text-2xl">8 Cars</p>
+</div>
+</div>
+</div>
+<!-- Active Dispatches -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm flex-1 flex flex-col">
+<div class="p-6 border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Live Dispatches</h3>
+<a class="font-label-caps text-label-caps text-primary hover:underline" href="#">View All</a>
+</div>
+<div class="p-6 space-y-5">
+<!-- Dispatch Item -->
+<div class="flex items-center gap-4 relative">
+<div class="w-2.5 h-2.5 rounded-full bg-primary absolute -left-1 shadow-sm"></div>
+<div class="pl-4 border-l-2 border-outline-variant flex-1">
+<p class="font-headline-sm text-headline-sm text-on-surface text-lg">Car #402 - En Route</p>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm truncate mt-1">Picking up client at The Plaza</p>
+</div>
+<span class="font-label-caps text-label-caps text-on-surface-variant bg-surface-container px-2 py-1 rounded">10m away</span>
+</div>
+<!-- Dispatch Item -->
+<div class="flex items-center gap-4 relative opacity-70 hover:opacity-100 transition-opacity">
+<div class="w-2.5 h-2.5 rounded-full bg-outline absolute -left-1"></div>
+<div class="pl-4 border-l-2 border-outline-variant/50 flex-1">
+<p class="font-headline-sm text-headline-sm text-on-surface text-on-surface-variant text-lg">Car #118 - Standby</p>
+<p class="font-body-md text-body-md text-on-surface-variant text-sm truncate mt-1">Positioned near Midtown</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="h-section-gap"></div> <!-- Vertical Rhythm Space -->
+</div>
+</main>
+</body></html>

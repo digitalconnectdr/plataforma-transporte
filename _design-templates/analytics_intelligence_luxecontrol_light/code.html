@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Analytics Intelligence - LuxeControl</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "surface-container": "#efeeeb",
+                "on-primary": "#ffffff",
+                "surface-container-low": "#f4f3f0",
+                "inverse-surface": "#2f312f",
+                "on-tertiary-fixed-variant": "#464744",
+                "surface-container-high": "#e9e8e5",
+                "on-tertiary-container": "#525350",
+                "outline": "#7f7667",
+                "on-tertiary-fixed": "#1b1c1a",
+                "on-surface": "#1a1c1a",
+                "on-primary-container": "#6a4e0c",
+                "tertiary": "#5e5f5c",
+                "tertiary-fixed-dim": "#c7c6c3",
+                "primary-container": "#e9c176",
+                "primary": "#775a19",
+                "inverse-on-surface": "#f2f1ee",
+                "surface-tint": "#775a19",
+                "tertiary-container": "#c7c7c3",
+                "on-tertiary": "#ffffff",
+                "secondary": "#5f5e5e",
+                "secondary-container": "#e2dfde",
+                "on-surface-variant": "#4e4639",
+                "on-primary-fixed-variant": "#5d4200",
+                "on-secondary-fixed": "#1c1b1b",
+                "surface-bright": "#faf9f6",
+                "primary-fixed": "#ffdea5",
+                "secondary-fixed-dim": "#c8c6c5",
+                "surface-variant": "#e3e2df",
+                "outline-variant": "#d1c5b4",
+                "surface": "#faf9f6",
+                "on-primary-fixed": "#261900",
+                "secondary-fixed": "#e5e2e1",
+                "error": "#ba1a1a",
+                "on-secondary": "#ffffff",
+                "on-secondary-fixed-variant": "#474746",
+                "inverse-primary": "#e9c176",
+                "background": "#faf9f6",
+                "on-error": "#ffffff",
+                "on-background": "#1a1c1a",
+                "surface-dim": "#dbdad7",
+                "tertiary-fixed": "#e3e2df",
+                "on-secondary-container": "#636262",
+                "surface-container-highest": "#e3e2df",
+                "error-container": "#ffdad6",
+                "primary-fixed-dim": "#e9c176",
+                "surface-container-lowest": "#ffffff",
+                "on-error-container": "#93000a"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "margin-mobile": "16px",
+                "unit": "8px",
+                "container-max": "1200px",
+                "margin-desktop": "64px",
+                "gutter": "24px"
+        },
+        "fontFamily": {
+                "display-lg": [
+                        "Playfair Display"
+                ],
+                "body-md": [
+                        "Inter"
+                ],
+                "label-caps": [
+                        "Inter"
+                ],
+                "headline-sm": [
+                        "Playfair Display"
+                ],
+                "body-lg": [
+                        "Inter"
+                ],
+                "headline-md": [
+                        "Playfair Display"
+                ],
+                "display-lg-mobile": [
+                        "Playfair Display"
+                ]
+        },
+        "fontSize": {
+                "display-lg": [
+                        "48px",
+                        {
+                                "lineHeight": "1.1",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "1.5",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-caps": [
+                        "12px",
+                        {
+                                "lineHeight": "1",
+                                "letterSpacing": "0.1em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-sm": [
+                        "24px",
+                        {
+                                "lineHeight": "1.3",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "1.6",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-md": [
+                        "32px",
+                        {
+                                "lineHeight": "1.2",
+                                "fontWeight": "600"
+                        }
+                ],
+                "display-lg-mobile": [
+                        "32px",
+                        {
+                                "lineHeight": "1.2",
+                                "fontWeight": "700"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        .glass-panel {
+            background: linear-gradient(145deg, rgba(255,255,255,0.8) 0%, rgba(250,249,246,0.9) 100%);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(200,200,200,0.5);
+            box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.05);
+        }
+        .btn-primary {
+            background: linear-gradient(180deg, var(--tw-colors-primary) 0%, var(--tw-colors-surface-tint) 100%);
+            color: var(--tw-colors-on-primary);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        .btn-outline {
+            border: 1px solid var(--tw-colors-outline-variant);
+            color: var(--tw-colors-primary);
+            background: transparent;
+        }
+        .gold-glow:focus-within {
+            box-shadow: 0 0 15px rgba(119, 90, 25, 0.15) inset;
+            border-color: var(--tw-colors-primary);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-md antialiased overflow-x-hidden selection:bg-primary/30 selection:text-primary">
+<!-- TopNavBar -->
+<nav class="fixed top-0 right-0 left-0 md:left-64 h-20 bg-background/80 backdrop-blur-md border-b border-outline-variant/30 flex justify-between items-center px-margin-mobile md:px-margin-desktop z-50 transition-all duration-300">
+<div class="flex items-center gap-4">
+<span class="font-headline-sm text-headline-sm text-on-surface md:hidden">LuxeControl</span>
+<div class="hidden md:flex items-center gap-2 bg-surface-container-lowest rounded-full px-4 py-2 border border-outline-variant/50 gold-glow transition-all">
+<span class="material-symbols-outlined text-outline">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-body-md text-on-surface w-64 placeholder:text-outline-variant" placeholder="Search analytics..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<button aria-label="Notifications" class="text-on-surface-variant hover:text-primary transition-all focus:outline-none">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<div class="h-10 w-10 rounded-full bg-surface-container-high border border-outline-variant overflow-hidden cursor-pointer hover:border-primary transition-colors duration-300">
+<!-- Placeholder for Admin Profile Image -->
+<div class="w-full h-full bg-surface-variant flex items-center justify-center">
+<span class="material-symbols-outlined text-outline-variant">account_circle</span>
+</div>
+</div>
+</div>
+</nav>
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col h-screen w-64 fixed left-0 top-0 bg-surface-container-lowest border-r border-outline-variant/30 shadow-sm py-gutter px-4 z-50">
+<div class="mb-12 px-2">
+<h1 class="font-headline-sm text-headline-sm text-primary tracking-tight">LuxeControl</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase mt-1">Premium Management</p>
+</div>
+<nav class="flex-1 flex flex-col gap-2">
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant font-normal hover:bg-surface-container hover:text-primary transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant font-normal hover:bg-surface-container hover:text-primary transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">directions_car</span>
+<span>Fleet</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant font-normal hover:bg-surface-container hover:text-primary transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">person_pin_circle</span>
+<span>Drivers</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant font-normal hover:bg-surface-container hover:text-primary transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">route</span>
+<span>Trips</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant font-normal hover:bg-surface-container hover:text-primary transition-colors duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">business</span>
+<span>Companies</span>
+</a>
+<!-- Active State -->
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-primary border-l-2 border-primary bg-primary-container/20 font-semibold active:scale-95 transition-transform duration-150" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">analytics</span>
+<span>Analytics</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant font-normal hover:bg-surface-container hover:text-primary transition-colors duration-200 group mt-auto" href="#">
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">settings</span>
+<span>Settings</span>
+</a>
+</nav>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 pt-28 pb-20 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto min-h-screen flex flex-col gap-12">
+<!-- Header Section -->
+<header class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+<div>
+<h2 class="font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface tracking-tight mb-2">Analytics Intelligence</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Comprehensive performance insights across all operations.</p>
+</div>
+<div class="flex flex-wrap items-center gap-4 w-full md:w-auto">
+<div class="flex items-center bg-surface-container-lowest border border-outline-variant rounded-lg p-1">
+<button class="px-4 py-2 font-label-caps text-label-caps rounded bg-surface-container text-primary shadow-sm">30 Days</button>
+<button class="px-4 py-2 font-label-caps text-label-caps rounded text-on-surface-variant hover:text-on-surface transition-colors">90 Days</button>
+<button class="px-4 py-2 font-label-caps text-label-caps rounded text-on-surface-variant hover:text-on-surface transition-colors">YTD</button>
+<button class="px-4 py-2 font-label-caps text-label-caps rounded text-on-surface-variant hover:text-on-surface transition-colors flex items-center gap-2 border-l border-outline-variant/30 ml-1 pl-3">
+<span class="material-symbols-outlined text-[18px]">calendar_month</span> Custom
+                    </button>
+</div>
+<div class="flex gap-2">
+<button class="btn-outline font-label-caps text-label-caps px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-surface-container-low transition-colors">
+<span class="material-symbols-outlined text-[18px]">download</span> CSV
+                    </button>
+<button class="btn-primary font-label-caps text-label-caps px-4 py-2 rounded-lg flex items-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined text-[18px]">picture_as_pdf</span> PDF Report
+                    </button>
+</div>
+</div>
+</header>
+<!-- KPI Cards Grid -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- KPI 1 -->
+<div class="glass-panel p-6 rounded-xl flex flex-col justify-between h-40 group hover:border-primary/50 transition-colors duration-300">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Net Revenue</span>
+<span class="material-symbols-outlined text-primary opacity-70">account_balance_wallet</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-on-surface mb-1">$2.4M</div>
+<div class="flex items-center gap-2 font-label-caps text-label-caps text-[#16a34a]">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span>+12.5% vs last period</span>
+</div>
+</div>
+</div>
+<!-- KPI 2 -->
+<div class="glass-panel p-6 rounded-xl flex flex-col justify-between h-40 group hover:border-primary/50 transition-colors duration-300">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Avg. Trip Value</span>
+<span class="material-symbols-outlined text-primary opacity-70">local_taxi</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-on-surface mb-1">$450</div>
+<div class="flex items-center gap-2 font-label-caps text-label-caps text-[#16a34a]">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span>+3.2% vs last period</span>
+</div>
+</div>
+</div>
+<!-- KPI 3 -->
+<div class="glass-panel p-6 rounded-xl flex flex-col justify-between h-40 group hover:border-primary/50 transition-colors duration-300">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Fleet Efficiency</span>
+<span class="material-symbols-outlined text-primary opacity-70">speed</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-on-surface mb-1">87%</div>
+<div class="flex items-center gap-2 font-label-caps text-label-caps text-error">
+<span class="material-symbols-outlined text-[16px]">trending_down</span>
+<span>-1.5% vs last period</span>
+</div>
+</div>
+</div>
+<!-- KPI 4 -->
+<div class="glass-panel p-6 rounded-xl flex flex-col justify-between h-40 group hover:border-primary/50 transition-colors duration-300">
+<div class="flex justify-between items-start">
+<span class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Customer Retention</span>
+<span class="material-symbols-outlined text-primary opacity-70">workspace_premium</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md text-on-surface mb-1">94.2%</div>
+<div class="flex items-center gap-2 font-label-caps text-label-caps text-[#16a34a]">
+<span class="material-symbols-outlined text-[16px]">trending_up</span>
+<span>+0.8% vs last period</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Main Chart Area -->
+<section class="glass-panel rounded-2xl p-8 border-t-2 border-t-primary/30">
+<div class="flex justify-between items-center mb-8">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Revenue vs. Operational Costs</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Monthly progression over the selected period.</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-primary"></div>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Revenue</span>
+</div>
+<div class="flex items-center gap-2">
+<div class="w-3 h-3 rounded-full bg-outline-variant"></div>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Costs</span>
+</div>
+</div>
+</div>
+<!-- Abstract Chart Representation using CSS for aesthetic layout -->
+<div class="h-[400px] w-full relative border-l border-b border-outline-variant/30 flex items-end justify-between pt-10 pb-2 px-4">
+<!-- Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between border-b border-outline-variant/0 pointer-events-none z-0">
+<div class="w-full border-t border-outline-variant/20 h-0"></div>
+<div class="w-full border-t border-outline-variant/20 h-0"></div>
+<div class="w-full border-t border-outline-variant/20 h-0"></div>
+<div class="w-full border-t border-outline-variant/20 h-0"></div>
+</div>
+<!-- Data Points (Mock Line Chart via SVG) -->
+<svg class="absolute inset-0 h-full w-full z-10 drop-shadow-[0_4px_12px_rgba(119,90,25,0.2)]" preserveaspectratio="none" viewbox="0 0 100 100">
+<!-- Cost Line (Subtle) -->
+<path class="opacity-50" d="M0,80 L10,75 L20,78 L30,65 L40,68 L50,60 L60,65 L70,55 L80,58 L90,50 L100,45" fill="none" stroke="var(--tw-colors-outline-variant)" stroke-width="0.5"></path>
+<!-- Revenue Line (Gold) -->
+<path d="M0,60 L10,50 L20,45 L30,30 L40,35 L50,20 L60,25 L70,15 L80,10 L90,15 L100,5" fill="none" stroke="var(--tw-colors-primary)" stroke-width="1.5"></path>
+<!-- Plot Points -->
+<circle cx="50" cy="20" fill="var(--tw-colors-primary)" r="1.5"></circle>
+<circle cx="80" cy="10" fill="var(--tw-colors-primary)" r="1.5"></circle>
+</svg>
+<!-- X Axis Labels -->
+<div class="absolute -bottom-8 left-0 right-0 flex justify-between px-4 z-20">
+<span class="font-label-caps text-label-caps text-on-surface-variant">Jan</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Feb</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Mar</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Apr</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">May</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">Jun</span>
+</div>
+<!-- Y Axis Labels -->
+<div class="absolute left-[-50px] top-0 bottom-0 flex flex-col justify-between items-end pb-8 pt-10 z-20">
+<span class="font-label-caps text-label-caps text-on-surface-variant">1.0M</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">750k</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">500k</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">250k</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">0</span>
+</div>
+</div>
+</section>
+<!-- Secondary Metrics Bento Grid -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Widget 1: Revenue by Vehicle Class -->
+<div class="glass-panel rounded-2xl p-6 flex flex-col">
+<h4 class="font-headline-sm text-headline-sm text-on-surface mb-6">Revenue by Class</h4>
+<div class="flex-1 flex flex-col items-center justify-center relative min-h-[250px]">
+<!-- CSS Mock Donut Chart -->
+<div class="w-48 h-48 rounded-full border-[16px] border-surface-container relative" style="border-top-color: var(--tw-colors-primary); border-right-color: var(--tw-colors-primary); border-bottom-color: var(--tw-colors-primary-container);">
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-headline-sm text-headline-sm text-on-surface">65%</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">First Class</span>
+</div>
+</div>
+</div>
+<div class="mt-4 flex flex-col gap-2">
+<div class="flex justify-between items-center font-label-caps text-label-caps">
+<div class="flex items-center gap-2"><div class="w-2 h-2 bg-primary rounded-full"></div><span class="text-on-surface">First Class</span></div>
+<span class="text-on-surface-variant">65%</span>
+</div>
+<div class="flex justify-between items-center font-label-caps text-label-caps">
+<div class="flex items-center gap-2"><div class="w-2 h-2 bg-primary-container rounded-full"></div><span class="text-on-surface">Business</span></div>
+<span class="text-on-surface-variant">25%</span>
+</div>
+<div class="flex justify-between items-center font-label-caps text-label-caps">
+<div class="flex items-center gap-2"><div class="w-2 h-2 bg-outline-variant rounded-full"></div><span class="text-on-surface">Executive SUV</span></div>
+<span class="text-on-surface-variant">10%</span>
+</div>
+</div>
+</div>
+<!-- Widget 2: Peak Booking Hours -->
+<div class="glass-panel rounded-2xl p-6 flex flex-col lg:col-span-2">
+<div class="flex justify-between items-center mb-6">
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Peak Booking Volume</h4>
+<button class="text-primary hover:text-on-surface transition-colors"><span class="material-symbols-outlined">more_horiz</span></button>
+</div>
+<div class="flex-1 flex items-end gap-2 mt-4 min-h-[200px] border-b border-outline-variant/30 pb-2">
+<!-- Mock Bar Chart -->
+<div class="flex-1 flex flex-col items-center group"><div class="w-full bg-surface-container-high group-hover:bg-primary/40 transition-colors rounded-t-sm h-[20%]"></div><span class="text-[10px] text-on-surface-variant mt-2 font-label-caps">6a</span></div>
+<div class="flex-1 flex flex-col items-center group"><div class="w-full bg-surface-container-high group-hover:bg-primary/40 transition-colors rounded-t-sm h-[40%]"></div><span class="text-[10px] text-on-surface-variant mt-2 font-label-caps">8a</span></div>
+<div class="flex-1 flex flex-col items-center group"><div class="w-full bg-primary/80 group-hover:bg-primary transition-colors rounded-t-sm h-[85%] shadow-[0_0_10px_rgba(119,90,25,0.2)]"></div><span class="text-[10px] text-on-surface-variant mt-2 font-label-caps">10a</span></div>
+<div class="flex-1 flex flex-col items-center group"><div class="w-full bg-surface-container-high group-hover:bg-primary/40 transition-colors rounded-t-sm h-[60%]"></div><span class="text-[10px] text-on-surface-variant mt-2 font-label-caps">12p</span></div>
+<div class="flex-1 flex flex-col items-center group"><div class="w-full bg-surface-container-high group-hover:bg-primary/40 transition-colors rounded-t-sm h-[45%]"></div><span class="text-[10px] text-on-surface-variant mt-2 font-label-caps">2p</span></div>
+<div class="flex-1 flex flex-col items-center group"><div class="w-full bg-surface-container-high group-hover:bg-primary/40 transition-colors rounded-t-sm h-[70%]"></div><span class="text-[10px] text-on-surface-variant mt-2 font-label-caps">4p</span></div>
+<div class="flex-1 flex flex-col items-center group"><div class="w-full bg-primary shadow-[0_0_15px_rgba(119,90,25,0.3)] rounded-t-sm h-[100%]"></div><span class="text-[10px] text-primary font-bold mt-2 font-label-caps">6p</span></div>
+<div class="flex-1 flex flex-col items-center group"><div class="w-full bg-surface-container-high group-hover:bg-primary/40 transition-colors rounded-t-sm h-[80%]"></div><span class="text-[10px] text-on-surface-variant mt-2 font-label-caps">8p</span></div>
+<div class="flex-1 flex flex-col items-center group"><div class="w-full bg-surface-container-high group-hover:bg-primary/40 transition-colors rounded-t-sm h-[50%]"></div><span class="text-[10px] text-on-surface-variant mt-2 font-label-caps">10p</span></div>
+</div>
+<div class="mt-4 flex items-center justify-between">
+<p class="font-body-md text-body-md text-on-surface-variant">Highest volume concentrated during evening executive commutes.</p>
+</div>
+</div>
+</section>
+<!-- Regional Performance List -->
+<section class="glass-panel rounded-2xl overflow-hidden border border-outline-variant/30">
+<div class="p-6 border-b border-outline-variant/30 flex justify-between items-center bg-surface-container-lowest/50">
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Regional Performance</h4>
+<a class="font-label-caps text-label-caps text-primary hover:underline uppercase tracking-wider" href="#">View Full Map</a>
+</div>
+<div class="w-full">
+<!-- Table Header -->
+<div class="grid grid-cols-4 px-6 py-3 border-b border-outline-variant/20 bg-surface-container/30">
+<div class="font-label-caps text-label-caps text-on-surface-variant uppercase">Region / City</div>
+<div class="font-label-caps text-label-caps text-on-surface-variant uppercase text-right">Completed Trips</div>
+<div class="font-label-caps text-label-caps text-on-surface-variant uppercase text-right">Revenue</div>
+<div class="font-label-caps text-label-caps text-on-surface-variant uppercase text-right">Growth (MoM)</div>
+</div>
+<!-- List Items -->
+<div class="grid grid-cols-4 px-6 py-4 border-b border-outline-variant/10 hover:bg-surface-container-low transition-colors group">
+<div class="font-body-md text-body-md text-on-surface font-medium flex items-center gap-3">
+<span class="material-symbols-outlined text-primary opacity-0 group-hover:opacity-100 transition-opacity">location_on</span>
+                        New York City (Metro)
+                    </div>
+<div class="font-body-md text-body-md text-on-surface-variant text-right">4,205</div>
+<div class="font-body-md text-body-md text-on-surface text-right">$1.8M</div>
+<div class="font-body-md text-body-md text-[#16a34a] text-right flex items-center justify-end gap-1"><span class="material-symbols-outlined text-[16px]">arrow_upward</span> 8.4%</div>
+</div>
+<div class="grid grid-cols-4 px-6 py-4 border-b border-outline-variant/10 hover:bg-surface-container-low transition-colors group">
+<div class="font-body-md text-body-md text-on-surface font-medium flex items-center gap-3">
+<span class="material-symbols-outlined text-primary opacity-0 group-hover:opacity-100 transition-opacity">location_on</span>
+                        London (Central)
+                    </div>
+<div class="font-body-md text-body-md text-on-surface-variant text-right">2,840</div>
+<div class="font-body-md text-body-md text-on-surface text-right">$950K</div>
+<div class="font-body-md text-body-md text-[#16a34a] text-right flex items-center justify-end gap-1"><span class="material-symbols-outlined text-[16px]">arrow_upward</span> 5.2%</div>
+</div>
+<div class="grid grid-cols-4 px-6 py-4 hover:bg-surface-container-low transition-colors group">
+<div class="font-body-md text-body-md text-on-surface font-medium flex items-center gap-3">
+<span class="material-symbols-outlined text-primary opacity-0 group-hover:opacity-100 transition-opacity">location_on</span>
+                        Los Angeles (Beverly Hills)
+                    </div>
+<div class="font-body-md text-body-md text-on-surface-variant text-right">1,950</div>
+<div class="font-body-md text-body-md text-on-surface text-right">$820K</div>
+<div class="font-body-md text-body-md text-error text-right flex items-center justify-end gap-1"><span class="material-symbols-outlined text-[16px]">arrow_downward</span> 2.1%</div>
+</div>
+</div>
+</section>
+</main>
+</body></html>

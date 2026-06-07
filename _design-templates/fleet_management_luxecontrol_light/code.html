@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Fleet Management - LuxeControl</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "surface-container": "#efeeeb",
+                "on-primary": "#ffffff",
+                "surface-container-low": "#f4f3f0",
+                "inverse-surface": "#2f312f",
+                "on-tertiary-fixed-variant": "#464744",
+                "surface-container-high": "#e9e8e5",
+                "on-tertiary-container": "#525350",
+                "outline": "#7f7667",
+                "on-tertiary-fixed": "#1b1c1a",
+                "on-surface": "#1a1c1a",
+                "on-primary-container": "#6a4e0c",
+                "tertiary": "#5e5f5c",
+                "tertiary-fixed-dim": "#c7c6c3",
+                "primary-container": "#e9c176",
+                "primary": "#775a19",
+                "inverse-on-surface": "#f2f1ee",
+                "surface-tint": "#775a19",
+                "tertiary-container": "#c7c7c3",
+                "on-tertiary": "#ffffff",
+                "secondary": "#5f5e5e",
+                "secondary-container": "#e2dfde",
+                "on-surface-variant": "#4e4639",
+                "on-primary-fixed-variant": "#5d4200",
+                "on-secondary-fixed": "#1c1b1b",
+                "surface-bright": "#faf9f6",
+                "primary-fixed": "#ffdea5",
+                "secondary-fixed-dim": "#c8c6c5",
+                "surface-variant": "#e3e2df",
+                "outline-variant": "#d1c5b4",
+                "surface": "#faf9f6",
+                "on-primary-fixed": "#261900",
+                "secondary-fixed": "#e5e2e1",
+                "error": "#ba1a1a",
+                "on-secondary": "#ffffff",
+                "on-secondary-fixed-variant": "#474746",
+                "inverse-primary": "#e9c176",
+                "background": "#faf9f6",
+                "on-error": "#ffffff",
+                "on-background": "#1a1c1a",
+                "surface-dim": "#dbdad7",
+                "tertiary-fixed": "#e3e2df",
+                "on-secondary-container": "#636262",
+                "surface-container-highest": "#e3e2df",
+                "error-container": "#ffdad6",
+                "primary-fixed-dim": "#e9c176",
+                "surface-container-lowest": "#ffffff",
+                "on-error-container": "#93000a"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "margin-mobile": "16px",
+                "unit": "8px",
+                "container-max": "1200px",
+                "margin-desktop": "64px",
+                "gutter": "24px"
+        },
+        "fontFamily": {
+                "display-lg": [
+                        "Playfair Display"
+                ],
+                "body-md": [
+                        "Inter"
+                ],
+                "label-caps": [
+                        "Inter"
+                ],
+                "headline-sm": [
+                        "Playfair Display"
+                ],
+                "body-lg": [
+                        "Inter"
+                ],
+                "headline-md": [
+                        "Playfair Display"
+                ],
+                "display-lg-mobile": [
+                        "Playfair Display"
+                ]
+        },
+        "fontSize": {
+                "display-lg": [
+                        "48px",
+                        {
+                                "lineHeight": "1.1",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "1.5",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-caps": [
+                        "12px",
+                        {
+                                "lineHeight": "1",
+                                "letterSpacing": "0.1em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-sm": [
+                        "24px",
+                        {
+                                "lineHeight": "1.3",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "1.6",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-md": [
+                        "32px",
+                        {
+                                "lineHeight": "1.2",
+                                "fontWeight": "600"
+                        }
+                ],
+                "display-lg-mobile": [
+                        "32px",
+                        {
+                                "lineHeight": "1.2",
+                                "fontWeight": "700"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        body { background-color: #faf9f6; color: #1a1c1a; }
+        /* Custom scrollbar for sleek look */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #e3e2df; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #c7c7c3; }
+    </style>
+</head>
+<body class="font-body-md text-body-md antialiased overflow-x-hidden">
+<!-- SideNavBar Component -->
+<nav class="hidden md:flex flex-col h-full py-gutter h-screen w-64 fixed left-0 top-0 border-r border-outline-variant bg-surface-container-lowest z-40">
+<!-- Header -->
+<div class="px-gutter mb-8">
+<h1 class="font-headline-sm text-headline-sm text-primary tracking-widest uppercase mb-1">LuxeControl</h1>
+<p class="font-label-caps text-label-caps text-on-surface-variant flex items-center gap-2">
+<img alt="Admin profile photo" class="w-6 h-6 rounded-full object-cover border border-outline-variant" data-alt="A close-up, high-quality portrait of a professional in a dark tailored suit, conveying authority and trust. The lighting is soft and cinematic, highlighting crisp details against a deep charcoal background, perfectly matching a dark-mode luxury interface aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFGVuTGi4c6pHaC5oKORcaTmEmL8WEZy9VaeC_0v9G0Q6NJh3f5io_gBOprbpnWziz8EIm9DNfKwhHaKoQsDM0CKZxpgG5MC0sUGQ_swWFeov6DNA_L_a7g6yBX8wkHj54hPTgPYAIjw0Od8ve2MJWVSfReVA_PDDj2PpobsCtvz9FHuhYV7jmbW3UqTUWsLbhO_6u3Im7kE81s7ioNCeiAl_2a6R5jw879WmJHXCtAKccEN36mhhzx_4b44A35077WUdKgt-IPKk"/>
+                Global Admin
+            </p>
+</div>
+<!-- Main Navigation -->
+<div class="flex-1 flex flex-col gap-2 px-4">
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-300 ease-in-out font-label-caps text-label-caps group" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-primary font-bold border-r-2 border-primary bg-primary-container/20 hover:text-primary hover:bg-surface-container-low transition-colors duration-300 ease-in-out font-label-caps text-label-caps group" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">directions_car</span>
+                Fleet
+            </a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-300 ease-in-out font-label-caps text-label-caps group" href="#">
+<span class="material-symbols-outlined text-[20px]">route</span>
+                Trips
+            </a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-300 ease-in-out font-label-caps text-label-caps group" href="#">
+<span class="material-symbols-outlined text-[20px]">corporate_fare</span>
+                Companies
+            </a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-300 ease-in-out font-label-caps text-label-caps group" href="#">
+<span class="material-symbols-outlined text-[20px]">leaderboard</span>
+                Analytics
+            </a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-300 ease-in-out font-label-caps text-label-caps group" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+                Settings
+            </a>
+</div>
+<!-- CTA -->
+<div class="px-gutter mb-6">
+<button class="w-full bg-primary text-on-primary font-label-caps text-label-caps py-3 rounded-lg flex justify-center items-center gap-2 hover:opacity-90 transition-opacity shadow-sm border border-primary/30">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                New Fleet Entry
+            </button>
+</div>
+<!-- Footer Navigation -->
+<div class="px-4 flex flex-col gap-2 mt-auto border-t border-outline-variant/30 pt-4">
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-300 ease-in-out font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined text-[20px]">help_outline</span>
+                Support
+            </a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-300 ease-in-out font-label-caps text-label-caps" href="#">
+<span class="material-symbols-outlined text-[20px]">logout</span>
+                Sign Out
+            </a>
+</div>
+</nav>
+<!-- TopNavBar Component -->
+<header class="hidden md:flex justify-between items-center h-16 px-margin-desktop fixed top-0 right-0 w-[calc(100%-16rem)] z-50 bg-surface/80 backdrop-blur-md border-b border-outline-variant shadow-sm transition-transform duration-300 ease-in-out">
+<!-- Left: Navigation Links -->
+<nav class="flex gap-8 items-center h-full">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-all flex items-center h-full" href="#">Network</a>
+<a class="font-label-caps text-label-caps text-primary border-b-2 border-primary pb-1 flex items-center h-full mt-1" href="#">Operations</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-all flex items-center h-full" href="#">Reports</a>
+</nav>
+<!-- Right: Actions & Profile -->
+<div class="flex items-center gap-6">
+<!-- Search Bar placeholder from JSON instructions -->
+<div class="relative group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors text-[18px]">search</span>
+<input class="bg-surface-container-low border border-outline-variant rounded-full py-2 pl-10 pr-4 text-body-md text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all w-64 placeholder-on-surface-variant/50 font-label-caps" placeholder="Search vehicles..." type="text"/>
+</div>
+<button class="font-label-caps text-label-caps text-primary border border-primary rounded-full px-5 py-2 hover:bg-primary/10 transition-colors scale-98 active:opacity-80">
+                Deploy Fleet
+            </button>
+<div class="flex items-center gap-4 border-l border-outline-variant pl-6">
+<button class="text-on-surface-variant hover:text-primary transition-colors scale-98 active:opacity-80">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors scale-98 active:opacity-80">
+<span class="material-symbols-outlined">light_mode</span>
+</button>
+<img alt="User avatar" class="w-8 h-8 rounded-full border border-outline-variant cursor-pointer hover:border-primary transition-colors" data-alt="A close-up, high-quality portrait of a professional in a dark tailored suit, conveying authority and trust. The lighting is soft and cinematic, highlighting crisp details against a deep charcoal background, perfectly matching a dark-mode luxury interface aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDOJgkGnELqCmQHgYzea3AjigTfz1cJqXdW2PKL4LobyD0FaohEiVQXLkLWQtaTYJHiov_aw8TqYFRCNWfLo7IN4X1byBfBElnWKgJ6ySM-di5JLZQPLaxZzYtRw5Bt4FfeC4MURInz5saBieq65KTLg9U84RpMRVTQpEOMkuWHBkb8BeAk4zXOLBE22AtLwopn3cJDi05mYutADtVXNuOLzVORbuTf7QnniHizQAfPO9CJnNnmuurEfC561zv8vtkl-pYc79Xb-IA"/>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="md:ml-64 pt-16 min-h-screen bg-background">
+<div class="max-w-[1440px] mx-auto p-margin-mobile md:p-margin-desktop">
+<!-- Page Header -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+<div>
+<h2 class="font-display-lg-mobile md:font-display-lg text-display-lg-mobile md:text-display-lg text-on-surface mb-2">Fleet Roster</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">Manage your global inventory of luxury vehicles, track real-time status, and oversee driver assignments.</p>
+</div>
+<!-- Quick Stats -->
+<div class="flex gap-8 bg-surface-container-low p-6 rounded-xl border border-outline-variant/50">
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest mb-1">Total Fleet</p>
+<p class="font-headline-md text-headline-md text-on-surface">142</p>
+</div>
+<div class="w-px bg-outline-variant/50"></div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest mb-1">Active</p>
+<p class="font-headline-md text-headline-md text-primary">98</p>
+</div>
+<div class="w-px bg-outline-variant/50"></div>
+<div>
+<p class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest mb-1">Maintenance</p>
+<p class="font-headline-md text-headline-md text-error">12</p>
+</div>
+</div>
+</div>
+<!-- Filters Toolbar -->
+<div class="flex flex-wrap items-center justify-between gap-4 mb-8 bg-surface-container p-4 rounded-lg border border-outline-variant/30">
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-2 font-label-caps text-label-caps text-on-surface bg-surface-container-high px-4 py-2 rounded-md hover:bg-surface-variant transition-colors border border-outline-variant/50">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+                        All Classes
+                    </button>
+<button class="flex items-center gap-2 font-label-caps text-label-caps text-on-surface bg-surface-container-high px-4 py-2 rounded-md hover:bg-surface-variant transition-colors border border-outline-variant/50">
+                        Status: Any
+                        <span class="material-symbols-outlined text-[18px]">expand_more</span>
+</button>
+<button class="flex items-center gap-2 font-label-caps text-label-caps text-on-surface bg-surface-container-high px-4 py-2 rounded-md hover:bg-surface-variant transition-colors border border-outline-variant/50">
+                        Location: Global
+                        <span class="material-symbols-outlined text-[18px]">expand_more</span>
+</button>
+</div>
+<div class="flex items-center gap-4">
+<button class="p-2 text-on-surface-variant hover:text-primary transition-colors" title="Grid View">
+<span class="material-symbols-outlined">grid_view</span>
+</button>
+<button class="p-2 text-primary bg-primary-container/20 rounded-md transition-colors" title="List View">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">view_list</span>
+</button>
+</div>
+</div>
+<!-- Elegant List View -->
+<div class="flex flex-col gap-4">
+<!-- List Header (Hidden on small screens) -->
+<div class="hidden lg:grid grid-cols-12 gap-6 px-6 py-3 border-b border-outline-variant/50 font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">
+<div class="col-span-4">Vehicle Model</div>
+<div class="col-span-2">License / ID</div>
+<div class="col-span-2">Status</div>
+<div class="col-span-2">Assigned Driver</div>
+<div class="col-span-2 text-right">Mileage</div>
+</div>
+<!-- Row 1 -->
+<div class="group grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-center p-4 lg:px-6 lg:py-5 bg-surface-container-low hover:bg-surface-variant/50 rounded-xl border border-transparent hover:border-outline-variant/50 transition-all duration-300">
+<div class="col-span-1 lg:col-span-4 flex items-center gap-6">
+<div class="w-32 h-20 bg-surface-container-highest rounded-lg overflow-hidden relative border border-outline-variant/30 flex-shrink-0">
+<img alt="Mercedes S-Class" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" data-alt="A sleek, black Mercedes S-Class luxury sedan shown in a dynamic side profile. It is parked in an elegant, modern underground garage with minimal concrete pillars and dramatic, high-contrast lighting that catches the curves of the metallic paint. The mood is sophisticated and exclusive, fitting a premium dark-mode interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBhSzvvYY54LMmAvp4hYM7oPFqGIwrwe8tQjJ6qqOUDT4UOOr1aSqd48IEBHhreK_meVp4GYniLGt9iUsh1Tt7aSVLNDOUkTEeEpYswA19RHrgoaJuy-4F3XbYdH2BhAANpSwmSFvFOpnH_qCPTXBYzLp-WxxzFnrkkP7PVMbgyW89nxBz1aYPvgwukfeDtwwlnXwvI1bVrEiwqcuXrpUY0UUNTjcZA5WYDL-G0ppsKc-_SKOm7H8iuLSEZ8ZL4Er6k2fuLxVJYseY"/>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Mercedes-Benz S580</h3>
+<span class="inline-block px-2 py-0.5 rounded border border-outline text-label-caps font-label-caps text-on-surface-variant">FIRST CLASS</span>
+</div>
+</div>
+<div class="col-span-1 lg:col-span-2 flex lg:block items-center justify-between">
+<span class="lg:hidden font-label-caps text-on-surface-variant">ID:</span>
+<p class="font-body-md text-on-surface">NY-8824-LC</p>
+</div>
+<div class="col-span-1 lg:col-span-2 flex lg:block items-center justify-between">
+<span class="lg:hidden font-label-caps text-on-surface-variant">Status:</span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-primary/30 bg-primary-container/20 text-primary font-label-caps text-label-caps">
+<span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Active
+                        </span>
+</div>
+<div class="col-span-1 lg:col-span-2 flex lg:block items-center justify-between">
+<span class="lg:hidden font-label-caps text-on-surface-variant">Driver:</span>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center text-on-surface font-label-caps">JD</div>
+<p class="font-body-md text-on-surface">J. Doe</p>
+</div>
+</div>
+<div class="col-span-1 lg:col-span-2 flex items-center justify-between lg:justify-end gap-4">
+<span class="lg:hidden font-label-caps text-on-surface-variant">Mileage:</span>
+<p class="font-body-md text-on-surface">12,450 mi</p>
+<button class="text-on-surface-variant hover:text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="group grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-center p-4 lg:px-6 lg:py-5 bg-surface-container-low hover:bg-surface-variant/50 rounded-xl border border-transparent hover:border-outline-variant/50 transition-all duration-300">
+<div class="col-span-1 lg:col-span-4 flex items-center gap-6">
+<div class="w-32 h-20 bg-surface-container-highest rounded-lg overflow-hidden relative border border-outline-variant/30 flex-shrink-0">
+<img alt="Cadillac Escalade" class="w-full h-full object-cover opacity-90 group-hover:opacity-100 transition-opacity" data-alt="A massive, imposing black Cadillac Escalade ESV SUV positioned confidently against a sleek, dark architectural background. The vehicle is lit with sophisticated studio lighting that highlights its strong, angular lines and chrome accents, creating a feeling of commanding luxury and security for a dark-mode layout." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBOrqcdFJ49uhbptDnLi3RGBzqCjLvctqsaE0FU2J53tLOMXfKYUyQaA9xfrFKZvhiFXEJLFZ2P1tMGYLToa3nyRY9x9ZOF-fRlKvR0otBCKOduQbVdfGz0YCnYObMJPsIYSvCVC-DEBij1sZa8EpQroo4dSxQSzJ8cPxtFQLNd-zOENz6EsxdLpIPg97EgMuc4p2clnuBQxVQVjbWkjIjxhZU6dweSG14xgQNXYH7T9Rb5Y6G8zi5iMS44_8abYxZ2ce__i-59DGg"/>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Cadillac Escalade ESV</h3>
+<span class="inline-block px-2 py-0.5 rounded border border-outline text-label-caps font-label-caps text-on-surface-variant">EXECUTIVE SUV</span>
+</div>
+</div>
+<div class="col-span-1 lg:col-span-2 flex lg:block items-center justify-between">
+<span class="lg:hidden font-label-caps text-on-surface-variant">ID:</span>
+<p class="font-body-md text-on-surface">LA-9912-EX</p>
+</div>
+<div class="col-span-1 lg:col-span-2 flex lg:block items-center justify-between">
+<span class="lg:hidden font-label-caps text-on-surface-variant">Status:</span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-outline/30 bg-surface-container-highest text-on-surface-variant font-label-caps text-label-caps">
+<span class="w-1.5 h-1.5 rounded-full bg-outline"></span> Reserved
+                        </span>
+</div>
+<div class="col-span-1 lg:col-span-2 flex lg:block items-center justify-between">
+<span class="lg:hidden font-label-caps text-on-surface-variant">Driver:</span>
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center text-on-surface font-label-caps">MS</div>
+<p class="font-body-md text-on-surface">M. Smith</p>
+</div>
+</div>
+<div class="col-span-1 lg:col-span-2 flex items-center justify-between lg:justify-end gap-4">
+<span class="lg:hidden font-label-caps text-on-surface-variant">Mileage:</span>
+<p class="font-body-md text-on-surface">8,200 mi</p>
+<button class="text-on-surface-variant hover:text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Row 3 -->
+<div class="group grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-center p-4 lg:px-6 lg:py-5 bg-surface-container-low hover:bg-surface-variant/50 rounded-xl border border-transparent hover:border-outline-variant/50 transition-all duration-300">
+<div class="col-span-1 lg:col-span-4 flex items-center gap-6">
+<div class="w-32 h-20 bg-surface-container-highest rounded-lg overflow-hidden relative border border-outline-variant/30 flex-shrink-0">
+<div class="absolute inset-0 bg-background/40 z-10 flex items-center justify-center backdrop-blur-[2px]">
+<span class="material-symbols-outlined text-error">build</span>
+</div>
+<img alt="Range Rover" class="w-full h-full object-cover opacity-70 grayscale transition-opacity" data-alt="A high-end Land Rover Range Rover SV parked in a pristine, minimalist service bay. The environment is dark with sharp, cool overhead lighting focusing on the vehicle's hood. The overall tone is clinical, luxurious, and precision-oriented, adhering to a sophisticated dark color palette." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJA5sUHYs35rsgaPQE_J8OQuhLbL-cK9a7CkLtWhlKIf-SoQCVZzcSnYI7xZLih64XO7x8v7RXwYHzZnF1b5MKqM2IBmDwa0QU9murxn2EoZlTXHlJLUjsplOcLZPc14QRp_9HcxvX6_qc5zH3GGsXSWpcw3NzbOy2-p4nmVuvGo5qqKLo4HvshOe2YbGFIroShFQt7DPAWJfBBUZ4ooEBj2_kR5c_uSLNWqz43BIVd8CdtpwlZZAvHZiq7hQQDTRYpC09yKht3mM"/>
+</div>
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1 text-on-surface-variant">Range Rover SV</h3>
+<span class="inline-block px-2 py-0.5 rounded border border-outline/50 text-label-caps font-label-caps text-on-surface-variant/70">LUXURY SUV</span>
+</div>
+</div>
+<div class="col-span-1 lg:col-span-2 flex lg:block items-center justify-between">
+<span class="lg:hidden font-label-caps text-on-surface-variant">ID:</span>
+<p class="font-body-md text-on-surface-variant">LDN-004-RR</p>
+</div>
+<div class="col-span-1 lg:col-span-2 flex lg:block items-center justify-between">
+<span class="lg:hidden font-label-caps text-on-surface-variant">Status:</span>
+<span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full border border-error/30 bg-error-container/50 text-error font-label-caps text-label-caps">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span> Maintenance
+                        </span>
+</div>
+<div class="col-span-1 lg:col-span-2 flex lg:block items-center justify-between">
+<span class="lg:hidden font-label-caps text-on-surface-variant">Driver:</span>
+<div class="flex items-center gap-3">
+<p class="font-body-md text-on-surface-variant italic">Unassigned</p>
+</div>
+</div>
+<div class="col-span-1 lg:col-span-2 flex items-center justify-between lg:justify-end gap-4">
+<span class="lg:hidden font-label-caps text-on-surface-variant">Mileage:</span>
+<p class="font-body-md text-on-surface-variant">24,100 mi</p>
+<button class="text-on-surface-variant hover:text-primary opacity-0 group-hover:opacity-100 transition-opacity">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Pagination / Load More -->
+<div class="mt-8 flex justify-center">
+<button class="font-label-caps text-label-caps text-on-surface border border-outline-variant px-6 py-3 rounded-full hover:bg-surface-variant transition-colors">
+                    Load More Vehicles
+                </button>
+</div>
+</div>
+</main>
+</body></html>

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LuxeControl - Trips</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-primary-fixed-variant": "#474646",
+                        "primary-fixed": "#e5e2e1",
+                        "primary-fixed-dim": "#c9c6c5",
+                        "inverse-on-surface": "#313030",
+                        "on-primary-fixed": "#1c1b1b",
+                        "error": "#ffb4ab",
+                        "on-error": "#690005",
+                        "surface-tint": "#c9c6c5",
+                        "inverse-surface": "#e5e2e1",
+                        "secondary-fixed": "#ffdea5",
+                        "tertiary-fixed": "#e4e2e1",
+                        "on-background": "#e5e2e1",
+                        "tertiary-container": "#0a0a0a",
+                        "on-primary-container": "#7b7979",
+                        "tertiary-fixed-dim": "#c8c6c6",
+                        "surface-variant": "#353434",
+                        "secondary-fixed-dim": "#e9c176",
+                        "on-secondary-container": "#dab36a",
+                        "surface-container-highest": "#353434",
+                        "on-secondary-fixed": "#261900",
+                        "on-tertiary": "#303030",
+                        "surface-container-lowest": "#0e0e0e",
+                        "surface-bright": "#3a3939",
+                        "error-container": "#93000a",
+                        "background": "#141313",
+                        "primary-container": "#0a0a0a",
+                        "tertiary": "#c8c6c6",
+                        "secondary": "#e9c176",
+                        "surface-container": "#201f1f",
+                        "outline": "#8e9192",
+                        "on-secondary": "#412d00",
+                        "secondary-container": "#604403",
+                        "on-error-container": "#ffdad6",
+                        "on-surface": "#e5e2e1",
+                        "on-tertiary-container": "#7a7979",
+                        "primary": "#c9c6c5",
+                        "surface-container-high": "#2b2a2a",
+                        "surface-dim": "#141313",
+                        "on-surface-variant": "#c4c7c7",
+                        "surface": "#141313",
+                        "on-tertiary-fixed": "#1b1c1c",
+                        "on-primary": "#313030",
+                        "outline-variant": "#444748",
+                        "surface-container-low": "#1c1b1b",
+                        "inverse-primary": "#5f5e5e",
+                        "on-secondary-fixed-variant": "#5d4201",
+                        "on-tertiary-fixed-variant": "#474747"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "gutter": "24px",
+                        "unit": "8px",
+                        "section-gap": "120px",
+                        "margin-desktop": "64px",
+                        "container-max": "1280px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Playfair Display"],
+                        "body-lg": ["Inter"],
+                        "display-lg": ["Playfair Display"],
+                        "label-sm": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-sm": ["Playfair Display"],
+                        "body-md": ["Inter"],
+                        "display-lg-mobile": ["Playfair Display"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["32px", { "lineHeight": "1.2", "fontWeight": "500" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "label-sm": ["12px", { "lineHeight": "1.4", "letterSpacing": "0.03em", "fontWeight": "500" }],
+                        "label-md": ["14px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "headline-sm": ["24px", { "lineHeight": "1.3", "fontWeight": "500" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: theme('colors.background');
+            color: theme('colors.on-background');
+        }
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: theme('colors.surface-container-highest');
+            border-radius: theme('borderRadius.full');
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: theme('colors.outline');
+        }
+    </style>
+</head>
+<body class="flex bg-background font-body-md text-on-background min-h-screen">
+<!-- SideNavBar -->
+<nav class="bg-surface-container-lowest dark:bg-surface-container-lowest h-screen w-64 fixed left-0 top-0 border-r border-outline-variant flex flex-col h-full py-gutter z-50">
+<div class="px-gutter mb-8">
+<h1 class="font-headline-sm text-headline-sm text-secondary tracking-widest uppercase">LuxeControl</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Global Admin</p>
+</div>
+<div class="px-gutter mb-6">
+<button class="w-full py-3 px-4 rounded-lg bg-gradient-to-b from-[#f3dbab] to-[#e9c176] text-[#0A0A0A] font-label-md text-label-md flex items-center justify-center gap-2 hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">add</span>
+                New Fleet Entry
+            </button>
+</div>
+<div class="flex-1 overflow-y-auto px-gutter flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-secondary hover:bg-surface-container-low transition-colors duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-secondary hover:bg-surface-container-low transition-colors duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined">directions_car</span>
+<span class="font-label-md text-label-md">Fleet</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-secondary hover:bg-surface-container-low transition-colors duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-md text-label-md">Drivers</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-secondary font-bold border-r-2 border-secondary bg-secondary-container/10 duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">route</span>
+<span class="font-label-md text-label-md">Trips</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-secondary hover:bg-surface-container-low transition-colors duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined">corporate_fare</span>
+<span class="font-label-md text-label-md">Companies</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-secondary hover:bg-surface-container-low transition-colors duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span class="font-label-md text-label-md">Analytics</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-secondary hover:bg-surface-container-low transition-colors duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</div>
+<div class="px-gutter mt-auto pt-4 border-t border-outline-variant/50 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-secondary hover:bg-surface-container-low transition-colors duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="font-label-md text-label-md">Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-secondary hover:bg-surface-container-low transition-colors duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-label-md text-label-md">Sign Out</span>
+</a>
+<div class="mt-4 flex items-center gap-3 px-4">
+<img alt="Admin profile photo" class="w-10 h-10 rounded-full border border-outline-variant object-cover" data-alt="A close up portrait photo of a professional administrative assistant or dispatcher. The person is well-groomed and looking directly at the camera with a neutral, professional expression. The background is slightly blurred and features dark, elegant tones consistent with a luxury brand aesthetic. Soft, flattering lighting highlights the face without harsh shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCxhd8RRj1fldM9Z2yTepGXXSPvE-um9uA9Djcfdm-OMRDnatHptnFCxiL6GSMLg_PnLnRtIZGuJIhnmU0CoCk0_4bHzXms_kDNCFh6XxEwgRhv2lewhNnQOB37AL21Me4CtPnWhQZFanBTppwe0EgV4EQVEQSnow78ior0LUmWDwkDrQ_HFUQfjJzc6KA0KypINp75zww_6aZItp0q7JAesk1mTymjs2cy7chHsUrUoDYlZv9wU6ndFj1CJmEKTgghG6lHVe7bMTY"/>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<div class="flex-1 ml-64 relative min-h-screen flex flex-col">
+<!-- TopNavBar -->
+<header class="bg-surface/80 backdrop-blur-md fixed top-0 right-0 w-[calc(100%-16rem)] z-50 border-b border-outline-variant shadow-sm flex justify-between items-center h-16 px-margin-desktop">
+<div class="flex items-center gap-8">
+<nav class="hidden md:flex gap-6">
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-all" href="#">Network</a>
+<a class="font-label-md text-label-md text-secondary border-b-2 border-secondary pb-1" href="#">Operations</a>
+<a class="font-label-md text-label-md text-on-surface-variant hover:text-secondary transition-all" href="#">Reports</a>
+</nav>
+</div>
+<div class="flex items-center gap-6">
+<div class="relative hidden lg:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="bg-surface-container-low border border-outline-variant rounded-full py-1.5 pl-10 pr-4 font-label-md text-label-md text-on-surface focus:border-secondary focus:ring-1 focus:ring-secondary transition-colors w-64 placeholder:text-on-surface-variant/50" placeholder="Search trips, vehicles..." type="text"/>
+</div>
+<div class="flex items-center gap-4 border-l border-outline-variant pl-6">
+<button class="text-on-surface-variant hover:text-secondary transition-colors scale-98 active:opacity-80 transition-transform">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-secondary transition-colors scale-98 active:opacity-80 transition-transform">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+<button class="ml-2 py-2 px-4 rounded-lg bg-transparent border border-outline-variant text-on-surface font-label-md text-label-md hover:border-secondary hover:text-secondary transition-colors">
+                        Deploy Fleet
+                    </button>
+</div>
+</div>
+</header>
+<!-- Canvas -->
+<main class="flex-1 pt-16 flex h-screen overflow-hidden">
+<!-- Map Area -->
+<div class="flex-1 relative bg-surface-dim overflow-hidden">
+<!-- Simulated Dark Map -->
+<img alt="Dark map view" class="w-full h-full object-cover opacity-30 grayscale contrast-125" data-alt="A highly stylized, dark-themed digital map interface showing a major metropolitan city at night. The map utilizes a monochrome color palette of deep blacks and slate grays for streets and terrain. Roads are subtly highlighted with faint, glowing lines. There are a few scattered, elegant champagne gold markers indicating active vehicle locations. The overall aesthetic is sleek, minimalist, and high-tech, fitting for a luxury fleet management system." data-location="New York" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaRMmdyHQPh_b3fYkncVP25g4vWLeb3uIqZL_RYkHKzrsg5S60U1wOA1fyLcNU5igzL4kAIXEgVJlXUx439LY74K2nf3BysG8JFIqteanEEPu93l7rVQtTR-xu2ANeapKUauzgxCEQ-Rz1TtMKYUtfvKgHo_D7gR0EdV6v-1-4vRNNj3Z8Y5psK0OFuEb9OuIO5DMARu1CIsVGsVZjOnKJraW7zCnMJ2w7xJsFcCoMZCrc52SE6dHw_LA9DL1jgoi3gprUif1IZgo"/>
+<!-- Map Overlay Gradient -->
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-surface/50 pointer-events-none"></div>
+<!-- Vehicle Markers (Simulated) -->
+<div class="absolute top-1/3 left-1/4 transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer">
+<div class="w-8 h-8 bg-secondary/20 rounded-full flex items-center justify-center relative shadow-[0_0_15px_rgba(233,193,118,0.3)] border border-secondary/50">
+<div class="w-2.5 h-2.5 bg-secondary rounded-full"></div>
+<!-- Pulse effect -->
+<div class="absolute inset-0 rounded-full animate-ping bg-secondary/30"></div>
+</div>
+<!-- Tooltip -->
+<div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-max bg-surface-container-high border border-outline-variant rounded-lg p-3 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none shadow-lg z-10 backdrop-blur-sm">
+<p class="font-label-md text-label-md text-on-surface">Maybach S-Class</p>
+<p class="font-label-sm text-label-sm text-secondary mt-0.5">En Route • 8 mins</p>
+</div>
+</div>
+<div class="absolute top-1/2 left-2/3 transform -translate-x-1/2 -translate-y-1/2 group cursor-pointer">
+<div class="w-8 h-8 bg-surface-container-highest rounded-full flex items-center justify-center relative border border-outline-variant">
+<div class="w-2 h-2 bg-on-surface-variant rounded-full"></div>
+</div>
+</div>
+<!-- Route Line (Simulated with SVG for visual only, normally done by mapping lib) -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none opacity-40" preserveaspectratio="none">
+<path class="animate-[dash_20s_linear_infinite]" d="M 25% 33% Q 40% 50% 66% 50%" fill="none" stroke="theme('colors.secondary')" stroke-dasharray="4 4" stroke-width="2"></path>
+</svg>
+<style>
+                    @keyframes dash {
+                        to {
+                            stroke-dashoffset: -1000;
+                        }
+                    }
+                 </style>
+<!-- Map Controls -->
+<div class="absolute bottom-margin-desktop right-margin-desktop flex flex-col gap-2">
+<button class="w-10 h-10 bg-surface-container-high/80 backdrop-blur-md rounded-lg border border-outline-variant flex items-center justify-center text-on-surface hover:text-secondary hover:border-secondary transition-colors shadow-lg">
+<span class="material-symbols-outlined">add</span>
+</button>
+<button class="w-10 h-10 bg-surface-container-high/80 backdrop-blur-md rounded-lg border border-outline-variant flex items-center justify-center text-on-surface hover:text-secondary hover:border-secondary transition-colors shadow-lg">
+<span class="material-symbols-outlined">remove</span>
+</button>
+<button class="w-10 h-10 bg-surface-container-high/80 backdrop-blur-md rounded-lg border border-outline-variant flex items-center justify-center text-on-surface hover:text-secondary hover:border-secondary transition-colors shadow-lg mt-2">
+<span class="material-symbols-outlined">my_location</span>
+</button>
+</div>
+</div>
+<!-- Active Trips Panel -->
+<aside class="w-96 bg-surface border-l border-outline-variant flex flex-col h-full shadow-[-10px_0_30px_rgba(0,0,0,0.5)] z-10 relative">
+<div class="p-6 border-b border-outline-variant/50 bg-surface/95 backdrop-blur z-20">
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-1">Active Trips</h2>
+<p class="font-body-sm text-on-surface-variant text-sm">Monitoring 12 ongoing journeys</p>
+<div class="flex gap-2 mt-4">
+<button class="px-3 py-1 rounded-full border border-secondary text-secondary font-label-sm text-label-sm bg-secondary/10">All (12)</button>
+<button class="px-3 py-1 rounded-full border border-outline-variant text-on-surface-variant font-label-sm text-label-sm hover:border-outline hover:text-on-surface transition-colors">En Route (8)</button>
+<button class="px-3 py-1 rounded-full border border-outline-variant text-on-surface-variant font-label-sm text-label-sm hover:border-outline hover:text-on-surface transition-colors">Delayed (1)</button>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-4">
+<!-- Trip Card 1: En Route -->
+<div class="bg-surface-container-low rounded-xl border border-outline-variant/50 p-5 hover:border-outline transition-colors cursor-pointer relative overflow-hidden group">
+<!-- Active Indicator -->
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-secondary"></div>
+<div class="flex justify-between items-start mb-4">
+<div>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-secondary/10 text-secondary border border-secondary/20 mb-2 inline-block">En Route</span>
+<h3 class="font-label-md text-label-md text-on-surface">Alexander Pierce</h3>
+<p class="font-body-sm text-on-surface-variant text-sm mt-0.5">Maybach S-Class • LIVERY-01</p>
+</div>
+<div class="text-right">
+<p class="font-headline-sm text-headline-sm text-secondary">14:30</p>
+<p class="font-body-sm text-on-surface-variant text-xs">ETA (8 mins)</p>
+</div>
+</div>
+<div class="relative pl-6 space-y-4 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-px before:bg-outline-variant/50">
+<div class="relative">
+<div class="absolute left-[-26px] top-1 w-2.5 h-2.5 rounded-full bg-surface border-2 border-outline-variant z-10"></div>
+<p class="font-label-sm text-label-sm text-on-surface">The Ritz-Carlton, Central Park</p>
+<p class="text-xs text-on-surface-variant mt-0.5">14:05 • Picked up</p>
+</div>
+<div class="relative">
+<div class="absolute left-[-26px] top-1 w-2.5 h-2.5 rounded-full bg-surface border-2 border-secondary z-10"></div>
+<p class="font-label-sm text-label-sm text-on-surface">JFK International Airport (T4)</p>
+<p class="text-xs text-on-surface-variant mt-0.5">Destination</p>
+</div>
+</div>
+<div class="mt-4 pt-4 border-t border-outline-variant/30 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<img alt="Driver photo" class="w-6 h-6 rounded-full grayscale opacity-80" data-alt="A small, circular black and white portrait photo of a professional chauffeur wearing a dark suit and tie. The lighting is moody and sophisticated, fitting the luxury brand aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB6E8_pRD-IUC_Z2tQBCVxC45B3YWpHXPxs6WIu27b8IkoIPPsV3XqAfwah8F9A_9olEeXtLt7AoRXK22DFPMDgRsL86kcUvg6_n6zRZJjitE2gx5U1Lj8D6Of-Vix5tHDHQMv6uw-iKQewLYWMTRR036lGaX8diilJe__8ejsVa7gGrRhixoRq0zxsLImfsc-5i948-5UmpSqsbEHGdH83KezDr_wtvIkgCW7Sg7mEuJCkGnKbiskUVbTkK3xtNxRU5kvckMyy3HU"/>
+<span class="text-xs text-on-surface-variant">Chauffeur: M. Davis</span>
+</div>
+<button class="text-secondary hover:text-secondary-fixed transition-colors">
+<span class="material-symbols-outlined text-[20px]">chat_bubble</span>
+</button>
+</div>
+</div>
+<!-- Trip Card 2: Delayed -->
+<div class="bg-surface-container-low rounded-xl border border-outline-variant/50 p-5 hover:border-outline transition-colors cursor-pointer relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-error"></div>
+<div class="flex justify-between items-start mb-4">
+<div>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-error/10 text-error border border-error/20 mb-2 inline-block">Delayed</span>
+<h3 class="font-label-md text-label-md text-on-surface">Eleanor Vance</h3>
+<p class="font-body-sm text-on-surface-variant text-sm mt-0.5">Range Rover SV • LIVERY-04</p>
+</div>
+<div class="text-right">
+<p class="font-headline-sm text-headline-sm text-error">15:15</p>
+<p class="font-body-sm text-error/80 text-xs">+12 mins traffic</p>
+</div>
+</div>
+<div class="relative pl-6 space-y-4 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-px before:bg-outline-variant/50">
+<div class="relative">
+<div class="absolute left-[-26px] top-1 w-2.5 h-2.5 rounded-full bg-surface border-2 border-outline-variant z-10"></div>
+<p class="font-label-sm text-label-sm text-on-surface">Hudson Yards, 35th St</p>
+</div>
+<div class="relative">
+<div class="absolute left-[-26px] top-1 w-2.5 h-2.5 rounded-full bg-surface border-2 border-error z-10"></div>
+<p class="font-label-sm text-label-sm text-on-surface">Teterboro Airport (TEB)</p>
+</div>
+</div>
+</div>
+<!-- Trip Card 3: Arrived -->
+<div class="bg-surface-container-low rounded-xl border border-outline-variant/50 p-5 opacity-70 hover:opacity-100 transition-opacity cursor-pointer relative overflow-hidden">
+<div class="flex justify-between items-start mb-4">
+<div>
+<span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-outline-variant/30 text-on-surface-variant border border-outline-variant mb-2 inline-block">Arrived</span>
+<h3 class="font-label-md text-label-md text-on-surface">Marcus Sterling</h3>
+<p class="font-body-sm text-on-surface-variant text-sm mt-0.5">Cadillac Escalade • LIVERY-12</p>
+</div>
+</div>
+<div class="relative pl-6 space-y-4 before:absolute before:left-[11px] before:top-2 before:bottom-2 before:w-px before:bg-outline-variant/50">
+<div class="relative">
+<div class="absolute left-[-26px] top-1 w-2.5 h-2.5 rounded-full bg-outline-variant z-10"></div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Wall Street Heliport</p>
+</div>
+<div class="relative">
+<div class="absolute left-[-26px] top-1 w-2.5 h-2.5 rounded-full bg-outline-variant z-10"></div>
+<p class="font-label-sm text-label-sm text-on-surface-variant">1 Central Park West</p>
+</div>
+</div>
+</div>
+</div>
+</aside>
+</main>
+</div>
+</body></html>

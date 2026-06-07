@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LuxeControl - Premium Chauffeur Service</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "surface-container": "#efeeeb",
+                "on-primary": "#ffffff",
+                "surface-container-low": "#f4f3f0",
+                "inverse-surface": "#2f312f",
+                "on-tertiary-fixed-variant": "#464744",
+                "surface-container-high": "#e9e8e5",
+                "on-tertiary-container": "#525350",
+                "outline": "#7f7667",
+                "on-tertiary-fixed": "#1b1c1a",
+                "on-surface": "#1a1c1a",
+                "on-primary-container": "#6a4e0c",
+                "tertiary": "#5e5f5c",
+                "tertiary-fixed-dim": "#c7c6c3",
+                "primary-container": "#e9c176",
+                "primary": "#775a19",
+                "inverse-on-surface": "#f2f1ee",
+                "surface-tint": "#775a19",
+                "tertiary-container": "#c7c7c3",
+                "on-tertiary": "#ffffff",
+                "secondary": "#5f5e5e",
+                "secondary-container": "#e2dfde",
+                "on-surface-variant": "#4e4639",
+                "on-primary-fixed-variant": "#5d4200",
+                "on-secondary-fixed": "#1c1b1b",
+                "surface-bright": "#faf9f6",
+                "primary-fixed": "#ffdea5",
+                "secondary-fixed-dim": "#c8c6c5",
+                "surface-variant": "#e3e2df",
+                "outline-variant": "#d1c5b4",
+                "surface": "#faf9f6",
+                "on-primary-fixed": "#261900",
+                "secondary-fixed": "#e5e2e1",
+                "error": "#ba1a1a",
+                "on-secondary": "#ffffff",
+                "on-secondary-fixed-variant": "#474746",
+                "inverse-primary": "#e9c176",
+                "background": "#faf9f6",
+                "on-error": "#ffffff",
+                "on-background": "#1a1c1a",
+                "surface-dim": "#dbdad7",
+                "tertiary-fixed": "#e3e2df",
+                "on-secondary-container": "#636262",
+                "surface-container-highest": "#e3e2df",
+                "error-container": "#ffdad6",
+                "primary-fixed-dim": "#e9c176",
+                "surface-container-lowest": "#ffffff",
+                "on-error-container": "#93000a"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "margin-mobile": "16px",
+                "unit": "8px",
+                "container-max": "1200px",
+                "margin-desktop": "64px",
+                "gutter": "24px"
+        },
+        "fontFamily": {
+                "display-lg": [
+                        "Playfair Display"
+                ],
+                "body-md": [
+                        "Inter"
+                ],
+                "label-caps": [
+                        "Inter"
+                ],
+                "headline-sm": [
+                        "Playfair Display"
+                ],
+                "body-lg": [
+                        "Inter"
+                ],
+                "headline-md": [
+                        "Playfair Display"
+                ],
+                "display-lg-mobile": [
+                        "Playfair Display"
+                ]
+        },
+        "fontSize": {
+                "display-lg": [
+                        "48px",
+                        {
+                                "lineHeight": "1.1",
+                                "letterSpacing": "-0.02em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "body-md": [
+                        "16px",
+                        {
+                                "lineHeight": "1.5",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-caps": [
+                        "12px",
+                        {
+                                "lineHeight": "1",
+                                "letterSpacing": "0.1em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "headline-sm": [
+                        "24px",
+                        {
+                                "lineHeight": "1.3",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-lg": [
+                        "18px",
+                        {
+                                "lineHeight": "1.6",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "400"
+                        }
+                ],
+                "headline-md": [
+                        "32px",
+                        {
+                                "lineHeight": "1.2",
+                                "fontWeight": "600"
+                        }
+                ],
+                "display-lg-mobile": [
+                        "32px",
+                        {
+                                "lineHeight": "1.2",
+                                "fontWeight": "700"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script>
+<style>
+        /* Hide scrollbar for clean mobile horizontal scrolling */
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* Subtle input focus glow */
+        .input-glow:focus-within {
+            box-shadow: 0 0 15px -3px rgba(119, 90, 25, 0.15);
+        }
+        
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Mobile App Frame Simulation (for desktop viewing) */
+        body {
+            display: flex;
+            justify-content: center;
+            background-color: #050505; /* Darker background outside the phone frame */
+        }
+        #app-frame {
+            width: 100%;
+            max-width: 430px; /* iPhone Pro Max width approx */
+            height: 100vh;
+            max-height: 932px;
+            position: relative;
+            overflow: hidden;
+            background-color: #faf9f6; /* bg-background */
+            box-shadow: 0 0 50px rgba(0,0,0,0.5);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="text-on-surface font-body-md antialiased">
+<!-- Mobile App Container -->
+<div class="flex flex-col relative" id="app-frame">
+<!-- Top Navigation Bar (Mobile Variant) -->
+<header class="flex justify-between items-center px-margin-mobile h-16 bg-surface/90 backdrop-blur-md border-b border-outline-variant/30 z-40 shrink-0">
+<button aria-label="Open menu" class="p-2 -ml-2 text-on-surface-variant hover:text-primary transition-colors" id="menu-toggle">
+<span class="material-symbols-outlined text-[24px]">menu</span>
+</button>
+<h1 class="font-headline-sm text-headline-sm text-primary uppercase tracking-widest absolute left-1/2 -translate-x-1/2">
+                LuxeControl
+            </h1>
+<button aria-label="Profile" class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant/50 relative">
+<img alt="User avatar" class="w-full h-full object-cover" data-alt="A sophisticated close-up portrait of a sharply dressed individual, suitable for a premium profile avatar. The image features moody, low-key lighting with subtle warm highlights, perfectly complementing a luxury dark-mode interface. The subject exudes quiet confidence." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbVI2pqD3I9m1ayP1Z3YVrPIqEYfHJAmOPZPFMD-pFqHKAytHmauRPou4rSqlV-RlU2rLGCpTiB0Pu1MExQXTht7yjuJNn_jaYB93xKPdySvfnhtJIlj7qxW1KFkq8HtAH6bSklwndAnZhjpZc0xmeaUjsaF3WdFjNVlukUoHxUf2X1WO5kkFoOkrZQAdBl1_3NE7wWtlzIyALmSWFE_-6mnKfeU6gtUhYdpv9dn8lYkVTq1ifiEhyBTJPPberb2zA6znz5IDf6w8"/>
+</button>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 overflow-y-auto hide-scrollbar px-margin-mobile py-8 space-y-10">
+<!-- Greeting & Search -->
+<section class="space-y-6">
+<div>
+<h2 class="font-display-lg-mobile text-display-lg-mobile text-on-surface">Good evening,<br/><span class="text-on-surface-variant">Mr. Sterling.</span></h2>
+</div>
+<!-- Where to? Input -->
+<div class="relative input-glow transition-shadow duration-300">
+<div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">my_location</span>
+</div>
+<input class="w-full bg-surface-container-low border border-outline-variant text-on-surface font-headline-sm text-[20px] rounded-xl py-4 pl-12 pr-4 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/50 placeholder:text-on-surface-variant/50 transition-all placeholder:font-headline-sm" placeholder="Where to?" style="font-family: 'Playfair Display', serif;" type="text"/>
+<button class="absolute inset-y-0 right-0 pr-4 flex items-center text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">schedule</span>
+</button>
+</div>
+</section>
+<!-- Vehicle Class Selection (Bento-style Horizontal Scroll) -->
+<section class="space-y-4">
+<div class="flex justify-between items-center">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-[0.1em]">Select Class</h3>
+<span class="text-label-caps font-label-caps text-primary flex items-center cursor-pointer">View Fleet <span class="material-symbols-outlined text-[16px] ml-1">arrow_forward</span></span>
+</div>
+<div class="flex space-x-4 overflow-x-auto hide-scrollbar snap-x snap-mandatory pb-4 -mx-margin-mobile px-margin-mobile">
+<!-- Sedan Card -->
+<div class="snap-center shrink-0 w-[240px] h-[280px] bg-surface-container rounded-2xl p-5 border border-outline-variant/30 flex flex-col justify-between relative overflow-hidden group">
+<!-- Background Gradient for depth -->
+<div class="absolute inset-0 bg-gradient-to-b from-transparent to-surface/90 z-0"></div>
+<div class="relative z-10 flex justify-between items-start">
+<span class="font-label-caps text-[10px] uppercase border border-primary/40 bg-primary/10 text-primary px-2 py-1 rounded-sm tracking-widest">Business</span>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">info</span>
+</div>
+<!-- Vehicle Image Placeholder - replacing with CSS gradient/pattern for visual structure without data URI -->
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-48 bg-cover bg-center opacity-80 mix-blend-multiply z-0 group-hover:scale-105 transition-transform duration-700 ease-in-out" data-alt="A sleek, black luxury business sedan photographed in profile against a dark, minimalist background. The lighting emphasizes the smooth curves and polished chrome accents of the vehicle, casting soft reflections. The aesthetic is ultra-premium, dark, and sophisticated, aligning perfectly with a silent luxury visual identity." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuC_9u4eHPqYb7xyAb3GegT8jnkwkDKb0lRuBGc6G_HMTENxLsije29Oi_vrGooJ-6N8L7U04veU4HyV8kIj69SDnGQVIRH1LygC_5CsxY3vAUy3O7XBuGrnFbXEFcabyaW-2q8LoBNb_Iw4MuGhN5yDhufq6ejdribcJhRVzAOKB1PDD1VeChVoz-wm9jW5rrhMOF2b5p2Vv6b0QvdaIVjnmZKRzufMb1lC7gKDGyite2jzN3t1XAP8mCC9nHe9UTXyaA6SPC0JCJE')">
+</div>
+<div class="relative z-10 space-y-1">
+<h4 class="font-headline-sm text-headline-sm text-on-surface">Sedan</h4>
+<p class="font-label-caps text-label-caps text-on-surface-variant flex items-center gap-2">
+<span class="flex items-center"><span class="material-symbols-outlined text-[14px] mr-1">person</span> 3</span>
+<span class="flex items-center"><span class="material-symbols-outlined text-[14px] mr-1">work</span> 2</span>
+</p>
+</div>
+</div>
+<!-- SUV Card -->
+<div class="snap-center shrink-0 w-[240px] h-[280px] bg-surface-container rounded-2xl p-5 border border-outline-variant/30 flex flex-col justify-between relative overflow-hidden group">
+<div class="absolute inset-0 bg-gradient-to-b from-transparent to-surface/90 z-0"></div>
+<div class="relative z-10 flex justify-between items-start">
+<span class="font-label-caps text-[10px] uppercase border border-primary/40 bg-primary/10 text-primary px-2 py-1 rounded-sm tracking-widest">First Class</span>
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">info</span>
+</div>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120%] h-48 bg-cover bg-center opacity-80 mix-blend-multiply z-0 group-hover:scale-105 transition-transform duration-700 ease-in-out" data-alt="A commanding, jet-black luxury SUV shown in a dramatic 3/4 angle under studio lighting. The dark environment highlights the vehicle's imposing silhouette and subtle champagne gold trims. The image conveys safety, spaciousness, and uncompromising high-end quality for an executive transport interface." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB6UkZoS_UxUkG0naY5wNxBgRl_iE3V-e1EHL5GV1zruZaUsQpbSGoEiZB3Jb-gPFRfeFKyIUuQdRB1bIIhwYcJki133FSHJMqFLLH6dY8nR2-w5hNHzZIdjLSUDXhTWbv72ezbtGA0HiJ1hNCBxLxV7rkqMb1tsUJZNnvGMwQu3Aoxx1gC5xu31Glq2yQMeTt9ZA1fYta9NpbupV5lkGL9_P9yHbM7Jh5QafXwm-cXfi9aE6Dzsno0qzFUX2J9Htl-L3hnT1dd3Jk')">
+</div>
+<div class="relative z-10 space-y-1">
+<h4 class="font-headline-sm text-headline-sm text-on-surface">SUV</h4>
+<p class="font-label-caps text-label-caps text-on-surface-variant flex items-center gap-2">
+<span class="flex items-center"><span class="material-symbols-outlined text-[14px] mr-1">person</span> 6</span>
+<span class="flex items-center"><span class="material-symbols-outlined text-[14px] mr-1">work</span> 4</span>
+</p>
+</div>
+</div>
+<!-- Spacer for final scroll snap -->
+<div class="snap-center shrink-0 w-[20px] h-[280px]"></div>
+</div>
+</section>
+<!-- Recent Destinations -->
+<section class="space-y-4 pb-8">
+<h3 class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-[0.1em]">Recent</h3>
+<div class="space-y-3">
+<!-- List Item 1 -->
+<div class="flex items-center p-4 bg-surface-container-lowest rounded-xl border border-surface-container hover:border-outline-variant/50 transition-colors cursor-pointer group">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant group-hover:text-primary transition-colors shrink-0">
+<span class="material-symbols-outlined text-[20px]">history</span>
+</div>
+<div class="ml-4 flex-1">
+<h4 class="font-body-md text-body-md font-semibold text-on-surface">The Ritz-Carlton</h4>
+<p class="font-label-caps text-label-caps text-on-surface-variant truncate mt-0.5">181 Wellington St W, Financial District</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[20px]">chevron_right</span>
+</div>
+<!-- List Item 2 -->
+<div class="flex items-center p-4 bg-surface-container-lowest rounded-xl border border-surface-container hover:border-outline-variant/50 transition-colors cursor-pointer group">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center text-on-surface-variant group-hover:text-primary transition-colors shrink-0">
+<span class="material-symbols-outlined text-[20px]">flight_land</span>
+</div>
+<div class="ml-4 flex-1">
+<h4 class="font-body-md text-body-md font-semibold text-on-surface">Private Terminal FBO</h4>
+<p class="font-label-caps text-label-caps text-on-surface-variant truncate mt-0.5">Pearson International Airport</p>
+</div>
+<span class="material-symbols-outlined text-outline-variant text-[20px]">chevron_right</span>
+</div>
+</div>
+</section>
+</main>
+<!-- Sleek Side Menu (Drawer implementation) -->
+<!-- Overlay -->
+<div class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden opacity-0 transition-opacity duration-300" id="drawer-overlay"></div>
+<!-- Drawer Panel -->
+<aside class="fixed top-0 left-0 h-full w-[280px] bg-surface-container-lowest border-r border-outline-variant/20 z-50 transform -translate-x-full transition-transform duration-300 ease-in-out flex flex-col" id="side-drawer">
+<div class="p-margin-mobile flex justify-between items-center border-b border-outline-variant/10">
+<h2 class="font-headline-sm text-headline-sm text-primary uppercase tracking-widest">LuxeControl</h2>
+<button class="text-on-surface-variant hover:text-on-surface" id="close-menu">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="p-margin-mobile border-b border-outline-variant/10 flex items-center space-x-4">
+<div class="w-12 h-12 rounded-full overflow-hidden border border-primary/30">
+<img alt="Admin profile photo" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByq9uskLXciD59cdXxfGkpTVvtTORqanlElTxFXEaP4xUFBZ3Tj5wWf29XLosdV06owdiOeJBcR8WYBpVwwbS-ytYvym4PGZX6pOYp4fAIs2qPRdywIyHfOjLN60Z09UfNF1FKycHbBiRYsb1Uz__VcgIe1pRLQ0pLXrVmlCm9dtdPWsmWq8FvBbNDFlWWOaX2qs8v5hDt6pQBmh1kRCEhsjUCbqhT16TdW3RHN1BpLK_MTwT9N3ZvjqWAahHILHFZQkR7AC0v_YE"/>
+</div>
+<div>
+<p class="font-body-md text-body-md font-semibold text-on-surface">Alexander Sterling</p>
+<p class="font-label-caps text-label-caps text-primary mt-1">Global Admin</p>
+</div>
+</div>
+<nav class="flex-1 overflow-y-auto py-4">
+<ul class="space-y-1 px-3">
+<li>
+<a class="flex items-center space-x-4 px-4 py-3 rounded-lg text-primary font-bold bg-primary-container/30" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-body-md text-body-md font-semibold">Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center space-x-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined">directions_car</span>
+<span class="font-body-md text-body-md font-semibold">Fleet</span>
+</a>
+</li>
+<li>
+<a class="flex items-center space-x-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined">route</span>
+<span class="font-body-md text-body-md font-semibold">Trips</span>
+</a>
+</li>
+<li>
+<a class="flex items-center space-x-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary hover:bg-surface-container-low transition-colors duration-300 ease-in-out" href="#">
+<span class="material-symbols-outlined">corporate_fare</span>
+<span class="font-body-md text-body-md font-semibold">Companies</span>
+</a>
+</li>
+</ul>
+</nav>
+<div class="p-margin-mobile border-t border-outline-variant/10">
+<ul class="space-y-1">
+<li>
+<a class="flex items-center space-x-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-body-md text-body-md font-semibold">Settings</span>
+</a>
+</li>
+<li>
+<a class="flex items-center space-x-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-body-md text-body-md font-semibold">Sign Out</span>
+</a>
+</li>
+</ul>
+</div>
+</aside>
+</div>
+<!-- Micro-interaction JS -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuToggle = document.getElementById('menu-toggle');
+            const closeMenu = document.getElementById('close-menu');
+            const drawer = document.getElementById('side-drawer');
+            const overlay = document.getElementById('drawer-overlay');
+
+            function openDrawer() {
+                overlay.classList.remove('hidden');
+                // Trigger reflow
+                void overlay.offsetWidth;
+                overlay.classList.remove('opacity-0');
+                drawer.classList.remove('-translate-x-full');
+            }
+
+            function closeDrawer() {
+                overlay.classList.add('opacity-0');
+                drawer.classList.add('-translate-x-full');
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                }, 300); // match transition duration
+            }
+
+            menuToggle.addEventListener('click', openDrawer);
+            closeMenu.addEventListener('click', closeDrawer);
+            overlay.addEventListener('click', closeDrawer);
+        });
+    </script>
+</body></html>

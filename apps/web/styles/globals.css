@@ -1,0 +1,287 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── GOOGLE FONTS ─────────────────────────────────────────────────────────── */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ─── CSS CUSTOM PROPERTIES ─────────────────────────────────────────────────── */
+:root {
+  /* Shared */
+  --gold: #e9c176;
+  --gold-light: #ffdea5;
+  --gold-dark: #775a19;
+  --radius: 0.5rem;
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
+
+/* ─── SILENT LUXURY — Dark Mode ─────────────────────────────────────────────── */
+.dark,
+[data-theme='silent-luxury'] {
+  --bg: #141313;
+  --surface-low: #1c1b1b;
+  --surface: #201f1f;
+  --surface-high: #2b2a2a;
+  --surface-highest: #353434;
+  --on-surface: #e5e2e1;
+  --on-surface-muted: #c4c7c7;
+  --outline: #8e9192;
+  --outline-subtle: #444748;
+  --shadow-color: rgba(0, 0, 0, 0.4);
+}
+
+/* ─── LUMINOUS EDITORIAL — Light Mode ───────────────────────────────────────── */
+:root,
+[data-theme='luminous-editorial'] {
+  --bg: #faf9f6;
+  --surface-low: #f4f3f0;
+  --surface: #efeeeb;
+  --surface-high: #e9e8e5;
+  --surface-highest: #e3e2df;
+  --on-surface: #1a1c1a;
+  --on-surface-muted: #4e4639;
+  --outline: #7f7667;
+  --outline-subtle: #d1c5b4;
+  --hairline: #e5e4e0;
+  --shadow-color: rgba(26, 28, 26, 0.06);
+}
+
+/* ─── BASE STYLES ────────────────────────────────────────────────────────────── */
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--on-surface);
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-serif);
+  }
+
+  /* Scrollbar styling — luxury thin scrollbar */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: var(--outline-subtle);
+    border-radius: 2px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--gold);
+  }
+
+  /* Focus visible — gold ring */
+  :focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 2px;
+    border-radius: var(--radius);
+  }
+}
+
+/* ─── COMPONENT LAYER ────────────────────────────────────────────────────────── */
+@layer components {
+  /* ── Primary Button (Gold Fill) ── */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2;
+    @apply rounded-full px-6 py-3 text-label-md font-semibold uppercase tracking-wider;
+    @apply bg-gold text-sl-bg;
+    @apply transition-all duration-200 ease-luxury;
+    @apply hover:brightness-110 hover:shadow-gold-glow;
+    @apply active:scale-[0.98];
+    @apply disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:brightness-100;
+    background: linear-gradient(to bottom, #f0cc84, #e9c176);
+  }
+
+  /* ── Secondary Button (Outline) ── */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2;
+    @apply rounded-full px-6 py-3 text-label-md font-semibold uppercase tracking-wider;
+    @apply border border-gold/40 text-gold;
+    @apply transition-all duration-200 ease-luxury;
+    @apply hover:border-gold hover:bg-gold/10;
+    @apply active:scale-[0.98];
+  }
+
+  /* ── Ghost Button ── */
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2;
+    @apply rounded px-4 py-2 text-label-md;
+    @apply text-le-on-surface-variant dark:text-sl-on-surface-variant;
+    @apply transition-all duration-150;
+    @apply hover:bg-le-surface dark:hover:bg-sl-surface;
+    @apply active:scale-[0.98];
+  }
+
+  /* ── Card — Dark ── */
+  .card-dark {
+    @apply rounded-md border border-sl-outline-variant bg-sl-surface-low;
+    @apply p-6 transition-shadow duration-200;
+  }
+
+  .card-dark-hover {
+    @apply card-dark hover:border-gold/30 hover:shadow-gold-glow-sm;
+  }
+
+  /* ── Card — Light ── */
+  .card-light {
+    @apply rounded-md border border-le-hairline bg-le-surface-lowest;
+    @apply p-6;
+  }
+
+  /* ── Input — Dark ── */
+  .input-dark {
+    @apply w-full rounded bg-sl-surface-low border border-sl-outline-variant;
+    @apply px-4 py-3 text-body-md text-sl-on-surface font-serif;
+    @apply placeholder:text-sl-on-surface-variant;
+    @apply transition-colors duration-150;
+    @apply focus:border-gold focus:outline-none focus:ring-0;
+  }
+
+  /* ── Input — Light ── */
+  .input-light {
+    @apply w-full rounded border border-le-outline-variant bg-le-surface-low;
+    @apply px-4 py-3 text-body-md text-le-on-surface;
+    @apply placeholder:text-le-on-surface-variant;
+    @apply transition-colors duration-150;
+    @apply focus:border-gold-dark focus:outline-none focus:ring-0;
+  }
+
+  /* ── Label ── */
+  .label-caps {
+    @apply text-label-caps font-semibold uppercase tracking-[0.1em];
+    @apply text-le-on-surface-variant dark:text-sl-on-surface-variant;
+  }
+
+  /* ── Badge / Chip ── */
+  .badge-gold {
+    @apply inline-flex items-center rounded-full px-3 py-1;
+    @apply text-label-caps font-semibold uppercase tracking-wider;
+    @apply border border-gold/40 bg-gold/10 text-gold;
+  }
+
+  .badge-class {
+    @apply inline-flex items-center rounded-sm px-2 py-0.5;
+    @apply text-label-caps text-[10px] font-bold uppercase tracking-widest;
+    @apply bg-gold/20 text-gold;
+  }
+
+  /* ── Section wrapper ── */
+  .section {
+    @apply px-5 py-20 md:px-16;
+  }
+
+  .container-luxury {
+    @apply mx-auto max-w-container px-5 md:px-16;
+  }
+
+  /* ── Glassmorphism nav (mobile) ── */
+  .glass-nav {
+    @apply backdrop-blur-glass bg-sl-bg/80 border-b border-sl-outline-variant;
+  }
+
+  /* ── Skeleton shimmer ── */
+  .skeleton {
+    @apply animate-shimmer rounded bg-gradient-to-r;
+    background: linear-gradient(
+      90deg,
+      var(--surface) 25%,
+      var(--surface-high) 50%,
+      var(--surface) 75%
+    );
+    background-size: 200% 100%;
+  }
+
+  /* ── Status dots ── */
+  .status-dot {
+    @apply inline-block h-2 w-2 rounded-full;
+  }
+  .status-dot.active   { @apply bg-success; }
+  .status-dot.inactive { @apply bg-sl-outline; }
+  .status-dot.warning  { @apply bg-warning; }
+  .status-dot.error    { @apply bg-error; }
+
+  /* ── Admin sidebar item ── */
+  .sidebar-item {
+    @apply flex items-center gap-3 rounded px-3 py-2.5;
+    @apply text-body-md text-sl-on-surface-variant;
+    @apply transition-all duration-150;
+    @apply hover:bg-sl-surface-high hover:text-sl-on-surface;
+  }
+
+  .sidebar-item.active {
+    @apply bg-sl-surface-high text-gold;
+  }
+
+  /* ── Booking step indicator ── */
+  .booking-step {
+    @apply flex flex-col items-center gap-1;
+  }
+
+  .booking-step-circle {
+    @apply flex h-8 w-8 items-center justify-center rounded-full;
+    @apply text-label-sm font-semibold;
+    @apply border-2 border-sl-outline-variant bg-sl-surface text-sl-on-surface-variant;
+    @apply transition-all duration-300;
+  }
+
+  .booking-step-circle.completed {
+    @apply border-gold bg-gold text-sl-bg;
+  }
+
+  .booking-step-circle.active {
+    @apply border-gold text-gold;
+  }
+
+  .booking-step-line {
+    @apply h-px flex-1 bg-sl-outline-variant transition-colors duration-300;
+  }
+
+  .booking-step-line.completed {
+    @apply bg-gold;
+  }
+}
+
+/* ─── UTILITY LAYER ──────────────────────────────────────────────────────────── */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .text-gradient-gold {
+    background: linear-gradient(135deg, #f0cc84 0%, #e9c176 50%, #c9993c 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .border-gradient-gold {
+    border-image: linear-gradient(135deg, #e9c176, #775a19) 1;
+  }
+
+  .scrollbar-hidden {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hidden::-webkit-scrollbar {
+    display: none;
+  }
+}

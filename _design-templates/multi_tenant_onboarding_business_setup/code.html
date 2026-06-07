@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LuxeControl - Onboarding</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#ffdea5",
+                        "on-tertiary-container": "#7a7979",
+                        "on-secondary-container": "#dab36a",
+                        "surface-container-highest": "#353434",
+                        "primary-container": "#0a0a0a",
+                        "primary-fixed": "#e5e2e1",
+                        "outline-variant": "#444748",
+                        "secondary-fixed-dim": "#e9c176",
+                        "on-primary": "#313030",
+                        "on-tertiary-fixed": "#1b1c1c",
+                        "on-primary-container": "#7b7979",
+                        "on-tertiary-fixed-variant": "#474747",
+                        "outline": "#8e9192",
+                        "tertiary-fixed": "#e4e2e1",
+                        "surface-dim": "#141313",
+                        "tertiary-fixed-dim": "#c8c6c6",
+                        "tertiary-container": "#0a0a0a",
+                        "surface-container": "#201f1f",
+                        "on-primary-fixed": "#1c1b1b",
+                        "on-tertiary": "#303030",
+                        "inverse-primary": "#5f5e5e",
+                        "tertiary": "#c8c6c6",
+                        "on-background": "#e5e2e1",
+                        "error": "#ffb4ab",
+                        "on-secondary-fixed": "#261900",
+                        "on-surface": "#e5e2e1",
+                        "primary-fixed-dim": "#c9c6c5",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-secondary-fixed-variant": "#5d4201",
+                        "surface-tint": "#c9c6c5",
+                        "surface-bright": "#3a3939",
+                        "inverse-on-surface": "#313030",
+                        "background": "#141313",
+                        "on-surface-variant": "#c4c7c7",
+                        "on-primary-fixed-variant": "#474646",
+                        "surface": "#141313",
+                        "primary": "#c9c6c5",
+                        "surface-container-low": "#1c1b1b",
+                        "on-error-container": "#ffdad6",
+                        "inverse-surface": "#e5e2e1",
+                        "secondary": "#e9c176",
+                        "surface-container-high": "#2b2a2a",
+                        "on-error": "#690005",
+                        "secondary-container": "#604403",
+                        "on-secondary": "#412d00",
+                        "surface-variant": "#353434",
+                        "error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-gap": "120px",
+                        "margin-desktop": "64px",
+                        "container-max": "1280px",
+                        "unit": "8px",
+                        "gutter": "24px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Playfair Display"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-md": ["Playfair Display"],
+                        "label-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-sm": ["Playfair Display"],
+                        "display-lg-mobile": ["Playfair Display"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "label-sm": ["12px", {"lineHeight": "1.4", "letterSpacing": "0.03em", "fontWeight": "500"}],
+                        "headline-md": ["32px", {"lineHeight": "1.2", "fontWeight": "500"}],
+                        "label-md": ["14px", {"lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "headline-sm": ["24px", {"lineHeight": "1.3", "fontWeight": "500"}],
+                        "display-lg-mobile": ["32px", {"lineHeight": "1.2", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .icon-fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Custom Scrollbar for elegant feel */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #353434; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #444748; }
+
+        /* Metallic Sheen Effect for Primary Buttons */
+        .btn-metallic {
+            background: linear-gradient(180deg, #e9c176 0%, #d4aa5c 100%);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 4px 14px rgba(0,0,0,0.4);
+        }
+        .btn-metallic:hover {
+            background: linear-gradient(180deg, #f5d392 0%, #e0b465 100%);
+        }
+    </style>
+</head>
+<body class="bg-surface-container-lowest text-on-surface min-h-screen antialiased selection:bg-secondary/30 selection:text-secondary">
+<!-- Split Screen Layout -->
+<div class="flex min-h-screen w-full">
+<!-- Left Panel: Atmospheric Editorial Image (Hidden on Mobile) -->
+<div class="hidden lg:flex lg:w-5/12 relative bg-surface-container overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="A cinematic, high-quality photograph of a luxury vehicle interior at night, focusing on the premium leather seats and subtle ambient cabin lighting. The scene is shot from the perspective of a passenger, looking subtly out the window towards a blurred, luminous cityscape in the background. The color palette emphasizes deep slate grays, midnight blacks, and warm champagne gold bokeh highlights from streetlights, perfectly matching the Silent Luxury dark mode aesthetic." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB1JRPFKiYcffGyDbRKNqmKRpaFedCcZddlsGIE117gpEkACZH4YPsavCk20P_-8XQyLs2r-JWA9TSh1n5-Nrg0NtlPilDuWQEGiQs_WM6zapS_pglYWzf_kuo_YL5rNAsj6Hqkmo34LAsRXg7IwHyoAbxScYeGcG3Em8dte28uNyQdZNje563x0Fa4A1O_Tz7nPmdLn_9uLp_bGAbc8cRVAi0ahNVcK45LQsOTwIkMFqwuNrakmyIl8uTdYI_8KoDCpPyBDoJ2HxU');">
+</div>
+<!-- Gradient Overlay for readability -->
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-lowest via-surface-container-lowest/50 to-transparent"></div>
+<div class="absolute bottom-margin-desktop left-margin-desktop pr-margin-desktop">
+<div class="font-headline-sm text-headline-sm text-secondary tracking-widest uppercase mb-4">LuxeControl</div>
+<h2 class="font-display-lg text-display-lg text-on-surface mb-6 leading-tight">Elevate Your<br/>Fleet Operations.</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-md">Join an exclusive network of premium transport providers. Configure your profile to connect with discerning clientele globally.</p>
+</div>
+</div>
+<!-- Right Panel: Guided Wizard Form -->
+<div class="w-full lg:w-7/12 flex flex-col items-center py-12 px-margin-mobile md:px-margin-desktop overflow-y-auto relative">
+<!-- Mobile Brand Header (Visible only on mobile) -->
+<div class="lg:hidden w-full max-w-2xl mb-8 flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary text-3xl">diamond</span>
+<span class="font-headline-sm text-headline-sm text-secondary tracking-widest uppercase">LuxeControl</span>
+</div>
+<div class="w-full max-w-2xl flex flex-col flex-1">
+<!-- Progress Stepper -->
+<div class="w-full flex items-center mb-16 relative">
+<div class="absolute left-0 top-1/2 -translate-y-1/2 w-full h-[1px] bg-outline-variant z-0"></div>
+<div class="w-full flex justify-between z-10">
+<!-- Step 1 Indicator -->
+<div class="flex flex-col items-center gap-2" id="nav-step-1">
+<div class="w-8 h-8 rounded-full bg-secondary border-2 border-secondary flex items-center justify-center transition-colors duration-300 shadow-[0_0_15px_rgba(233,193,118,0.2)]">
+<span class="material-symbols-outlined text-[16px] text-on-secondary font-bold">corporate_fare</span>
+</div>
+<span class="font-label-sm text-label-sm text-secondary uppercase tracking-widest">Identity</span>
+</div>
+<!-- Step 2 Indicator -->
+<div class="flex flex-col items-center gap-2" id="nav-step-2">
+<div class="w-8 h-8 rounded-full bg-surface-container border-2 border-outline-variant flex items-center justify-center transition-colors duration-300">
+<span class="material-symbols-outlined text-[16px] text-outline-variant">directions_car</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline-variant uppercase tracking-widest">Service</span>
+</div>
+<!-- Step 3 Indicator -->
+<div class="flex flex-col items-center gap-2" id="nav-step-3">
+<div class="w-8 h-8 rounded-full bg-surface-container border-2 border-outline-variant flex items-center justify-center transition-colors duration-300">
+<span class="material-symbols-outlined text-[16px] text-outline-variant">palette</span>
+</div>
+<span class="font-label-sm text-label-sm text-outline-variant uppercase tracking-widest">Brand</span>
+</div>
+</div>
+</div>
+<!-- Forms Container -->
+<div class="relative flex-1">
+<!-- STEP 1: Business Identity -->
+<div class="transition-all duration-500 opacity-100 translate-x-0 absolute inset-0" id="form-step-1">
+<div class="mb-10">
+<h1 class="font-headline-md text-headline-md text-on-surface mb-2">Establish Your Identity</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Provide the legal details of your enterprise to ensure compliance and trust within the network.</p>
+</div>
+<div class="space-y-6">
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Legal Entity Name</label>
+<input class="w-full bg-surface-container border border-outline-variant rounded-DEFAULT focus:border-secondary focus:ring-1 focus:ring-secondary text-on-surface font-body-md px-4 py-3.5 outline-none transition-colors placeholder-on-surface-variant/30" placeholder="e.g., Atlas Chauffeurs Ltd." type="text"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Tax Identification Number (TIN)</label>
+<input class="w-full bg-surface-container border border-outline-variant rounded-DEFAULT focus:border-secondary focus:ring-1 focus:ring-secondary text-on-surface font-body-md px-4 py-3.5 outline-none transition-colors placeholder-on-surface-variant/30" placeholder="00-0000000" type="text"/>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Headquarters City</label>
+<input class="w-full bg-surface-container border border-outline-variant rounded-DEFAULT focus:border-secondary focus:ring-1 focus:ring-secondary text-on-surface font-body-md px-4 py-3.5 outline-none transition-colors placeholder-on-surface-variant/30" placeholder="London" type="text"/>
+</div>
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Country</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface-container border border-outline-variant rounded-DEFAULT focus:border-secondary focus:ring-1 focus:ring-secondary text-on-surface font-body-md px-4 py-3.5 outline-none transition-colors">
+<option value="">Select Country</option>
+<option value="uk">United Kingdom</option>
+<option value="us">United States</option>
+<option value="ae">United Arab Emirates</option>
+<option value="ch">Switzerland</option>
+</select>
+<span class="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">expand_more</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- STEP 2: Service Configuration -->
+<div class="transition-all duration-500 opacity-0 translate-x-8 absolute inset-0 pointer-events-none" id="form-step-2">
+<div class="mb-10">
+<h1 class="font-headline-md text-headline-md text-on-surface mb-2">Configure Your Fleet</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Select the service tiers your company will offer. You can assign specific vehicles later.</p>
+</div>
+<div class="space-y-4">
+<!-- Fleet Option 1 -->
+<label class="cursor-pointer group relative block">
+<input checked="" class="peer sr-only" type="checkbox"/>
+<div class="p-5 border border-outline-variant bg-surface-container rounded-lg peer-checked:border-secondary peer-checked:bg-secondary/5 transition-all duration-300 hover:border-outline">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary icon-fill">star</span>
+<span class="font-headline-sm text-headline-sm text-on-surface group-hover:text-secondary transition-colors">First Class</span>
+</div>
+<div class="w-5 h-5 mt-1 rounded-sm border border-outline-variant peer-checked:border-secondary flex items-center justify-center peer-checked:bg-secondary transition-colors">
+<span class="material-symbols-outlined text-[14px] text-on-secondary opacity-0 peer-checked:opacity-100 font-bold">check</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant ml-9">Mercedes-Maybach S-Class, Rolls-Royce Ghost, Bentley Flying Spur or equivalent.</p>
+</div>
+</label>
+<!-- Fleet Option 2 -->
+<label class="cursor-pointer group relative block">
+<input class="peer sr-only" type="checkbox"/>
+<div class="p-5 border border-outline-variant bg-surface-container rounded-lg peer-checked:border-secondary peer-checked:bg-secondary/5 transition-all duration-300 hover:border-outline">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline-variant group-hover:text-secondary transition-colors">work</span>
+<span class="font-headline-sm text-headline-sm text-on-surface group-hover:text-secondary transition-colors">Business</span>
+</div>
+<div class="w-5 h-5 mt-1 rounded-sm border border-outline-variant peer-checked:border-secondary flex items-center justify-center peer-checked:bg-secondary transition-colors">
+<span class="material-symbols-outlined text-[14px] text-on-secondary opacity-0 peer-checked:opacity-100 font-bold">check</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant ml-9">Mercedes-Benz S-Class, BMW 7 Series, Audi A8 or equivalent.</p>
+</div>
+</label>
+<!-- Fleet Option 3 -->
+<label class="cursor-pointer group relative block">
+<input class="peer sr-only" type="checkbox"/>
+<div class="p-5 border border-outline-variant bg-surface-container rounded-lg peer-checked:border-secondary peer-checked:bg-secondary/5 transition-all duration-300 hover:border-outline">
+<div class="flex justify-between items-start mb-2">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-outline-variant group-hover:text-secondary transition-colors">airport_shuttle</span>
+<span class="font-headline-sm text-headline-sm text-on-surface group-hover:text-secondary transition-colors">Executive SUV</span>
+</div>
+<div class="w-5 h-5 mt-1 rounded-sm border border-outline-variant peer-checked:border-secondary flex items-center justify-center peer-checked:bg-secondary transition-colors">
+<span class="material-symbols-outlined text-[14px] text-on-secondary opacity-0 peer-checked:opacity-100 font-bold">check</span>
+</div>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant ml-9">Cadillac Escalade, Range Rover, Mercedes-Benz GLS or equivalent.</p>
+</div>
+</label>
+</div>
+</div>
+<!-- STEP 3: Brand Customization -->
+<div class="transition-all duration-500 opacity-0 translate-x-8 absolute inset-0 pointer-events-none" id="form-step-3">
+<div class="mb-10">
+<h1 class="font-headline-md text-headline-md text-on-surface mb-2">Brand Presence</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">Upload your corporate insignia and define a primary accent color for client-facing communications.</p>
+</div>
+<div class="space-y-8">
+<!-- Logo Upload -->
+<div class="flex flex-col gap-3">
+<label class="font-label-md text-label-md text-on-surface-variant">Corporate Logo</label>
+<div class="border-2 border-dashed border-outline-variant rounded-lg p-8 flex flex-col items-center justify-center bg-surface-container-highest/20 hover:bg-surface-container-highest/50 hover:border-secondary transition-colors cursor-pointer group">
+<div class="w-12 h-12 rounded-full bg-surface-container border border-outline-variant flex items-center justify-center mb-4 group-hover:border-secondary transition-colors">
+<span class="material-symbols-outlined text-on-surface-variant group-hover:text-secondary transition-colors">cloud_upload</span>
+</div>
+<p class="font-label-md text-label-md text-on-surface mb-1">Click to upload or drag and drop</p>
+<p class="font-label-sm text-label-sm text-on-surface-variant">SVG, PNG, JPG (max. 800x400px, transparent bg preferred)</p>
+</div>
+</div>
+<!-- Accent Color -->
+<div class="flex flex-col gap-3">
+<label class="font-label-md text-label-md text-on-surface-variant">Primary Accent Color</label>
+<div class="flex gap-4">
+<button aria-label="Champagne Gold" class="w-10 h-10 rounded-full bg-[#e9c176] ring-2 ring-offset-2 ring-offset-surface-container-lowest ring-secondary outline-none focus:ring-secondary transition-all"></button>
+<button aria-label="Slate Black" class="w-10 h-10 rounded-full bg-[#1A1A1A] border border-outline-variant ring-offset-2 ring-offset-surface-container-lowest outline-none focus:ring-outline transition-all"></button>
+<button aria-label="Pearl White" class="w-10 h-10 rounded-full bg-[#F5F5F5] border border-outline-variant ring-offset-2 ring-offset-surface-container-lowest outline-none focus:ring-outline transition-all"></button>
+<div class="w-10 h-10 rounded-full bg-surface-container border border-outline-variant flex items-center justify-center cursor-pointer hover:border-secondary transition-colors">
+<span class="material-symbols-outlined text-[18px] text-on-surface-variant">add</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Navigation Actions -->
+<div class="mt-auto pt-12 flex justify-between items-center w-full z-20 bg-surface-container-lowest">
+<button class="text-on-surface-variant font-label-md text-label-md px-6 py-3 rounded hover:text-on-surface transition-colors flex items-center gap-2 opacity-0 pointer-events-none" id="btn-back">
+<span class="material-symbols-outlined text-[18px]">arrow_back</span> Back
+                    </button>
+<button class="btn-metallic text-on-secondary font-label-md text-label-md px-8 py-3.5 rounded ml-auto flex items-center gap-2 transition-all" id="btn-next">
+                        Continue <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Simple Interaction Script -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let currentStep = 1;
+            const totalSteps = 3;
+            
+            const btnNext = document.getElementById('btn-next');
+            const btnBack = document.getElementById('btn-back');
+            
+            function updateUI() {
+                // Update Forms visibility and animation
+                for(let i = 1; i <= totalSteps; i++) {
+                    const form = document.getElementById(`form-step-${i}`);
+                    if (i === currentStep) {
+                        form.classList.remove('opacity-0', 'translate-x-8', '-translate-x-8', 'pointer-events-none');
+                        form.classList.add('opacity-100', 'translate-x-0');
+                    } else if (i < currentStep) {
+                        form.classList.remove('opacity-100', 'translate-x-0', 'translate-x-8');
+                        form.classList.add('opacity-0', '-translate-x-8', 'pointer-events-none');
+                    } else {
+                        form.classList.remove('opacity-100', 'translate-x-0', '-translate-x-8');
+                        form.classList.add('opacity-0', 'translate-x-8', 'pointer-events-none');
+                    }
+                }
+
+                // Update Progress Nodes
+                for(let i = 1; i <= totalSteps; i++) {
+                    const navNode = document.getElementById(`nav-step-${i}`);
+                    const iconContainer = navNode.querySelector('div');
+                    const label = navNode.querySelector('span:not(.material-symbols-outlined)');
+                    const icon = navNode.querySelector('.material-symbols-outlined');
+
+                    if (i === currentStep) {
+                        // Active state
+                        iconContainer.className = 'w-8 h-8 rounded-full bg-secondary border-2 border-secondary flex items-center justify-center transition-colors duration-300 shadow-[0_0_15px_rgba(233,193,118,0.2)]';
+                        icon.className = 'material-symbols-outlined text-[16px] text-on-secondary font-bold';
+                        label.className = 'font-label-sm text-label-sm text-secondary uppercase tracking-widest';
+                    } else if (i < currentStep) {
+                        // Completed state
+                        iconContainer.className = 'w-8 h-8 rounded-full bg-surface-container border-2 border-secondary flex items-center justify-center transition-colors duration-300';
+                        icon.className = 'material-symbols-outlined text-[16px] text-secondary font-bold';
+                        icon.textContent = 'check'; // Change icon to check
+                        label.className = 'font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest';
+                    } else {
+                        // Inactive state
+                        iconContainer.className = 'w-8 h-8 rounded-full bg-surface-container border-2 border-outline-variant flex items-center justify-center transition-colors duration-300';
+                        icon.className = 'material-symbols-outlined text-[16px] text-outline-variant';
+                        // Reset icons based on original HTML if we went backwards
+                        if(i===2) icon.textContent = 'directions_car';
+                        if(i===3) icon.textContent = 'palette';
+                        label.className = 'font-label-sm text-label-sm text-outline-variant uppercase tracking-widest';
+                    }
+                }
+
+                // Update Buttons
+                if (currentStep === 1) {
+                    btnBack.classList.add('opacity-0', 'pointer-events-none');
+                } else {
+                    btnBack.classList.remove('opacity-0', 'pointer-events-none');
+                }
+
+                if (currentStep === totalSteps) {
+                    btnNext.innerHTML = 'Complete Registration <span class="material-symbols-outlined text-[18px]">check_circle</span>';
+                } else {
+                    btnNext.innerHTML = 'Continue <span class="material-symbols-outlined text-[18px]">arrow_forward</span>';
+                }
+            }
+
+            btnNext.addEventListener('click', () => {
+                if (currentStep < totalSteps) {
+                    currentStep++;
+                    updateUI();
+                } else {
+                    // Final submission logic would go here
+                    btnNext.innerHTML = '<span class="material-symbols-outlined text-[18px] animate-spin">sync</span> Processing';
+                }
+            });
+
+            btnBack.addEventListener('click', () => {
+                if (currentStep > 1) {
+                    currentStep--;
+                    updateUI();
+                }
+            });
+        });
+    </script>
+</body></html>

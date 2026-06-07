@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>LuxeControl - Communications</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-background": "#e5e2e1",
+                        "on-tertiary-fixed": "#1b1c1c",
+                        "secondary": "#e9c176",
+                        "primary-fixed": "#e5e2e1",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-error": "#690005",
+                        "inverse-surface": "#e5e2e1",
+                        "surface-container-highest": "#353434",
+                        "on-secondary-fixed-variant": "#5d4201",
+                        "on-error-container": "#ffdad6",
+                        "surface-bright": "#3a3939",
+                        "on-tertiary-container": "#7a7979",
+                        "on-primary-fixed-variant": "#474646",
+                        "on-secondary-fixed": "#261900",
+                        "on-tertiary": "#303030",
+                        "surface": "#141313",
+                        "on-secondary": "#412d00",
+                        "error": "#ffb4ab",
+                        "secondary-container": "#604403",
+                        "on-tertiary-fixed-variant": "#474747",
+                        "on-secondary-container": "#dab36a",
+                        "surface-container-low": "#1c1b1b",
+                        "on-primary": "#313030",
+                        "secondary-fixed": "#ffdea5",
+                        "secondary-fixed-dim": "#e9c176",
+                        "on-primary-fixed": "#1c1b1b",
+                        "outline": "#8e9192",
+                        "primary-fixed-dim": "#c9c6c5",
+                        "on-surface-variant": "#c4c7c7",
+                        "inverse-on-surface": "#313030",
+                        "background": "#141313",
+                        "inverse-primary": "#5f5e5e",
+                        "tertiary-fixed": "#e4e2e1",
+                        "tertiary": "#c8c6c6",
+                        "outline-variant": "#444748",
+                        "surface-variant": "#353434",
+                        "on-surface": "#e5e2e1",
+                        "primary-container": "#0a0a0a",
+                        "surface-tint": "#c9c6c5",
+                        "surface-dim": "#141313",
+                        "tertiary-container": "#0a0a0a",
+                        "surface-container-high": "#2b2a2a",
+                        "on-primary-container": "#7b7979",
+                        "surface-container": "#201f1f",
+                        "tertiary-fixed-dim": "#c8c6c6",
+                        "primary": "#c9c6c5",
+                        "error-container": "#93000a"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    spacing: {
+                        "margin-desktop": "64px",
+                        "unit": "8px",
+                        "margin-mobile": "20px",
+                        "section-gap": "120px",
+                        "gutter": "24px",
+                        "container-max": "1280px"
+                    },
+                    fontFamily: {
+                        "label-md": ["Inter"],
+                        "display-lg-mobile": ["Playfair Display"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-md": ["Playfair Display"],
+                        "display-lg": ["Playfair Display"],
+                        "body-md": ["Inter"],
+                        "headline-sm": ["Playfair Display"]
+                    },
+                    fontSize: {
+                        "label-md": ["14px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "1.4", "letterSpacing": "0.03em", "fontWeight": "500" }],
+                        "headline-md": ["32px", { "lineHeight": "1.2", "fontWeight": "500" }],
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-sm": ["24px", { "lineHeight": "1.3", "fontWeight": "500" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Custom scrollbar for sleek dark mode */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #353434; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #444748; 
+        }
+        
+        /* Subtle glow for interactive elements */
+        .glow-active {
+            box-shadow: inset 0 0 0 1px rgba(233, 193, 118, 0.3);
+        }
+        
+        /* Toggle Switch Styles */
+        .toggle-checkbox:checked {
+            right: 0;
+            border-color: #e9c176;
+        }
+        .toggle-checkbox:checked + .toggle-label {
+            background-color: #e9c176;
+        }
+        
+        /* Code block tag simulation */
+        .tag-pill {
+            font-family: monospace;
+            background: rgba(233, 193, 118, 0.05);
+            border: 1px solid rgba(233, 193, 118, 0.2);
+            color: #e9c176;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased selection:bg-secondary selection:text-on-secondary overflow-hidden">
+<!-- Shared Component: SideNavBar -->
+<nav class="bg-surface dark:bg-surface h-screen w-64 fixed left-0 top-0 border-r border-outline-variant shadow-sm flex flex-col h-full py-unit px-4 z-20">
+<!-- Brand Header -->
+<div class="mb-12 mt-4 px-2">
+<h1 class="font-display-lg text-display-lg text-secondary tracking-tight" style="font-size: 32px;">LuxeOps</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1 uppercase tracking-widest">Enterprise Suite</p>
+</div>
+<!-- Navigation Links -->
+<ul class="flex-1 space-y-2">
+<!-- Inactive Items -->
+<li>
+<a class="flex items-center px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-200 cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined mr-4" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-200 cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined mr-4" style="font-variation-settings: 'FILL' 0;">directions_car</span>
+<span class="font-label-md text-label-md">Fleet</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-200 cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined mr-4" style="font-variation-settings: 'FILL' 0;">person</span>
+<span class="font-label-md text-label-md">Drivers</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-200 cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined mr-4" style="font-variation-settings: 'FILL' 0;">route</span>
+<span class="font-label-md text-label-md">Trips</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-200 cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined mr-4" style="font-variation-settings: 'FILL' 0;">business</span>
+<span class="font-label-md text-label-md">Companies</span>
+</a>
+</li>
+<li>
+<a class="flex items-center px-4 py-3 rounded-lg text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low transition-colors duration-200 cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined mr-4" style="font-variation-settings: 'FILL' 0;">analytics</span>
+<span class="font-label-md text-label-md">Analytics</span>
+</a>
+</li>
+<!-- Active Item: Settings -->
+<li>
+<a class="flex items-center px-4 py-3 rounded-lg text-secondary font-bold border-r-2 border-secondary bg-surface-container-high transition-colors duration-200 cursor-pointer active:scale-95" href="#">
+<span class="material-symbols-outlined mr-4" style="font-variation-settings: 'FILL' 1;">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</li>
+</ul>
+<!-- Bottom CTA / Profile area placeholder -->
+<div class="mt-auto border-t border-outline-variant pt-4 mb-4">
+<button class="w-full bg-secondary text-on-secondary-fixed font-label-md text-label-md py-3 rounded-lg flex justify-center items-center hover:bg-secondary-fixed transition-colors shadow-sm bg-gradient-to-b from-secondary to-[#d4af66]">
+                Book New Trip
+            </button>
+</div>
+</nav>
+<!-- Shared Component: TopNavBar -->
+<header class="fixed top-0 right-0 left-64 h-16 bg-surface-dim border-b border-outline-variant flex justify-between items-center px-margin-desktop w-[calc(100%-16rem)] z-10">
+<!-- Search Area (on_left) -->
+<div class="flex items-center w-1/3">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="w-full bg-surface-container-low border border-outline-variant rounded-full py-1.5 pl-10 pr-4 font-body-md text-body-md text-on-surface focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all placeholder:text-on-surface-variant" placeholder="Search operations..." type="text"/>
+</div>
+</div>
+<!-- Title -->
+<div class="absolute left-1/2 -translate-x-1/2">
+<span class="font-label-md text-label-md text-secondary tracking-widest uppercase">LuxeOps Admin</span>
+</div>
+<!-- Trailing Actions -->
+<div class="flex items-center space-x-6">
+<button class="text-on-surface-variant font-label-md text-label-md hover:text-secondary transition-opacity duration-300">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant font-label-md text-label-md hover:text-secondary transition-opacity duration-300">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<button class="text-on-surface-variant font-label-md text-label-md hover:text-secondary transition-opacity duration-300">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="ml-64 mt-16 p-margin-desktop h-[calc(100vh-64px)] overflow-hidden flex flex-col bg-[#0A0A0A]">
+<!-- Page Header -->
+<div class="mb-8 flex justify-between items-end shrink-0">
+<div>
+<p class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-2 flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">settings</span> Settings / Communications
+                </p>
+<h2 class="font-headline-md text-headline-md text-on-surface">Communication Engine</h2>
+</div>
+<div>
+<button class="border border-outline-variant bg-surface-container-low hover:border-secondary text-on-surface font-label-md text-label-md py-2 px-6 rounded transition-all flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">add</span> Create Template
+                </button>
+</div>
+</div>
+<!-- Engine Layout: 3 Columns -->
+<div class="flex-1 grid grid-cols-12 gap-6 min-h-0">
+<!-- Column 1: Template List (Left Pane) -->
+<div class="col-span-3 bg-surface-container-low border border-outline-variant rounded-xl flex flex-col overflow-hidden relative">
+<!-- Inner header: Segmented Control -->
+<div class="p-4 border-b border-outline-variant bg-surface-container-low/50 backdrop-blur-sm sticky top-0 z-10">
+<div class="flex bg-surface-container-highest rounded p-1">
+<button class="flex-1 text-center py-1.5 rounded bg-surface-container-low shadow text-on-surface font-label-sm text-label-sm transition-all">Client</button>
+<button class="flex-1 text-center py-1.5 rounded text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm transition-all">Driver</button>
+</div>
+</div>
+<!-- List Items -->
+<div class="flex-1 overflow-y-auto p-2 space-y-1">
+<!-- Active List Item -->
+<div class="p-3 rounded-lg bg-surface-container-high border-l-2 border-secondary cursor-pointer hover:bg-surface-container-highest transition-all group">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-label-md text-label-md text-secondary">Booking Confirmation</h4>
+<div class="flex gap-1">
+<span class="material-symbols-outlined text-[14px] text-secondary">mail</span>
+<span class="material-symbols-outlined text-[14px] text-secondary">sms</span>
+</div>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant truncate">Sent immediately upon reservation.</p>
+</div>
+<!-- Inactive List Item -->
+<div class="p-3 rounded-lg border-l-2 border-transparent cursor-pointer hover:bg-surface-container transition-all group">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-label-md text-label-md text-on-surface group-hover:text-secondary transition-colors">Chauffeur En Route</h4>
+<div class="flex gap-1">
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant">sms</span>
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant">notifications_active</span>
+</div>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant truncate">Triggered 30m before pickup.</p>
+</div>
+<div class="p-3 rounded-lg border-l-2 border-transparent cursor-pointer hover:bg-surface-container transition-all group">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-label-md text-label-md text-on-surface group-hover:text-secondary transition-colors">Trip Completed Survey</h4>
+<div class="flex gap-1">
+<span class="material-symbols-outlined text-[14px] text-on-surface-variant">mail</span>
+</div>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant truncate">Sent 1hr post drop-off.</p>
+</div>
+<div class="p-3 rounded-lg border-l-2 border-transparent cursor-pointer hover:bg-surface-container transition-all group opacity-60">
+<div class="flex justify-between items-start mb-1">
+<h4 class="font-label-md text-label-md text-on-surface group-hover:text-secondary transition-colors">Payment Failed Alert</h4>
+<div class="flex gap-1">
+<span class="material-symbols-outlined text-[14px] text-error">warning</span>
+</div>
+</div>
+<p class="font-label-sm text-label-sm text-on-surface-variant truncate">Requires immediate action.</p>
+</div>
+</div>
+</div>
+<!-- Column 2: Editor View (Center Pane) -->
+<div class="col-span-6 flex flex-col h-full overflow-hidden">
+<!-- Editor Header Card -->
+<div class="bg-surface-container-low border border-outline-variant rounded-xl p-6 mb-6 shrink-0 flex justify-between items-center shadow-[0_4px_24px_rgba(0,0,0,0.4)]">
+<div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface mb-1">Booking Confirmation</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">Manage automated messaging sent upon successful reservation creation.</p>
+</div>
+<!-- Global Enable Toggle -->
+<div class="flex items-center gap-3">
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest">Active</span>
+<div class="relative inline-block w-10 mr-2 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-5 h-5 rounded-full bg-surface-container border-2 border-outline-variant appearance-none cursor-pointer z-10 transition-all right-0 border-secondary" id="global_toggle" name="toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-5 rounded-full bg-secondary cursor-pointer transition-colors" for="global_toggle"></label>
+</div>
+</div>
+</div>
+<!-- Channels Scrollable Area -->
+<div class="flex-1 overflow-y-auto space-y-6 pr-2">
+<!-- Channel: Email -->
+<div class="bg-[#1A1A1A] border border-[#2D2D2D] rounded-xl overflow-hidden group hover:border-outline-variant transition-colors">
+<div class="px-6 py-4 border-b border-[#2D2D2D] flex justify-between items-center bg-[#1c1b1b]">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">mail</span>
+<h4 class="font-label-md text-label-md text-on-surface">Email Configuration</h4>
+</div>
+<!-- Local Toggle -->
+<div class="relative inline-block w-8 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-4 h-4 rounded-full bg-surface-container border border-outline-variant appearance-none cursor-pointer z-10 transition-all right-0 border-secondary" id="email_toggle" name="email_toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-4 rounded-full bg-secondary cursor-pointer transition-colors" for="email_toggle"></label>
+</div>
+</div>
+<div class="p-6 space-y-4">
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-2">Subject Line</label>
+<input class="w-full bg-[#141313] border border-[#2D2D2D] rounded px-4 py-3 font-body-md text-on-surface focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all glow-active" type="text" value="Your LuxeOps Reservation: {{reservation_id}}"/>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-2">HTML Body Template</label>
+<textarea class="w-full bg-[#141313] border border-[#2D2D2D] rounded px-4 py-3 font-mono text-sm text-on-surface focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all resize-none glow-active" rows="4">Dear {{passenger_name}},
+
+Your reservation for a {{vehicle_model}} is confirmed.
+Pickup: {{pickup_time}} at {{pickup_location}}.</textarea>
+</div>
+</div>
+</div>
+<!-- Channel: SMS -->
+<div class="bg-[#1A1A1A] border border-[#2D2D2D] rounded-xl overflow-hidden group hover:border-outline-variant transition-colors">
+<div class="px-6 py-4 border-b border-[#2D2D2D] flex justify-between items-center bg-[#1c1b1b]">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-secondary">sms</span>
+<h4 class="font-label-md text-label-md text-on-surface">SMS Content</h4>
+</div>
+<!-- Local Toggle -->
+<div class="relative inline-block w-8 align-middle select-none transition duration-200 ease-in">
+<input checked="" class="toggle-checkbox absolute block w-4 h-4 rounded-full bg-surface-container border border-outline-variant appearance-none cursor-pointer z-10 transition-all right-0 border-secondary" id="sms_toggle" name="sms_toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-4 rounded-full bg-secondary cursor-pointer transition-colors" for="sms_toggle"></label>
+</div>
+</div>
+<div class="p-6">
+<div>
+<div class="flex justify-between mb-2">
+<label class="block font-label-sm text-label-sm text-on-surface-variant">Message Body</label>
+<span class="font-label-sm text-label-sm text-on-surface-variant opacity-50">124/160 chars</span>
+</div>
+<textarea class="w-full bg-[#141313] border border-[#2D2D2D] rounded px-4 py-3 font-body-md text-on-surface focus:border-secondary focus:ring-1 focus:ring-secondary outline-none transition-all resize-none glow-active" rows="3">LuxeOps Confirmation: {{passenger_name}}, your {{vehicle_model}} is booked for {{pickup_time}}. Reply 'HELP' for support.</textarea>
+</div>
+</div>
+</div>
+<!-- Channel: Push Notification -->
+<div class="bg-[#1A1A1A] border border-[#2D2D2D] rounded-xl overflow-hidden group hover:border-outline-variant transition-colors opacity-50">
+<div class="px-6 py-4 border-b border-[#2D2D2D] flex justify-between items-center bg-[#1c1b1b]">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-on-surface-variant">notifications</span>
+<h4 class="font-label-md text-label-md text-on-surface-variant">Push Notification</h4>
+</div>
+<!-- Local Toggle -->
+<div class="relative inline-block w-8 align-middle select-none transition duration-200 ease-in">
+<input class="toggle-checkbox absolute block w-4 h-4 rounded-full bg-surface-container border border-outline-variant appearance-none cursor-pointer z-10 transition-all left-0" id="push_toggle" name="push_toggle" type="checkbox"/>
+<label class="toggle-label block overflow-hidden h-4 rounded-full bg-surface-variant cursor-pointer transition-colors" for="push_toggle"></label>
+</div>
+</div>
+</div>
+</div>
+<!-- Save Action Sticky Bottom -->
+<div class="mt-4 shrink-0 flex justify-end gap-4 pt-4 border-t border-outline-variant">
+<button class="font-label-md text-label-md text-on-surface-variant hover:text-on-surface px-6 py-2 transition-colors">Discard Changes</button>
+<button class="bg-secondary text-on-secondary-fixed font-label-md text-label-md px-8 py-2 rounded shadow-sm hover:bg-secondary-fixed transition-colors">Save Template</button>
+</div>
+</div>
+<!-- Column 3: Dynamic Tags (Right Pane) -->
+<div class="col-span-3 bg-surface border border-outline-variant rounded-xl flex flex-col overflow-hidden h-[80%]">
+<div class="p-4 border-b border-outline-variant bg-[#1c1b1b]">
+<h4 class="font-label-md text-label-md text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]">data_object</span> Dynamic Tags
+                    </h4>
+<p class="font-label-sm text-label-sm text-on-surface-variant mt-1">Click to copy variable.</p>
+</div>
+<div class="flex-1 overflow-y-auto p-4 space-y-6">
+<!-- Tag Category -->
+<div>
+<h5 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-3 border-b border-[#2D2D2D] pb-1">Passenger Data</h5>
+<div class="flex flex-wrap gap-2">
+<span class="tag-pill text-xs px-2 py-1 rounded cursor-pointer hover:border-secondary hover:bg-secondary/10 transition-all">{{passenger_name}}</span>
+<span class="tag-pill text-xs px-2 py-1 rounded cursor-pointer hover:border-secondary hover:bg-secondary/10 transition-all">{{passenger_phone}}</span>
+<span class="tag-pill text-xs px-2 py-1 rounded cursor-pointer hover:border-secondary hover:bg-secondary/10 transition-all">{{client_company}}</span>
+</div>
+</div>
+<!-- Tag Category -->
+<div>
+<h5 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-3 border-b border-[#2D2D2D] pb-1">Trip Details</h5>
+<div class="flex flex-wrap gap-2">
+<span class="tag-pill text-xs px-2 py-1 rounded cursor-pointer hover:border-secondary hover:bg-secondary/10 transition-all">{{reservation_id}}</span>
+<span class="tag-pill text-xs px-2 py-1 rounded cursor-pointer hover:border-secondary hover:bg-secondary/10 transition-all">{{pickup_time}}</span>
+<span class="tag-pill text-xs px-2 py-1 rounded cursor-pointer hover:border-secondary hover:bg-secondary/10 transition-all">{{pickup_location}}</span>
+<span class="tag-pill text-xs px-2 py-1 rounded cursor-pointer hover:border-secondary hover:bg-secondary/10 transition-all">{{dropoff_location}}</span>
+</div>
+</div>
+<!-- Tag Category -->
+<div>
+<h5 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-3 border-b border-[#2D2D2D] pb-1">Vehicle &amp; Driver</h5>
+<div class="flex flex-wrap gap-2">
+<span class="tag-pill text-xs px-2 py-1 rounded cursor-pointer hover:border-secondary hover:bg-secondary/10 transition-all">{{vehicle_model}}</span>
+<span class="tag-pill text-xs px-2 py-1 rounded cursor-pointer hover:border-secondary hover:bg-secondary/10 transition-all">{{license_plate}}</span>
+<span class="tag-pill text-xs px-2 py-1 rounded cursor-pointer hover:border-secondary hover:bg-secondary/10 transition-all">{{driver_name}}</span>
+<span class="tag-pill text-xs px-2 py-1 rounded cursor-pointer hover:border-secondary hover:bg-secondary/10 transition-all">{{driver_phone}}</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<script>
+        // Simple JS to simulate tag copying
+        document.querySelectorAll('.tag-pill').forEach(pill => {
+            pill.addEventListener('click', function() {
+                const text = this.innerText;
+                // Visual feedback
+                const originalBg = this.style.backgroundColor;
+                this.style.backgroundColor = 'rgba(233, 193, 118, 0.3)';
+                setTimeout(() => {
+                    this.style.backgroundColor = originalBg;
+                }, 200);
+            });
+        });
+    </script>
+</body></html>

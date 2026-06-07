@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport"/>
+<title>LuxeControl - Trip History</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Playfair+Display:wght@500;600&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "secondary-fixed": "#ffdea5",
+                        "on-tertiary-container": "#7a7979",
+                        "on-secondary-container": "#dab36a",
+                        "surface-container-highest": "#353434",
+                        "primary-container": "#0a0a0a",
+                        "primary-fixed": "#e5e2e1",
+                        "outline-variant": "#444748",
+                        "secondary-fixed-dim": "#e9c176",
+                        "on-primary": "#313030",
+                        "on-tertiary-fixed": "#1b1c1c",
+                        "on-primary-container": "#7b7979",
+                        "on-tertiary-fixed-variant": "#474747",
+                        "outline": "#8e9192",
+                        "tertiary-fixed": "#e4e2e1",
+                        "surface-dim": "#141313",
+                        "tertiary-fixed-dim": "#c8c6c6",
+                        "tertiary-container": "#0a0a0a",
+                        "surface-container": "#201f1f",
+                        "on-primary-fixed": "#1c1b1b",
+                        "on-tertiary": "#303030",
+                        "inverse-primary": "#5f5e5e",
+                        "tertiary": "#c8c6c6",
+                        "on-background": "#e5e2e1",
+                        "error": "#ffb4ab",
+                        "on-secondary-fixed": "#261900",
+                        "on-surface": "#e5e2e1",
+                        "primary-fixed-dim": "#c9c6c5",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-secondary-fixed-variant": "#5d4201",
+                        "surface-tint": "#c9c6c5",
+                        "surface-bright": "#3a3939",
+                        "inverse-on-surface": "#313030",
+                        "background": "#141313",
+                        "on-surface-variant": "#c4c7c7",
+                        "on-primary-fixed-variant": "#474646",
+                        "surface": "#141313",
+                        "primary": "#c9c6c5",
+                        "surface-container-low": "#1c1b1b",
+                        "on-error-container": "#ffdad6",
+                        "inverse-surface": "#e5e2e1",
+                        "secondary": "#e9c176",
+                        "surface-container-high": "#2b2a2a",
+                        "on-error": "#690005",
+                        "secondary-container": "#604403",
+                        "on-secondary": "#412d00",
+                        "surface-variant": "#353434",
+                        "error-container": "#93000a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "section-gap": "120px",
+                        "margin-desktop": "64px",
+                        "container-max": "1280px",
+                        "unit": "8px",
+                        "gutter": "24px",
+                        "margin-mobile": "20px"
+                    },
+                    "fontFamily": {
+                        "display-lg": ["Playfair Display"],
+                        "body-lg": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-md": ["Playfair Display"],
+                        "label-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-sm": ["Playfair Display"],
+                        "display-lg-mobile": ["Playfair Display"]
+                    },
+                    "fontSize": {
+                        "display-lg": ["48px", { "lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "label-sm": ["12px", { "lineHeight": "1.4", "letterSpacing": "0.03em", "fontWeight": "500" }],
+                        "headline-md": ["32px", { "lineHeight": "1.2", "fontWeight": "500" }],
+                        "label-md": ["14px", { "lineHeight": "1.4", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.5", "fontWeight": "400" }],
+                        "headline-sm": ["24px", { "lineHeight": "1.3", "fontWeight": "500" }],
+                        "display-lg-mobile": ["32px", { "lineHeight": "1.2", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Smooth gradient for buttons */
+        .btn-gold-gradient {
+            background: linear-gradient(180deg, #e9c176 0%, #dab36a 100%);
+        }
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #353434;
+            border-radius: 4px;
+        }
+        /* Safe area padding for mobile nav */
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface antialiased flex flex-col min-h-screen selection:bg-secondary/30 selection:text-secondary">
+<!-- Top App Bar (Mobile Context) -->
+<header class="sticky top-0 z-40 bg-surface-container-lowest/90 backdrop-blur-md border-b border-outline-variant flex justify-between items-center px-margin-mobile h-16">
+<h1 class="font-headline-sm text-headline-sm text-on-surface tracking-tight">Past Journeys</h1>
+<button class="w-10 h-10 flex items-center justify-center rounded-full bg-surface-container hover:bg-surface-container-high transition-colors text-on-surface-variant">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+</header>
+<!-- Main Content - Trip List -->
+<main class="flex-1 px-margin-mobile py-6 pb-32 space-y-4">
+<!-- Expanded Card (Recent Trip) -->
+<article class="bg-surface-container border border-outline-variant rounded-xl overflow-hidden shadow-[0_8px_30px_rgb(0,0,0,0.4)] transition-all duration-300">
+<!-- Card Header (Clickable Area) -->
+<button class="w-full text-left p-5 flex flex-col gap-4 focus:outline-none" onclick="toggleReceipt('receipt-1', 'icon-1')">
+<div class="flex justify-between items-start w-full">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Oct 24, 2023</span>
+<span class="font-body-md text-body-md text-on-surface-variant mt-0.5">08:30 AM • Completed</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-1 rounded font-label-sm text-label-sm text-secondary uppercase tracking-widest border border-secondary/30 bg-secondary/10">First Class</span>
+<span class="material-symbols-outlined text-on-surface-variant transition-transform duration-300 rotate-180" id="icon-1">expand_more</span>
+</div>
+</div>
+<!-- Route -->
+<div class="flex items-center gap-4 w-full">
+<div class="flex flex-col items-center gap-1.5 py-1">
+<div class="w-2 h-2 rounded-full bg-secondary"></div>
+<div class="w-0.5 h-8 bg-outline-variant/50"></div>
+<div class="w-2 h-2 rounded-full border-2 border-secondary bg-surface-container"></div>
+</div>
+<div class="flex flex-col gap-3 flex-1">
+<p class="font-body-md text-body-md text-on-surface truncate">The Peninsula, 5th Avenue</p>
+<p class="font-body-md text-body-md text-on-surface truncate">Teterboro Airport (TEB)</p>
+</div>
+</div>
+<!-- Chauffeur & Price Summary -->
+<div class="flex justify-between items-center w-full pt-3 border-t border-outline-variant/30">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden border border-outline-variant">
+<img alt="Chauffeur Portrait" class="w-full h-full object-cover grayscale opacity-80" data-alt="A professional headshot of a sophisticated male chauffeur in a sharp, dark bespoke suit with a subtle patterned tie. The background is a blurred, moody slate gray, typical of a high-end luxury service profile. The lighting is dramatic yet flattering, emphasizing a sense of discretion and quiet confidence." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAaZCwXLFeurf0b3IeKIenu6Ksf9ZQZQfVScSnuE5MdRuB9KGInXLCM4uvAOLcShEtEmmq3eEqZzUV4iDvhojeRnR9EBDP5sgZ7OP0XtccbuJWzdjEeBnUyc7_9KxfvNd2sGlzmghJDfEtB0prKv9VYL4QeVdJa2SR3xLHmaf3h76hOOSCoZFlZssqD81rxMMEEWyDUHfGhioogf5BdzDOJxqW21le7aWBxOPok1zyejLBkirejoCHUidju1MVb3PT-GtuEYfR0qJw"/>
+</div>
+<span class="font-label-md text-label-md text-on-surface">James W.</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-on-surface tracking-tight">$345.00</span>
+</div>
+</button>
+<!-- Expanded Receipt Details -->
+<div class="px-5 pb-5 pt-2 border-t border-dashed border-outline-variant/50 bg-surface-container-lowest/50 block" id="receipt-1">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-4">Digital Receipt</h3>
+<div class="space-y-3 mb-6">
+<div class="flex justify-between items-center">
+<span class="font-body-md text-body-md text-on-surface-variant">Base Fare</span>
+<span class="font-body-md text-body-md text-on-surface-variant">$280.00</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-md text-body-md text-on-surface-variant">Wait Time (15 mins)</span>
+<span class="font-body-md text-body-md text-on-surface-variant">$25.00</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-md text-body-md text-on-surface-variant">Taxes &amp; Surcharges</span>
+<span class="font-body-md text-body-md text-on-surface-variant">$40.00</span>
+</div>
+<div class="flex justify-between items-center pt-3 border-t border-outline-variant/30">
+<span class="font-label-md text-label-md text-on-surface">Total Charged</span>
+<span class="font-label-md text-label-md text-on-surface">$345.00</span>
+</div>
+<div class="flex justify-between items-center pt-1">
+<span class="font-body-md text-body-md text-on-surface-variant text-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">credit_card</span> •••• 4242
+                        </span>
+</div>
+</div>
+<div class="flex flex-col gap-3">
+<button class="w-full h-12 rounded-DEFAULT btn-gold-gradient text-on-secondary font-label-md text-label-md flex justify-center items-center gap-2 transition-transform active:scale-[0.98] shadow-lg shadow-secondary/10">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">refresh</span>
+                        Rebook Journey
+                    </button>
+<button class="w-full h-12 rounded-DEFAULT border border-outline-variant text-on-surface font-label-md text-label-md flex justify-center items-center gap-2 hover:bg-surface-variant/50 transition-colors">
+<span class="material-symbols-outlined">download</span>
+                        Download PDF Invoice
+                    </button>
+</div>
+</div>
+</article>
+<!-- Collapsed Card (Older Trip) -->
+<article class="bg-surface border border-outline-variant/50 rounded-xl overflow-hidden transition-all duration-300">
+<button class="w-full text-left p-5 flex flex-col gap-4 focus:outline-none" onclick="toggleReceipt('receipt-2', 'icon-2')">
+<div class="flex justify-between items-start w-full">
+<div class="flex flex-col">
+<span class="font-label-md text-label-md text-on-surface">Oct 18, 2023</span>
+<span class="font-body-md text-body-md text-on-surface-variant mt-0.5">18:45 PM • Completed</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="px-2 py-1 rounded font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest border border-outline-variant bg-surface-container-lowest">Business</span>
+<span class="material-symbols-outlined text-on-surface-variant transition-transform duration-300" id="icon-2">expand_more</span>
+</div>
+</div>
+<div class="flex items-center gap-4 w-full opacity-80">
+<div class="flex flex-col items-center gap-1.5 py-1">
+<div class="w-2 h-2 rounded-full bg-on-surface-variant"></div>
+<div class="w-0.5 h-8 bg-outline-variant/50"></div>
+<div class="w-2 h-2 rounded-full border-2 border-on-surface-variant bg-surface"></div>
+</div>
+<div class="flex flex-col gap-3 flex-1">
+<p class="font-body-md text-body-md text-on-surface truncate">Wall Street Heliport</p>
+<p class="font-body-md text-body-md text-on-surface truncate">1200 Luxury Blvd</p>
+</div>
+</div>
+<div class="flex justify-between items-center w-full pt-3 border-t border-outline-variant/30">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-variant overflow-hidden border border-outline-variant">
+<img alt="Chauffeur Portrait" class="w-full h-full object-cover grayscale opacity-80" data-alt="A professional portrait of a female chauffeur wearing a tailored dark blazer and crisp white shirt. The background is completely dark, creating a stark, high-contrast chiaroscuro effect. Her expression is focused and professional, perfectly capturing the silent luxury and discrete service aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDRNlPdXa9DuzNnpfNImMDv6gKa8hgW-dAf9QUpUgf1G9vW1oKhfyfZkzdGVEsWOOQWECF-pQDBp9y2P8z339zxisAxx0auzJtfsxBf4K__UdxJkDCtqJMccYbTq21fI3lET20ToUCPWbJU_E5FGdkdi8mXybuk6k0Z8rnc2QX5HPeZiegNO5G__wcMRqpBqwlAhX0hLfsLKW8xJbYUF40mQplVaLsN_KY63eF3d4iAfIfH7iB4JjOK0tlBpGyR0R2gsTinptjuUdI"/>
+</div>
+<span class="font-label-md text-label-md text-on-surface">Sarah M.</span>
+</div>
+<span class="font-headline-sm text-headline-sm text-on-surface tracking-tight">$185.00</span>
+</div>
+</button>
+<!-- Expanded Receipt Details (Hidden by default) -->
+<div class="px-5 pb-5 pt-2 border-t border-dashed border-outline-variant/50 bg-surface-container-lowest/50 hidden" id="receipt-2">
+<h3 class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-widest mb-4">Digital Receipt</h3>
+<div class="space-y-3 mb-6">
+<div class="flex justify-between items-center">
+<span class="font-body-md text-body-md text-on-surface-variant">Base Fare</span>
+<span class="font-body-md text-body-md text-on-surface-variant">$150.00</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-body-md text-body-md text-on-surface-variant">Taxes &amp; Surcharges</span>
+<span class="font-body-md text-body-md text-on-surface-variant">$35.00</span>
+</div>
+<div class="flex justify-between items-center pt-3 border-t border-outline-variant/30">
+<span class="font-label-md text-label-md text-on-surface">Total Charged</span>
+<span class="font-label-md text-label-md text-on-surface">$185.00</span>
+</div>
+</div>
+<div class="flex flex-col gap-3">
+<button class="w-full h-12 rounded-DEFAULT btn-gold-gradient text-on-secondary font-label-md text-label-md flex justify-center items-center gap-2 transition-transform active:scale-[0.98]">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">refresh</span>
+                        Rebook Journey
+                    </button>
+<button class="w-full h-12 rounded-DEFAULT border border-outline-variant text-on-surface font-label-md text-label-md flex justify-center items-center gap-2 hover:bg-surface-variant/50 transition-colors">
+<span class="material-symbols-outlined">download</span>
+                        Download PDF Invoice
+                    </button>
+</div>
+</div>
+</article>
+</main>
+<!-- Mobile Bottom Navigation Shell (Synthesized from context) -->
+<nav class="fixed bottom-0 w-full bg-surface-container-lowest border-t border-outline-variant flex justify-around items-center pt-3 pb-safe z-50 md:hidden shadow-[0_-4px_20px_rgb(0,0,0,0.5)]">
+<a class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-on-surface transition-colors p-2" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-sm text-[10px] tracking-wide">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-secondary p-2" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">route</span>
+<span class="font-label-sm text-[10px] tracking-wide font-bold">Trips</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-on-surface-variant hover:text-on-surface transition-colors p-2" href="#">
+<span class="material-symbols-outlined">person</span>
+<span class="font-label-sm text-[10px] tracking-wide">Profile</span>
+</a>
+</nav>
+<script>
+        // Simple accordion logic for receipts
+        function toggleReceipt(receiptId, iconId) {
+            const receipt = document.getElementById(receiptId);
+            const icon = document.getElementById(iconId);
+            const parentArticle = receipt.closest('article');
+            
+            if (receipt.classList.contains('hidden')) {
+                receipt.classList.remove('hidden');
+                receipt.classList.add('block');
+                icon.classList.add('rotate-180');
+                
+                // Elevate card visually when active
+                parentArticle.classList.remove('bg-surface', 'border-outline-variant/50');
+                parentArticle.classList.add('bg-surface-container', 'shadow-[0_8px_30px_rgb(0,0,0,0.4)]', 'border-outline-variant');
+            } else {
+                receipt.classList.remove('block');
+                receipt.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+                
+                // Return to flat state
+                parentArticle.classList.add('bg-surface', 'border-outline-variant/50');
+                parentArticle.classList.remove('bg-surface-container', 'shadow-[0_8px_30px_rgb(0,0,0,0.4)]', 'border-outline-variant');
+            }
+        }
+    </script>
+</body></html>
