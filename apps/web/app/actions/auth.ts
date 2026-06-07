@@ -76,7 +76,7 @@ export async function loginAction(
     password: parsed.data.password,
   })
 
-  if (error) {
+  if (error || !data.user) {
     return { success: false, error: 'Invalid email or password' }
   }
 
@@ -87,7 +87,7 @@ export async function loginAction(
     .eq('id', data.user.id)
     .single()
 
-  const role = (profile?.role ?? 'customer') as UserRole
+  const role = ((profile as { role?: string } | null)?.role ?? 'customer') as UserRole
   revalidatePath('/', 'layout')
   redirect(getDefaultRoute(role))
 }
