@@ -118,7 +118,7 @@ Two themes — both use Playfair Display (headings) + Inter (body):
 |---|---|---|
 | Silent Luxury (dark) | Booking, Dispatcher, Mobile | `#141313` |
 | Luminous Editorial (light) | Admin panel content area | `#faf9f6` |
-| LuxeControl (hybrid) | Admin sidebar dark + content light | Both |
+| LuxeRide (hybrid) | Admin sidebar dark + content light | Both |
 
 **Accent color across both:** Champagne Gold `#e9c176`
 

@@ -23,8 +23,8 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
   ),
   title: {
-    default: 'LuxeControl — Premium Transportation Platform',
-    template: '%s | LuxeControl',
+    default: 'LuxeRide — Premium Transportation Platform',
+    template: '%s | LuxeRide',
   },
   description:
     'The professional platform for luxury ground transportation companies. Manage bookings, fleet, drivers, and corporate accounts in one place.',
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    siteName: 'LuxeControl',
+    siteName: 'LuxeRide',
   },
   twitter: {
     card: 'summary_large_image',
