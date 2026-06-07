@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/ssr'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 import type { Database } from './database.types'
 
@@ -34,18 +35,15 @@ export async function createClient() {
 
 /**
  * Supabase Admin client with Service Role key.
+ * Uses @supabase/supabase-js createClient directly (no SSR cookie layer needed).
  * ONLY use in Server Actions and Route Handlers — never expose to client.
  * Bypasses RLS — use with extreme caution.
  */
 export function createAdminClient() {
-  return createServerClient<Database>(
+  return createSupabaseClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     {
-      cookies: {
-        getAll: () => [],
-        setAll: () => {},
-      },
       auth: {
         autoRefreshToken: false,
         persistSession: false,
