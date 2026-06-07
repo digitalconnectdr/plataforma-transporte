@@ -2,7 +2,7 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   // Transpile workspace packages
-  transpilePackages: ['@plataforma/ui', '@plataforma/database', '@plataforma/config'],
+  transpilePackages: ['@plataforma/ui', '@plataforma/database'],
 
   images: {
     remotePatterns: [

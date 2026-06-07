@@ -21,8 +21,7 @@
     "paths": {
       "@/*": ["./*"],
       "@plataforma/database": ["../../packages/database/src/index.ts"],
-      "@plataforma/ui": ["../../packages/ui/src/index.ts"],
-      "@plataforma/config": ["../../packages/config/index.ts"]
+      "@plataforma/ui": ["../../packages/ui/src/index.ts"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
