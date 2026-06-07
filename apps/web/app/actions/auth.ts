@@ -7,7 +7,7 @@ import { z } from 'zod'
 import { createClient } from '@/lib/supabase/server'
 import { createAdminClient } from '@/lib/supabase/server'
 import { getDefaultRoute } from '@/lib/auth/permissions'
-import type { UserRole } from '@plataforma/database'
+import type { UserRole } from '@/lib/auth/permissions'
 
 // ─── Schemas ──────────────────────────────────────────────────────────────────
 

@@ -1,7 +1,7 @@
 import { NextResponse, type NextRequest } from 'next/server'
 import { createClient } from '@/lib/supabase/server'
 import { getDefaultRoute } from '@/lib/auth/permissions'
-import type { UserRole } from '@plataforma/database'
+import type { UserRole } from '@/lib/auth/permissions'
 
 /**
  * Supabase Auth callback handler.
@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
         .eq('id', data.user.id)
         .single()
 
-      const role = (profile?.role ?? 'customer') as UserRole
+      const role = ((profile as { role?: string } | null)?.role ?? 'customer') as UserRole
       return NextResponse.redirect(`${origin}${getDefaultRoute(role)}`)
     }
   }

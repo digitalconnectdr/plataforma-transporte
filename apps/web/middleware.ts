@@ -1,6 +1,6 @@
 import { createServerClient } from '@supabase/ssr'
 import { type NextRequest, NextResponse } from 'next/server'
-import type { UserRole } from '@plataforma/database'
+import type { UserRole } from '@/lib/auth/permissions'
 import { getDefaultRoute, ADMIN_ROLES } from '@/lib/auth/permissions'
 
 export async function middleware(request: NextRequest) {

@@ -1,4 +1,17 @@
-import type { UserRole } from '@plataforma/database'
+/**
+ * The 9 roles in the platform.
+ * Defined here to avoid cross-package TypeScript resolution issues.
+ */
+export type UserRole =
+  | 'super_admin'
+  | 'company_owner'
+  | 'company_admin'
+  | 'dispatcher'
+  | 'accounting'
+  | 'driver'
+  | 'customer'
+  | 'corporate_manager'
+  | 'corporate_user'
 
 /**
  * Role hierarchy — higher index = more privilege within company scope.

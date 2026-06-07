@@ -1,10 +1,22 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import type { UserRole } from '@plataforma/database'
-import type { Database } from '@plataforma/database'
+import type { UserRole } from './permissions'
 import { getDefaultRoute } from './permissions'
 
-export type UserProfile = Database['public']['Tables']['user_profiles']['Row']
+export interface UserProfile {
+  id: string
+  company_id: string
+  role: UserRole
+  first_name: string
+  last_name: string
+  phone: string | null
+  avatar_url: string | null
+  is_active: boolean
+  last_seen_at: string | null
+  metadata: Record<string, unknown>
+  created_at: string
+  updated_at: string
+}
 
 export interface SessionUser {
   id: string
@@ -37,12 +49,14 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
 
   if (profileError || !profile) return null
 
+  const typedProfile = profile as unknown as UserProfile
+
   return {
     id: user.id,
     email: user.email!,
-    role: profile.role as UserRole,
-    company_id: profile.company_id,
-    profile,
+    role: typedProfile.role as UserRole,
+    company_id: typedProfile.company_id,
+    profile: typedProfile,
   }
 }
 
