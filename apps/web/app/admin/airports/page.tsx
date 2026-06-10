@@ -9,41 +9,25 @@ export default async function AirportsPage() {
 
   const admin = createAdminClient()
 
-  // Company airports with joined airport details
-  const { data: companyAirports } = await admin
-    .from('company_airports')
-    .select(`
-      id,
-      pickup_fee,
-      dropoff_fee,
-      is_active,
-      airports (
-        id,
-        iata_code,
-        name,
-        city,
-        state,
-        country
-      )
-    `)
-    .eq('company_id', user.company_id!)
-    .order('created_at', { ascending: true })
+  // Two separate queries — avoids Supabase FK-relation type resolution
+  const [{ data: companyAirports }, { data: allAirports }] = await Promise.all([
+    admin
+      .from('company_airports')
+      .select('id, airport_id, pickup_fee, dropoff_fee, is_active')
+      .eq('company_id', user.company_id!)
+      .order('created_at', { ascending: true }),
+    admin
+      .from('airports')
+      .select('id, iata_code, name, city, state, country')
+      .eq('is_active', true)
+      .order('country', { ascending: true })
+      .order('city', { ascending: true }),
+  ])
 
-  // All airports not yet added by this company (for the add form)
-  const addedAirportIds = (companyAirports ?? [])
-    .map((ca) => (ca.airports as { id: string } | null)?.id)
-    .filter(Boolean) as string[]
-
-  const { data: availableAirports } = await admin
-    .from('airports')
-    .select('id, iata_code, name, city, country')
-    .eq('is_active', true)
-    .order('country', { ascending: true })
-    .order('city', { ascending: true })
-
-  const notAddedAirports = (availableAirports ?? []).filter(
-    (a) => !addedAirportIds.includes(a.id),
-  )
+  // Build a lookup map and compute which airports haven't been added yet
+  const airportsMap = Object.fromEntries((allAirports ?? []).map((a) => [a.id, a]))
+  const addedAirportIds = new Set((companyAirports ?? []).map((ca) => ca.airport_id))
+  const notAddedAirports = (allAirports ?? []).filter((a) => !addedAirportIds.has(a.id))
 
   return (
     <div className="p-8 max-w-4xl">
@@ -139,7 +123,7 @@ export default async function AirportsPage() {
             </thead>
             <tbody className="divide-y divide-sl-outline-variant/40">
               {companyAirports.map((ca) => {
-                const airport = ca.airports as { iata_code: string; name: string; city: string; country: string } | null
+                const airport = airportsMap[ca.airport_id] ?? null
                 return (
                   <tr key={ca.id} className="hover:bg-sl-bg/40 transition-colors">
                     <td className="px-5 py-3.5">
