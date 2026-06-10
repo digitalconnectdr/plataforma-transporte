@@ -254,7 +254,7 @@ export type Database = {
         Row: {
           id: string
           company_id: string
-          vehicle_type_id: string
+          vehicle_type_id: string | null
           make: string
           model: string
           year: number
@@ -275,7 +275,7 @@ export type Database = {
         Insert: {
           id?: string | undefined
           company_id: string
-          vehicle_type_id: string
+          vehicle_type_id?: string | null | undefined
           make: string
           model: string
           year: number
@@ -296,7 +296,7 @@ export type Database = {
         Update: {
           id?: string | undefined
           company_id?: string | undefined
-          vehicle_type_id?: string | undefined
+          vehicle_type_id?: string | null | undefined
           make?: string | undefined
           model?: string | undefined
           year?: number | undefined
