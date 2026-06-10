@@ -1,11 +1,12 @@
 'use client'
 
-import { useActionState, useRef } from 'react'
+import { useRef } from 'react'
+import { useFormState } from 'react-dom'
 import Link from 'next/link'
 import { signupAction } from '@/app/actions/auth'
 
 export default function SignupPage() {
-  const [state, action, isPending] = useActionState(signupAction, null)
+  const [state, action, isPending] = useFormState(signupAction, null)
   const slugRef = useRef<HTMLInputElement>(null)
 
   // Auto-generate slug from company name

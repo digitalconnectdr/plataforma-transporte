@@ -1,10 +1,10 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useFormState } from 'react-dom'
 import { updatePasswordAction } from '@/app/actions/auth'
 
 export default function UpdatePasswordPage() {
-  const [state, action, isPending] = useActionState(updatePasswordAction, null)
+  const [state, action, isPending] = useFormState(updatePasswordAction, null)
 
   return (
     <div>

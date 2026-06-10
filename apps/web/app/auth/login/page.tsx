@@ -1,11 +1,11 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useFormState } from 'react-dom'
 import Link from 'next/link'
 import { loginAction } from '@/app/actions/auth'
 
 export default function LoginPage() {
-  const [state, action, isPending] = useActionState(loginAction, null)
+  const [state, action, isPending] = useFormState(loginAction, null)
 
   return (
     <div>

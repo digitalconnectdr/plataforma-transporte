@@ -1,11 +1,11 @@
 'use client'
 
-import { useActionState } from 'react'
+import { useFormState } from 'react-dom'
 import Link from 'next/link'
 import { resetPasswordAction } from '@/app/actions/auth'
 
 export default function ResetPasswordPage() {
-  const [state, action, isPending] = useActionState(resetPasswordAction, null)
+  const [state, action, isPending] = useFormState(resetPasswordAction, null)
 
   if (state?.success) {
     return (
