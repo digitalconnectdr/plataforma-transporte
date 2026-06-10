@@ -29,6 +29,9 @@ export default async function TeamPage() {
     .eq('company_id', user.company_id!)
     .order('created_at', { ascending: true })
 
+  // void cast — TypeScript void-callback rule
+  const teamAction: (fd: FormData) => void = inviteTeamMemberAction
+
   return (
     <div className="p-8 max-w-4xl">
 
@@ -48,7 +51,7 @@ export default async function TeamPage() {
       {/* Invite Form */}
       <div className="bg-sl-surface border border-sl-outline-variant rounded-xl p-5 mb-6">
         <h2 className="text-sm font-semibold text-sl-on-surface mb-4">Invite Team Member</h2>
-        <form action={inviteTeamMemberAction}>
+        <form action={teamAction}>
           <div className="grid grid-cols-2 gap-3 mb-3">
             <div>
               <label className="block text-xs text-sl-on-surface-muted mb-1">First Name *</label>

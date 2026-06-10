@@ -60,6 +60,11 @@ export default async function SettingsPage() {
   const booking  = settings.booking  ?? {}
   const gratuity = settings.gratuity ?? {}
 
+  // void casts — TypeScript void-callback rule
+  const infoAction:     (fd: FormData) => void = updateCompanyInfoAction
+  const bookingAction:  (fd: FormData) => void = updateBookingSettingsAction
+  const gratuityAction: (fd: FormData) => void = updateGratuitySettingsAction
+
   return (
     <div className="p-8 max-w-3xl space-y-8">
 
@@ -71,7 +76,7 @@ export default async function SettingsPage() {
       {/* ── Company Information ── */}
       <section className="bg-sl-surface border border-sl-outline-variant rounded-xl p-6">
         <h2 className="text-sm font-semibold text-sl-on-surface mb-5">Company Information</h2>
-        <form action={updateCompanyInfoAction} className="space-y-4">
+        <form action={infoAction} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
               <label className={labelCls}>Company Name *</label>
@@ -129,7 +134,7 @@ export default async function SettingsPage() {
       {/* ── Booking Settings ── */}
       <section className="bg-sl-surface border border-sl-outline-variant rounded-xl p-6">
         <h2 className="text-sm font-semibold text-sl-on-surface mb-5">Booking Settings</h2>
-        <form action={updateBookingSettingsAction} className="space-y-4">
+        <form action={bookingAction} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className={labelCls}>Min. Advance Booking (hours)</label>
@@ -202,7 +207,7 @@ export default async function SettingsPage() {
       {/* ── Gratuity Settings ── */}
       <section className="bg-sl-surface border border-sl-outline-variant rounded-xl p-6">
         <h2 className="text-sm font-semibold text-sl-on-surface mb-5">Gratuity</h2>
-        <form action={updateGratuitySettingsAction} className="space-y-4">
+        <form action={gratuityAction} className="space-y-4">
           <label className="flex items-center gap-3 cursor-pointer">
             <input
               name="enabled"
