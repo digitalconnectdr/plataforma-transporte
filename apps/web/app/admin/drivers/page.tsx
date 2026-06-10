@@ -11,24 +11,54 @@ export default async function DriversPage() {
   const companyId = user.company_id!
   const admin = createAdminClient()
 
-  const [{ data: profiles }, { data: driverRecords }] = await Promise.all([
-    admin
-      .from('user_profiles')
-      .select('id, first_name, last_name, phone, is_active')
-      .eq('company_id', companyId)
-      .eq('role', 'driver')
-      .order('first_name', { ascending: true }),
-    admin
-      .from('drivers')
-      .select('id, license_number, license_expiry, license_state, current_vehicle_id, is_available, rating, total_trips')
-      .eq('company_id', companyId),
-  ])
+  // ── Queries separadas con manejo individual de errores ─────────────────────
+  // Usamos bloques try/catch independientes en lugar de Promise.all para:
+  //   1. Aislar fallos (si una query lanza, la otra sigue)
+  //   2. Exponer el error real en Vercel Function Logs
+  //   3. Evitar que el componente crashee si la tabla aún no existe en producción
 
-  const allProfiles = profiles ?? []
-  const driverMap   = Object.fromEntries((driverRecords ?? []).map((d) => [d.id, d]))
+  const profilesQuery = admin
+    .from('user_profiles')
+    .select('id, first_name, last_name, phone, is_active')
+    .eq('company_id', companyId)
+    .eq('role', 'driver')
+    .order('first_name', { ascending: true })
+
+  const driversQuery = admin
+    .from('drivers')
+    .select('id, license_number, license_expiry, license_state, current_vehicle_id, is_available, rating, total_trips')
+    .eq('company_id', companyId)
+
+  type ProfileData = Awaited<typeof profilesQuery>['data']
+  type DriverData  = Awaited<typeof driversQuery>['data']
+
+  let profilesData: ProfileData = null
+  let driversData:  DriverData  = null
+
+  try {
+    const { data, error } = await profilesQuery
+    if (error) {
+      console.error('[drivers/page] user_profiles query error:', JSON.stringify(error))
+    }
+    profilesData = data
+  } catch (err) {
+    console.error('[drivers/page] user_profiles query THREW:', err)
+  }
+
+  try {
+    const { data, error } = await driversQuery
+    if (error) {
+      console.error('[drivers/page] drivers query error:', JSON.stringify(error))
+    }
+    driversData = data
+  } catch (err) {
+    console.error('[drivers/page] drivers query THREW:', err)
+  }
+
+  const allProfiles = profilesData ?? []
+  const driverMap   = Object.fromEntries((driversData ?? []).map((d) => [d.id, d]))
 
   const isAccounting = user.role === 'accounting'
-
   const today = new Date()
 
   return (
@@ -40,7 +70,7 @@ export default async function DriversPage() {
           <p className="text-sm text-sl-on-surface-muted mt-1">
             {allProfiles.length} conductor{allProfiles.length !== 1 ? 'es' : ''}
             {' · '}
-            {(driverRecords ?? []).filter((d) => d.is_available).length} disponibles
+            {(driversData ?? []).filter((d) => d.is_available).length} disponibles
           </p>
         </div>
         {/* Invitar conductor — disponible en F1.6 (Auth flows) */}

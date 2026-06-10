@@ -17,7 +17,8 @@ interface Props {
 }
 
 export function UpdateDriverLicenseForm({ driverId, current }: Props) {
-  const [state, action, isPending] = useFormState(
+  // useFormState retorna [state, formAction] en React 18 (2 valores, no 3)
+  const [state, formAction] = useFormState(
     updateDriverLicense.bind(null, driverId),
     null
   )
@@ -39,7 +40,7 @@ export function UpdateDriverLicenseForm({ driverId, current }: Props) {
         </div>
       )}
 
-      <form action={action} className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+      <form action={formAction} className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <div className="space-y-1">
           <label className="text-xs text-sl-on-surface-muted">No. Licencia</label>
           <input
@@ -73,10 +74,9 @@ export function UpdateDriverLicenseForm({ driverId, current }: Props) {
         <div className="sm:col-span-3 flex justify-end">
           <button
             type="submit"
-            disabled={isPending}
             className="px-4 py-2 text-xs font-semibold bg-gold text-gray-900 rounded-xl hover:bg-gold/90 disabled:opacity-60 transition-all"
           >
-            {isPending ? 'Guardando…' : 'Actualizar'}
+            Actualizar
           </button>
         </div>
       </form>

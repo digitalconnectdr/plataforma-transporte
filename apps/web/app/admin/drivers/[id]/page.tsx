@@ -17,35 +17,70 @@ export default async function DriverDetailPage({ params }: PageProps) {
   const companyId = user.company_id!
   const admin = createAdminClient()
 
-  // Fetch profile + driver record in parallel
-  const [{ data: profile }, { data: dr }] = await Promise.all([
-    admin
-      .from('user_profiles')
-      .select('id, first_name, last_name, phone, is_active, created_at')
-      .eq('id', params.id)
-      .eq('company_id', companyId)          // IDOR guard
-      .eq('role', 'driver')
-      .single(),
-    admin
-      .from('drivers')
-      .select('id, license_number, license_expiry, license_state, current_vehicle_id, is_available, rating, total_trips, total_earnings')
-      .eq('id', params.id)
-      .eq('company_id', companyId)          // IDOR guard
-      .single(),
-  ])
+  // ── Queries separadas con manejo individual de errores ─────────────────────
+  const profileQuery = admin
+    .from('user_profiles')
+    .select('id, first_name, last_name, phone, is_active, created_at')
+    .eq('id', params.id)
+    .eq('company_id', companyId)          // IDOR guard
+    .eq('role', 'driver')
+    .single()
+
+  const driverQuery = admin
+    .from('drivers')
+    .select('id, license_number, license_expiry, license_state, current_vehicle_id, is_available, rating, total_trips, total_earnings')
+    .eq('id', params.id)
+    .eq('company_id', companyId)          // IDOR guard
+    .single()
+
+  type ProfileData = Awaited<typeof profileQuery>['data']
+  type DriverData  = Awaited<typeof driverQuery>['data']
+
+  let profile: ProfileData = null
+  let dr: DriverData = null
+
+  try {
+    const { data, error } = await profileQuery
+    if (error) {
+      console.error('[drivers/[id]/page] user_profiles query error:', JSON.stringify(error))
+    }
+    profile = data
+  } catch (err) {
+    console.error('[drivers/[id]/page] user_profiles query THREW:', err)
+  }
+
+  try {
+    const { data, error } = await driverQuery
+    if (error) {
+      // PGRST116 = no rows found — expected when driver record doesn't exist yet
+      if ((error as { code?: string }).code !== 'PGRST116') {
+        console.error('[drivers/[id]/page] drivers query error:', JSON.stringify(error))
+      }
+    }
+    dr = data
+  } catch (err) {
+    console.error('[drivers/[id]/page] drivers query THREW:', err)
+  }
 
   if (!profile) notFound()
 
   // Current vehicle (if any)
   let currentVehicle: { id: string; make: string; model: string; year: number; plate_number: string } | null = null
   if (dr?.current_vehicle_id) {
-    const { data: v } = await admin
-      .from('vehicles')
-      .select('id, make, model, year, plate_number')
-      .eq('id', dr.current_vehicle_id)
-      .eq('company_id', companyId)
-      .single()
-    currentVehicle = v ?? null
+    try {
+      const { data: v, error } = await admin
+        .from('vehicles')
+        .select('id, make, model, year, plate_number')
+        .eq('id', dr.current_vehicle_id)
+        .eq('company_id', companyId)
+        .single()
+      if (error && (error as { code?: string }).code !== 'PGRST116') {
+        console.error('[drivers/[id]/page] vehicles query error:', JSON.stringify(error))
+      }
+      currentVehicle = v ?? null
+    } catch (err) {
+      console.error('[drivers/[id]/page] vehicles query THREW:', err)
+    }
   }
 
   const isAccounting = user.role === 'accounting'
