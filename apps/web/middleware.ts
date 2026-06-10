@@ -3,6 +3,24 @@ import { type NextRequest, NextResponse } from 'next/server'
 import type { UserRole } from '@/lib/auth/permissions'
 import { getDefaultRoute, ADMIN_ROLES } from '@/lib/auth/permissions'
 
+// Explicit type for setAll parameter — same reason as in lib/supabase/server.ts:
+// TypeScript can't infer from the union cookie options type in createServerClient.
+type CookieItem = {
+  name: string
+  value: string
+  options?: {
+    domain?: string
+    expires?: Date | number
+    httpOnly?: boolean
+    maxAge?: number
+    path?: string
+    sameSite?: 'strict' | 'lax' | 'none' | boolean
+    secure?: boolean
+    priority?: 'low' | 'medium' | 'high'
+    partitioned?: boolean
+  }
+}
+
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request })
 
@@ -15,7 +33,7 @@ export async function middleware(request: NextRequest) {
         getAll() {
           return request.cookies.getAll()
         },
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet: CookieItem[]) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value))
           supabaseResponse = NextResponse.next({ request })
           cookiesToSet.forEach(({ name, value, options }) =>

@@ -3,6 +3,25 @@ import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 import type { Database } from './database.types'
 
+// Explicit type for setAll parameter — TypeScript cannot infer it from
+// createServerClient because the `cookies` option accepts a union type
+// (CookieMethodsServer | CookieMethodsServerDeprecated), which breaks inference.
+type CookieItem = {
+  name: string
+  value: string
+  options?: {
+    domain?: string
+    expires?: Date | number
+    httpOnly?: boolean
+    maxAge?: number
+    path?: string
+    sameSite?: 'strict' | 'lax' | 'none' | boolean
+    secure?: boolean
+    priority?: 'low' | 'medium' | 'high'
+    partitioned?: boolean
+  }
+}
+
 /**
  * Supabase client for use in Server Components, Server Actions, and Route Handlers.
  * Reads cookies to restore the authenticated session server-side.
@@ -20,7 +39,7 @@ export async function createClient() {
         getAll() {
           return cookieStore.getAll()
         },
-        setAll(cookiesToSet) {
+        setAll(cookiesToSet: CookieItem[]) {
           try {
             cookiesToSet.forEach(({ name, value, options }) => {
               cookieStore.set(name, value, options)
