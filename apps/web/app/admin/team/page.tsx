@@ -48,7 +48,7 @@ export default async function TeamPage() {
       {/* Invite Form */}
       <div className="bg-sl-surface border border-sl-outline-variant rounded-xl p-5 mb-6">
         <h2 className="text-sm font-semibold text-sl-on-surface mb-4">Invite Team Member</h2>
-        <form action={inviteTeamMemberAction}>
+        <form action={async (fd) => { await inviteTeamMemberAction(fd) }}>
           <div className="grid grid-cols-2 gap-3 mb-3">
             <div>
               <label className="block text-xs text-sl-on-surface-muted mb-1">First Name *</label>

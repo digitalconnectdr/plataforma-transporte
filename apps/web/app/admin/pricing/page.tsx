@@ -68,7 +68,7 @@ export default async function PricingPage() {
       {/* Add Rule Form */}
       <div className="bg-sl-surface border border-sl-outline-variant rounded-xl p-5 mb-6">
         <h2 className="text-sm font-semibold text-sl-on-surface mb-4">Add Pricing Rule</h2>
-        <form action={createPricingRuleAction}>
+        <form action={async (fd) => { await createPricingRuleAction(fd) }}>
           <div className="grid grid-cols-2 gap-4 mb-4">
 
             {/* Name */}

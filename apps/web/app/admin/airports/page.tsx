@@ -51,7 +51,7 @@ export default async function AirportsPage() {
       {isAdmin && notAddedAirports.length > 0 && (
         <div className="bg-sl-surface border border-sl-outline-variant rounded-xl p-5 mb-6">
           <h2 className="text-sm font-semibold text-sl-on-surface mb-4">Add Airport</h2>
-          <form action={addCompanyAirportAction} className="flex flex-wrap gap-3 items-end">
+          <form action={async (fd) => { await addCompanyAirportAction(fd) }} className="flex flex-wrap gap-3 items-end">
             <div className="flex-1 min-w-[200px]">
               <label className="block text-xs text-sl-on-surface-muted mb-1">Airport</label>
               <select
