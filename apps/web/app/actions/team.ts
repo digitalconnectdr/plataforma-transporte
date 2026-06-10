@@ -1,0 +1,142 @@
+'use server'
+// ── F1.7 — Team Management: Server Actions ────────────────────────────────────
+// SECURITY: Solo company_owner y company_admin pueden gestionar el equipo.
+// No se expone SUPABASE_SERVICE_ROLE_KEY al cliente — solo en Server Actions.
+
+import { revalidatePath } from 'next/cache'
+import { createAdminClient } from '@/lib/supabase/server'
+import { requireRole } from '@/lib/auth/session'
+import type { UserRole } from '@/lib/auth/permissions'
+
+const ASSIGNABLE_ROLES: UserRole[] = [
+  'company_admin',
+  'dispatcher',
+  'accounting',
+  'driver',
+  'customer',
+]
+
+export async function inviteTeamMemberAction(
+  formData: FormData,
+): Promise<{ success: boolean; error?: string }> {
+  const user = await requireRole('company_owner', 'company_admin')
+  if (!user.company_id) return { success: false, error: 'Sin empresa asignada' }
+
+  const email     = (formData.get('email') as string ?? '').trim().toLowerCase()
+  const firstName = (formData.get('first_name') as string ?? '').trim()
+  const lastName  = (formData.get('last_name') as string ?? '').trim()
+  const role      = formData.get('role') as UserRole
+  const phone     = (formData.get('phone') as string ?? '').trim() || null
+
+  if (!email)     return { success: false, error: 'Email requerido' }
+  if (!firstName) return { success: false, error: 'Nombre requerido' }
+  if (!lastName)  return { success: false, error: 'Apellido requerido' }
+  if (!ASSIGNABLE_ROLES.includes(role)) {
+    return { success: false, error: 'Rol inválido' }
+  }
+
+  // company_admin cannot create another company_admin
+  if (user.role === 'company_admin' && role === 'company_admin') {
+    return { success: false, error: 'No tienes permiso para asignar este rol' }
+  }
+
+  const admin = createAdminClient()
+
+  // Invite via Supabase Auth (sends email to user)
+  const { data: authData, error: authError } = await admin.auth.admin.inviteUserByEmail(email, {
+    data: {
+      company_id: user.company_id,
+      role,
+      first_name: firstName,
+      last_name:  lastName,
+    },
+  })
+
+  if (authError) {
+    console.error('[inviteTeamMemberAction] auth error', authError)
+    if (authError.message?.includes('already registered')) {
+      return { success: false, error: 'Este email ya está registrado' }
+    }
+    return { success: false, error: 'Error al enviar la invitación' }
+  }
+
+  // Create profile immediately (active = false until invite accepted)
+  if (authData.user) {
+    const { error: profileError } = await admin.from('user_profiles').insert({
+      id:         authData.user.id,
+      company_id: user.company_id,
+      role,
+      first_name: firstName,
+      last_name:  lastName,
+      phone:      phone ?? undefined,
+      is_active:  false,   // activated when they accept the invite
+    })
+
+    if (profileError) {
+      console.error('[inviteTeamMemberAction] profile error', profileError)
+      // Non-fatal: auth invite sent, profile will be created on first login via trigger
+    }
+  }
+
+  revalidatePath('/admin/team')
+  return { success: true }
+}
+
+export async function updateTeamMemberRoleAction(
+  memberId: string,
+  role: UserRole,
+): Promise<{ success: boolean; error?: string }> {
+  const user = await requireRole('company_owner', 'company_admin')
+  if (!user.company_id) return { success: false, error: 'Sin empresa asignada' }
+
+  if (!ASSIGNABLE_ROLES.includes(role)) {
+    return { success: false, error: 'Rol inválido' }
+  }
+
+  // Prevent self-role change
+  if (memberId === user.id) {
+    return { success: false, error: 'No puedes cambiar tu propio rol' }
+  }
+
+  const admin = createAdminClient()
+  const { error } = await admin
+    .from('user_profiles')
+    .update({ role })
+    .eq('id', memberId)
+    .eq('company_id', user.company_id)
+
+  if (error) {
+    console.error('[updateTeamMemberRoleAction]', error)
+    return { success: false, error: 'Error al actualizar el rol' }
+  }
+
+  revalidatePath('/admin/team')
+  return { success: true }
+}
+
+export async function toggleTeamMemberActiveAction(
+  memberId: string,
+  isActive: boolean,
+): Promise<{ success: boolean; error?: string }> {
+  const user = await requireRole('company_owner', 'company_admin')
+  if (!user.company_id) return { success: false, error: 'Sin empresa asignada' }
+
+  if (memberId === user.id) {
+    return { success: false, error: 'No puedes desactivarte a ti mismo' }
+  }
+
+  const admin = createAdminClient()
+  const { error } = await admin
+    .from('user_profiles')
+    .update({ is_active: isActive })
+    .eq('id', memberId)
+    .eq('company_id', user.company_id)
+
+  if (error) {
+    console.error('[toggleTeamMemberActiveAction]', error)
+    return { success: false, error: 'Error al actualizar estado del miembro' }
+  }
+
+  revalidatePath('/admin/team')
+  return { success: true }
+}
