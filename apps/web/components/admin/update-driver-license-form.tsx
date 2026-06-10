@@ -1,0 +1,85 @@
+'use client'
+
+import { useFormState } from 'react-dom'
+import { updateDriverLicense } from '@/app/actions/fleet'
+
+const inputCls =
+  'w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-xl px-4 py-2.5 text-sl-on-surface ' +
+  'placeholder:text-sl-on-surface-muted focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold transition-all'
+
+interface Props {
+  driverId: string
+  current: {
+    license_number: string
+    license_expiry: string   // ISO date string or ''
+    license_state:  string
+  }
+}
+
+export function UpdateDriverLicenseForm({ driverId, current }: Props) {
+  const [state, action, isPending] = useFormState(
+    updateDriverLicense.bind(null, driverId),
+    null
+  )
+
+  return (
+    <div className="border-t border-sl-outline-variant pt-4">
+      <p className="text-xs font-semibold uppercase tracking-widest text-sl-on-surface-muted mb-3">
+        Actualizar Licencia
+      </p>
+
+      {state && !state.success && (
+        <div className="mb-3 rounded-lg bg-red-500/10 border border-red-500/20 px-4 py-2.5">
+          <p className="text-xs text-red-400">{state.error}</p>
+        </div>
+      )}
+      {state?.success && (
+        <div className="mb-3 rounded-lg bg-green-500/10 border border-green-500/20 px-4 py-2.5">
+          <p className="text-xs text-green-400">Licencia actualizada.</p>
+        </div>
+      )}
+
+      <form action={action} className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="space-y-1">
+          <label className="text-xs text-sl-on-surface-muted">No. Licencia</label>
+          <input
+            name="license_number"
+            type="text"
+            defaultValue={current.license_number}
+            placeholder="A1234567"
+            className={inputCls}
+          />
+        </div>
+        <div className="space-y-1">
+          <label className="text-xs text-sl-on-surface-muted">Estado emisor</label>
+          <input
+            name="license_state"
+            type="text"
+            defaultValue={current.license_state}
+            placeholder="CDMX"
+            className={inputCls}
+          />
+        </div>
+        <div className="space-y-1">
+          <label className="text-xs text-sl-on-surface-muted">Fecha vencimiento</label>
+          <input
+            name="license_expiry"
+            type="date"
+            defaultValue={current.license_expiry ? current.license_expiry.split('T')[0] : ''}
+            className={inputCls}
+          />
+        </div>
+
+        <div className="sm:col-span-3 flex justify-end">
+          <button
+            type="submit"
+            disabled={isPending}
+            className="px-4 py-2 text-xs font-semibold bg-gold text-sl-bg rounded-xl hover:bg-gold/90 disabled:opacity-60 transition-all"
+          >
+            {isPending ? 'Guardando…' : 'Actualizar'}
+          </button>
+        </div>
+      </form>
+    </div>
+  )
+}

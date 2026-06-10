@@ -1,0 +1,164 @@
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import { requireRole } from '@/lib/auth/session'
+import { createAdminClient } from '@/lib/supabase/server'
+import { DriverAvailabilityToggle } from '@/components/admin/fleet-controls'
+
+export const metadata: Metadata = { title: 'Conductores | LuxeRide' }
+
+export default async function DriversPage() {
+  const user = await requireRole('company_owner', 'company_admin', 'dispatcher', 'accounting')
+  const companyId = user.company_id!
+  const admin = createAdminClient()
+
+  const [{ data: profiles }, { data: driverRecords }] = await Promise.all([
+    admin
+      .from('user_profiles')
+      .select('id, first_name, last_name, phone, is_active')
+      .eq('company_id', companyId)
+      .eq('role', 'driver')
+      .order('first_name', { ascending: true }),
+    admin
+      .from('drivers')
+      .select('id, license_number, license_expiry, license_state, current_vehicle_id, is_available, rating, total_trips')
+      .eq('company_id', companyId),
+  ])
+
+  const allProfiles = profiles ?? []
+  const driverMap   = Object.fromEntries((driverRecords ?? []).map((d) => [d.id, d]))
+
+  const isAccounting = user.role === 'accounting'
+
+  const today = new Date()
+
+  return (
+    <div className="p-8 space-y-6 max-w-5xl">
+      {/* Header */}
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="font-playfair text-3xl font-semibold text-sl-on-surface">Conductores</h1>
+          <p className="text-sm text-sl-on-surface-muted mt-1">
+            {allProfiles.length} conductor{allProfiles.length !== 1 ? 'es' : ''}
+            {' · '}
+            {(driverRecords ?? []).filter((d) => d.is_available).length} disponibles
+          </p>
+        </div>
+        {/* Invitar conductor — disponible en F1.6 (Auth flows) */}
+      </div>
+
+      {/* Table */}
+      <div className="bg-sl-surface-high border border-sl-outline-variant rounded-2xl overflow-hidden">
+        {allProfiles.length === 0 ? (
+          <div className="px-6 py-16 text-center space-y-2">
+            <p className="text-sm text-sl-on-surface-muted">No hay conductores registrados.</p>
+            {/* Invitación disponible en F1.6 */}
+          </div>
+        ) : (
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-sl-outline-variant">
+                {['Conductor', 'Licencia', 'Viajes', 'Rating', 'Disponibilidad', ''].map((h) => (
+                  <th key={h} className="text-left px-5 py-3 text-[10px] font-semibold uppercase tracking-widest text-sl-on-surface-muted">
+                    {h}
+                  </th>
+                ))}
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-sl-outline-variant/50">
+              {allProfiles.map((p) => {
+                const dr = driverMap[p.id]
+                const licenseExpiry = dr?.license_expiry ? new Date(dr.license_expiry) : null
+                const licenseExpired  = licenseExpiry ? licenseExpiry < today : false
+                const licenseExpiring = licenseExpiry
+                  ? !licenseExpired && licenseExpiry < new Date(today.getTime() + 30 * 86_400_000)
+                  : false
+
+                return (
+                  <tr key={p.id} className="hover:bg-sl-bg/40 transition-colors group">
+                    {/* Name */}
+                    <td className="px-5 py-4">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center shrink-0">
+                          <span className="text-xs font-semibold text-gold">
+                            {p.first_name?.[0]}{p.last_name?.[0]}
+                          </span>
+                        </div>
+                        <div>
+                          <p className="font-medium text-sl-on-surface">
+                            {p.first_name} {p.last_name}
+                          </p>
+                          {p.phone && (
+                            <p className="text-xs text-sl-on-surface-muted">{p.phone}</p>
+                          )}
+                        </div>
+                      </div>
+                    </td>
+
+                    {/* License */}
+                    <td className="px-5 py-4">
+                      {dr ? (
+                        <div>
+                          <p className="text-xs text-sl-on-surface">
+                            {dr.license_number ?? '—'}
+                            {dr.license_state ? ` · ${dr.license_state}` : ''}
+                          </p>
+                          {licenseExpiry && (
+                            <p className={`text-[10px] mt-0.5 ${licenseExpired ? 'text-red-400' : licenseExpiring ? 'text-amber-400' : 'text-sl-on-surface-muted'}`}>
+                              {licenseExpired ? '⚠ Vencida' : licenseExpiring ? '⚠ Vence pronto' : ''}
+                              {' '}{licenseExpiry.toLocaleDateString('es-MX', { day: '2-digit', month: 'short', year: 'numeric' })}
+                            </p>
+                          )}
+                        </div>
+                      ) : (
+                        <span className="text-xs text-sl-on-surface-muted">Sin registro</span>
+                      )}
+                    </td>
+
+                    {/* Trips */}
+                    <td className="px-5 py-4">
+                      <span className="text-xs text-sl-on-surface-muted">
+                        {dr?.total_trips ?? 0}
+                      </span>
+                    </td>
+
+                    {/* Rating */}
+                    <td className="px-5 py-4">
+                      {dr?.rating != null ? (
+                        <span className="text-xs text-gold font-medium">
+                          ★ {Number(dr.rating).toFixed(1)}
+                        </span>
+                      ) : (
+                        <span className="text-xs text-sl-on-surface-muted">—</span>
+                      )}
+                    </td>
+
+                    {/* Availability toggle */}
+                    <td className="px-5 py-4">
+                      {dr && !isAccounting ? (
+                        <DriverAvailabilityToggle driverId={dr.id} isAvailable={dr.is_available} />
+                      ) : (
+                        <span className={`text-xs ${dr?.is_available ? 'text-green-400' : 'text-sl-on-surface-muted'}`}>
+                          {dr?.is_available ? 'Disponible' : 'No disponible'}
+                        </span>
+                      )}
+                    </td>
+
+                    {/* Link */}
+                    <td className="px-5 py-4 text-right">
+                      <Link
+                        href={`/admin/drivers/${p.id}`}
+                        className="text-xs text-gold opacity-0 group-hover:opacity-100 hover:text-gold/80 transition-all"
+                      >
+                        Perfil →
+                      </Link>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        )}
+      </div>
+    </div>
+  )
+}

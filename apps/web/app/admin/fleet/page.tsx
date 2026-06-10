@@ -1,0 +1,222 @@
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import { requireRole } from '@/lib/auth/session'
+import { createAdminClient } from '@/lib/supabase/server'
+import { VehicleStatusSelect, VehicleTypeActiveToggle } from '@/components/admin/fleet-controls'
+import { AddVehicleTypeForm } from '@/components/admin/add-vehicle-type-form'
+import type { VehicleStatus } from '@/lib/supabase/database.types'
+
+export const metadata: Metadata = { title: 'Fleet | LuxeRide' }
+
+const STATUS_BADGE: Record<VehicleStatus, string> = {
+  available:   'bg-green-500/10 text-green-400 border-green-500/20',
+  on_trip:     'bg-blue-500/10 text-blue-400 border-blue-500/20',
+  maintenance: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+  offline:     'bg-sl-outline-variant/20 text-sl-on-surface-muted border-sl-outline-variant/40',
+  retired:     'bg-sl-outline-variant/10 text-sl-on-surface-muted border-sl-outline-variant/20',
+}
+
+interface PageProps {
+  searchParams: { [key: string]: string | string[] | undefined }
+}
+
+export default async function FleetPage({ searchParams }: PageProps) {
+  const user = await requireRole('company_owner', 'company_admin', 'dispatcher', 'accounting')
+  const companyId = user.company_id!
+
+  const tab = typeof searchParams.tab === 'string' ? searchParams.tab : 'vehicles'
+  const admin = createAdminClient()
+
+  const [{ data: vehicles }, { data: vtypes }, { data: profiles }] = await Promise.all([
+    admin
+      .from('vehicles')
+      .select('id, make, model, year, plate_number, status, color, vehicle_type_id, current_driver_id, created_at')
+      .eq('company_id', companyId)
+      .order('created_at', { ascending: false }),
+    admin
+      .from('vehicle_types')
+      .select('id, name, class, capacity, amenities, is_active')
+      .eq('company_id', companyId)
+      .order('sort_order', { ascending: true }),
+    admin
+      .from('user_profiles')
+      .select('id, first_name, last_name')
+      .eq('company_id', companyId)
+      .eq('role', 'driver'),
+  ])
+
+  const allVehicles = vehicles ?? []
+  const allTypes    = vtypes   ?? []
+  const allDrivers  = profiles ?? []
+
+  const typeMap   = Object.fromEntries(allTypes.map((t) => [t.id, t]))
+  const driverMap = Object.fromEntries(allDrivers.map((d) => [d.id, d]))
+
+  const tabs = [
+    { label: 'Vehicles',      value: 'vehicles' },
+    { label: 'Vehicle Types', value: 'types'    },
+  ]
+
+  return (
+    <div className="p-8 space-y-6 max-w-6xl">
+      {/* Header */}
+      <div className="flex items-start justify-between">
+        <div>
+          <h1 className="font-playfair text-3xl font-semibold text-sl-on-surface">Fleet</h1>
+          <p className="text-sm text-sl-on-surface-muted mt-1">
+            {allVehicles.length} vehicle{allVehicles.length !== 1 ? 's' : ''}
+            {' · '}
+            {allVehicles.filter((v) => v.status === 'available').length} available
+          </p>
+        </div>
+        {tab === 'vehicles' && (
+          <Link
+            href="/admin/fleet/new"
+            className="px-4 py-2 text-sm font-semibold bg-gold text-sl-bg rounded-xl hover:bg-gold/90 transition-colors"
+          >
+            + Add Vehicle
+          </Link>
+        )}
+      </div>
+
+      {/* Tabs */}
+      <div className="flex items-center gap-0.5 bg-sl-surface-high border border-sl-outline-variant rounded-xl p-1 w-fit">
+        {tabs.map((t) => (
+          <Link
+            key={t.value}
+            href={`/admin/fleet${t.value !== 'vehicles' ? `?tab=${t.value}` : ''}`}
+            className={[
+              'px-4 py-1.5 rounded-lg text-xs font-medium transition-all',
+              tab === t.value
+                ? 'bg-gold text-sl-bg'
+                : 'text-sl-on-surface-muted hover:text-sl-on-surface',
+            ].join(' ')}
+          >
+            {t.label}
+          </Link>
+        ))}
+      </div>
+
+      {/* ── VEHICLES TAB ── */}
+      {tab === 'vehicles' && (
+        <div className="bg-sl-surface-high border border-sl-outline-variant rounded-2xl overflow-hidden">
+          {allVehicles.length === 0 ? (
+            <div className="px-6 py-16 text-center space-y-3">
+              <p className="text-sm text-sl-on-surface-muted">No hay vehículos registrados.</p>
+              <Link href="/admin/fleet/new" className="text-xs text-gold hover:text-gold/80 transition-colors">
+                Agregar primer vehículo →
+              </Link>
+            </div>
+          ) : (
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-sl-outline-variant">
+                  {['Vehículo', 'Tipo', 'Estado', 'Conductor', ''].map((h) => (
+                    <th key={h} className="text-left px-5 py-3 text-[10px] font-semibold uppercase tracking-widest text-sl-on-surface-muted">
+                      {h}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-sl-outline-variant/50">
+                {allVehicles.map((v) => {
+                  const type   = v.vehicle_type_id ? typeMap[v.vehicle_type_id] : null
+                  const driver = v.current_driver_id ? driverMap[v.current_driver_id] : null
+                  return (
+                    <tr key={v.id} className="hover:bg-sl-bg/40 transition-colors group">
+                      <td className="px-5 py-4">
+                        <p className="font-medium text-sl-on-surface">
+                          {v.year} {v.make} {v.model}
+                        </p>
+                        <p className="text-xs text-sl-on-surface-muted mt-0.5">
+                          {v.plate_number}{v.color ? ` · ${v.color}` : ''}
+                        </p>
+                      </td>
+                      <td className="px-5 py-4">
+                        <span className="text-xs text-sl-on-surface-muted">
+                          {type?.name ?? '—'}
+                        </span>
+                      </td>
+                      <td className="px-5 py-4">
+                        <VehicleStatusSelect vehicleId={v.id} current={v.status} />
+                      </td>
+                      <td className="px-5 py-4">
+                        {driver ? (
+                          <span className="text-xs text-sl-on-surface">
+                            {driver.first_name} {driver.last_name}
+                          </span>
+                        ) : (
+                          <span className="text-xs text-sl-on-surface-muted">Sin asignar</span>
+                        )}
+                      </td>
+                      <td className="px-5 py-4 text-right">
+                        <Link
+                          href={`/admin/fleet/${v.id}`}
+                          className="text-xs text-gold opacity-0 group-hover:opacity-100 hover:text-gold/80 transition-all"
+                        >
+                          Detalles →
+                        </Link>
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          )}
+        </div>
+      )}
+
+      {/* ── VEHICLE TYPES TAB ── */}
+      {tab === 'types' && (
+        <div className="space-y-4">
+          {allTypes.length === 0 && (
+            <div className="bg-sl-surface-high border border-sl-outline-variant rounded-2xl px-6 py-12 text-center text-sm text-sl-on-surface-muted">
+              Aún no hay tipos de vehículo. Agrega uno a continuación.
+            </div>
+          )}
+
+          {allTypes.length > 0 && (
+            <div className="bg-sl-surface-high border border-sl-outline-variant rounded-2xl overflow-hidden">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-sl-outline-variant">
+                    {['Tipo', 'Clase', 'Capacidad', 'Amenidades', 'Estado'].map((h) => (
+                      <th key={h} className="text-left px-5 py-3 text-[10px] font-semibold uppercase tracking-widest text-sl-on-surface-muted">
+                        {h}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-sl-outline-variant/50">
+                  {allTypes.map((t) => (
+                    <tr key={t.id} className="hover:bg-sl-bg/40 transition-colors">
+                      <td className="px-5 py-4">
+                        <p className="font-medium text-sl-on-surface">{t.name}</p>
+                      </td>
+                      <td className="px-5 py-4">
+                        <span className="text-xs text-sl-on-surface-muted capitalize">{t.class}</span>
+                      </td>
+                      <td className="px-5 py-4">
+                        <span className="text-xs text-sl-on-surface-muted">{t.capacity} pax</span>
+                      </td>
+                      <td className="px-5 py-4">
+                        <span className="text-xs text-sl-on-surface-muted">
+                          {t.amenities.length > 0 ? t.amenities.join(', ') : '—'}
+                        </span>
+                      </td>
+                      <td className="px-5 py-4">
+                        <VehicleTypeActiveToggle typeId={t.id} isActive={t.is_active} />
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          <AddVehicleTypeForm />
+        </div>
+      )}
+    </div>
+  )
+}

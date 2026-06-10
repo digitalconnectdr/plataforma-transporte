@@ -1,0 +1,128 @@
+'use client'
+
+import { useRef, useEffect, useState, useCallback } from 'react'
+import { useMapsLibrary } from '@vis.gl/react-google-maps'
+import type { PlaceResult } from '@/lib/maps/places'
+
+export interface AddressInputProps {
+  /** Nombre del campo — genera hidden inputs: name, name_lat, name_lng, name_place_id */
+  name?: string
+  placeholder?: string
+  defaultValue?: string
+  required?: boolean
+  disabled?: boolean
+  className?: string
+  /** Se llama cuando el usuario selecciona una sugerencia del autocomplete */
+  onPlaceSelect?: (place: PlaceResult) => void
+  /** Se llama en cada cambio de texto (incluso si no hay selección) */
+  onChange?: (value: string) => void
+}
+
+/**
+ * Input de dirección con Google Places Autocomplete.
+ *
+ * IMPORTANTE: Debe estar dentro de un <MapsProvider> para funcionar.
+ *
+ * Si se pasa `name`, genera 4 hidden inputs para usar en Server Actions:
+ *   - <name>          → dirección formateada
+ *   - <name>_lat      → latitud
+ *   - <name>_lng      → longitud
+ *   - <name>_place_id → Google Place ID
+ */
+export function AddressInput({
+  name,
+  placeholder = 'Ingresa una dirección...',
+  defaultValue = '',
+  required,
+  disabled,
+  className,
+  onPlaceSelect,
+  onChange,
+}: AddressInputProps) {
+  const inputRef  = useRef<HTMLInputElement>(null)
+  const acRef     = useRef<google.maps.places.Autocomplete | null>(null)
+  const [text,    setText]    = useState(defaultValue)
+  const [lat,     setLat]     = useState<number | ''>('')
+  const [lng,     setLng]     = useState<number | ''>('')
+  const [placeId, setPlaceId] = useState('')
+
+  const placesLib = useMapsLibrary('places')
+
+  const handlePlaceChanged = useCallback(() => {
+    const place = acRef.current?.getPlace()
+    if (!place?.geometry?.location) return
+
+    const result: PlaceResult = {
+      address: place.formatted_address ?? '',
+      lat:     place.geometry.location.lat(),
+      lng:     place.geometry.location.lng(),
+      placeId: place.place_id ?? '',
+    }
+
+    setText(result.address)
+    setLat(result.lat)
+    setLng(result.lng)
+    setPlaceId(result.placeId)
+    onChange?.(result.address)
+    onPlaceSelect?.(result)
+  }, [onChange, onPlaceSelect])
+
+  useEffect(() => {
+    if (!placesLib || !inputRef.current || acRef.current) return
+
+    acRef.current = new placesLib.Autocomplete(inputRef.current, {
+      fields: ['geometry', 'formatted_address', 'place_id'],
+    })
+    acRef.current.addListener('place_changed', handlePlaceChanged)
+
+    return () => {
+      if (acRef.current) {
+        google.maps.event.clearInstanceListeners(acRef.current)
+        acRef.current = null
+      }
+    }
+  }, [placesLib, handlePlaceChanged])
+
+  const inputCls =
+    className ??
+    'w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm ' +
+    'text-[#1d1d1f] placeholder:text-gray-400 ' +
+    'focus:border-[#0071e3] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 ' +
+    'disabled:cursor-not-allowed disabled:bg-gray-50 disabled:text-gray-400 ' +
+    'transition-colors'
+
+  return (
+    <>
+      <input
+        ref={inputRef}
+        type="text"
+        value={text}
+        onChange={(e) => {
+          setText(e.target.value)
+          onChange?.(e.target.value)
+          // Limpiar coords si el usuario escribe manualmente sin seleccionar sugerencia
+          setLat('')
+          setLng('')
+          setPlaceId('')
+        }}
+        placeholder={placeholder}
+        required={required}
+        disabled={disabled}
+        className={inputCls}
+        autoComplete="off"
+        aria-autocomplete="list"
+        aria-label={placeholder}
+      />
+
+      {/* Hidden inputs para Server Actions — solo si se pasa name */}
+      {name && (
+        <>
+          <input type="hidden" name={name}              value={text} />
+          <input type="hidden" name={`${name}_lat`}     value={lat} />
+          <input type="hidden" name={`${name}_lng`}     value={lng} />
+          <input type="hidden" name={`${name}_place_id`} value={placeId} />
+        </>
+      )}
+    </>
+  )
+}
