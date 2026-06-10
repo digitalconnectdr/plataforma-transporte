@@ -43,21 +43,6 @@ export default async function SettingsPage() {
 
   if (!company) return <p className="p-8 text-sl-on-surface-muted">Empresa no encontrada.</p>
 
-  async function handleUpdateInfo(fd: FormData) {
-    'use server'
-    await updateCompanyInfoAction(fd)
-  }
-
-  async function handleUpdateBooking(fd: FormData) {
-    'use server'
-    await updateBookingSettingsAction(fd)
-  }
-
-  async function handleUpdateGratuity(fd: FormData) {
-    'use server'
-    await updateGratuitySettingsAction(fd)
-  }
-
   const settings = (company.settings as {
     booking?: {
       advance_booking_hours?: number
@@ -86,7 +71,7 @@ export default async function SettingsPage() {
       {/* ── Company Information ── */}
       <section className="bg-sl-surface border border-sl-outline-variant rounded-xl p-6">
         <h2 className="text-sm font-semibold text-sl-on-surface mb-5">Company Information</h2>
-        <form action={handleUpdateInfo} className="space-y-4">
+        <form action={updateCompanyInfoAction} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
               <label className={labelCls}>Company Name *</label>
@@ -144,7 +129,7 @@ export default async function SettingsPage() {
       {/* ── Booking Settings ── */}
       <section className="bg-sl-surface border border-sl-outline-variant rounded-xl p-6">
         <h2 className="text-sm font-semibold text-sl-on-surface mb-5">Booking Settings</h2>
-        <form action={handleUpdateBooking} className="space-y-4">
+        <form action={updateBookingSettingsAction} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className={labelCls}>Min. Advance Booking (hours)</label>
@@ -217,7 +202,7 @@ export default async function SettingsPage() {
       {/* ── Gratuity Settings ── */}
       <section className="bg-sl-surface border border-sl-outline-variant rounded-xl p-6">
         <h2 className="text-sm font-semibold text-sl-on-surface mb-5">Gratuity</h2>
-        <form action={handleUpdateGratuity} className="space-y-4">
+        <form action={updateGratuitySettingsAction} className="space-y-4">
           <label className="flex items-center gap-3 cursor-pointer">
             <input
               name="enabled"

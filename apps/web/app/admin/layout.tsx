@@ -20,13 +20,21 @@ export default async function AdminLayout({
   // Fetch company name for sidebar header
   let companyName = 'Dashboard'
   if (user.company_id) {
-    const admin = createAdminClient()
-    const { data } = await admin
-      .from('companies')
-      .select('name')
-      .eq('id', user.company_id)
-      .single()
-    if (data?.name) companyName = data.name
+    try {
+      const admin = createAdminClient()
+      const { data, error } = await admin
+        .from('companies')
+        .select('name')
+        .eq('id', user.company_id)
+        .single()
+      if (error) {
+        console.error('[admin/layout] companies query error:', JSON.stringify(error))
+      } else if (data?.name) {
+        companyName = data.name
+      }
+    } catch (err) {
+      console.error('[admin/layout] companies query THREW:', err)
+    }
   }
 
   const isOwner        = user.role === 'company_owner'
