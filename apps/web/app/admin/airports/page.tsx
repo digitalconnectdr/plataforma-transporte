@@ -91,7 +91,7 @@ export default async function AirportsPage() {
             </div>
             <button
               type="submit"
-              className="px-4 py-2 text-sm font-medium bg-gold text-sl-bg rounded-lg hover:bg-gold/90 transition-colors"
+              className="px-4 py-2 text-sm font-medium bg-gold text-gray-900 rounded-lg hover:bg-gold/90 transition-colors"
             >
               Add Airport
             </button>

@@ -97,7 +97,7 @@
   .btn-primary {
     @apply inline-flex items-center justify-center gap-2;
     @apply rounded-full px-6 py-3 text-label-md font-semibold uppercase tracking-wider;
-    @apply bg-gold text-sl-bg;
+    @apply bg-gold text-gray-900;
     @apply transition-all duration-200 ease-luxury;
     @apply hover:brightness-110 hover:shadow-gold-glow;
     @apply active:scale-[0.98];
@@ -238,7 +238,7 @@
   }
 
   .booking-step-circle.completed {
-    @apply border-gold bg-gold text-sl-bg;
+    @apply border-gold bg-gold text-gray-900;
   }
 
   .booking-step-circle.active {

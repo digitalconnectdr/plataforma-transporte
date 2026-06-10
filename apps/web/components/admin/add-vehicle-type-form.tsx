@@ -58,7 +58,7 @@ export function AddVehicleTypeForm() {
           <button
             type="submit"
             disabled={isPending}
-            className="px-5 py-2 text-sm font-semibold bg-gold text-sl-bg rounded-xl hover:bg-gold/90 disabled:opacity-60 transition-all"
+            className="px-5 py-2 text-sm font-semibold bg-gold text-gray-900 rounded-xl hover:bg-gold/90 disabled:opacity-60 transition-all"
           >
             {isPending ? 'Adding…' : 'Add Type'}
           </button>

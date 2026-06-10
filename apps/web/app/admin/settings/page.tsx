@@ -121,7 +121,7 @@ export default async function SettingsPage() {
             </div>
           </div>
           <div className="flex justify-end pt-1">
-            <button type="submit" className="px-4 py-2 text-sm font-medium bg-gold text-sl-bg rounded-lg hover:bg-gold/90 transition-colors">
+            <button type="submit" className="px-4 py-2 text-sm font-medium bg-gold text-gray-900 rounded-lg hover:bg-gold/90 transition-colors">
               Save Changes
             </button>
           </div>
@@ -194,7 +194,7 @@ export default async function SettingsPage() {
           )}
 
           <div className="flex justify-end pt-1">
-            <button type="submit" className="px-4 py-2 text-sm font-medium bg-gold text-sl-bg rounded-lg hover:bg-gold/90 transition-colors">
+            <button type="submit" className="px-4 py-2 text-sm font-medium bg-gold text-gray-900 rounded-lg hover:bg-gold/90 transition-colors">
               Save Booking Settings
             </button>
           </div>
@@ -228,7 +228,7 @@ export default async function SettingsPage() {
             />
           </div>
           <div className="flex justify-end pt-1">
-            <button type="submit" className="px-4 py-2 text-sm font-medium bg-gold text-sl-bg rounded-lg hover:bg-gold/90 transition-colors">
+            <button type="submit" className="px-4 py-2 text-sm font-medium bg-gold text-gray-900 rounded-lg hover:bg-gold/90 transition-colors">
               Save Gratuity Settings
             </button>
           </div>

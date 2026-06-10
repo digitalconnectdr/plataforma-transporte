@@ -17,7 +17,7 @@ export default async function SuperAdminLayout({
         <div className="px-5 py-5 border-b border-sl-outline-variant">
           <div className="flex items-center gap-2.5">
             <div className="w-6 h-6 rounded-full bg-gold flex items-center justify-center shrink-0">
-              <span className="text-sl-bg font-bold text-[10px] leading-none">L</span>
+              <span className="text-gray-900 font-bold text-[10px] leading-none">L</span>
             </div>
             <span className="font-playfair text-sm font-semibold text-sl-on-surface">
               LuxeRide

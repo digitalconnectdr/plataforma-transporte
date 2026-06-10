@@ -16,22 +16,25 @@ const config: Config = {
         sans: ['var(--font-inter)', 'system-ui', 'sans-serif'],
       },
 
-      // ─── SILENT LUXURY — Dark Design System ─────────────────────────────────
+      // ─── APPLE WHITE — Luxury Light Design System ───────────────────────────
+      // sl-* tokens remapped to Luminous Editorial light palette.
+      // All components use sl-* classes — only these values change, zero component edits needed.
       colors: {
-        // Dark mode surfaces
-        'sl-bg': '#141313',
-        'sl-surface-lowest': '#0e0e0e',
-        'sl-surface-low': '#1c1b1b',
-        'sl-surface': '#201f1f',
-        'sl-surface-high': '#2b2a2a',
-        'sl-surface-highest': '#353434',
-        'sl-surface-bright': '#3a3939',
-        // Dark mode text
-        'sl-on-surface': '#e5e2e1',
-        'sl-on-surface-variant': '#c4c7c7',
-        // Dark mode outline
-        'sl-outline': '#8e9192',
-        'sl-outline-variant': '#444748',
+        // Light surfaces — warm off-white
+        'sl-bg': '#faf9f6',
+        'sl-surface-lowest': '#ffffff',
+        'sl-surface-low': '#f4f3f0',
+        'sl-surface': '#efeeeb',
+        'sl-surface-high': '#e9e8e5',
+        'sl-surface-highest': '#e3e2df',
+        'sl-surface-bright': '#dddcda',
+        // Text — near-black on light background
+        'sl-on-surface': '#1a1c1a',
+        'sl-on-surface-variant': '#4e4639',
+        'sl-on-surface-muted': '#7f7667',
+        // Outline — subtle light borders
+        'sl-outline': '#7f7667',
+        'sl-outline-variant': '#e5e4e0',
 
         // Luminous Editorial — Light Design System
         'le-bg': '#faf9f6',

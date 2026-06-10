@@ -81,7 +81,7 @@ export default async function CompaniesPage({ searchParams }: PageProps) {
                 className={[
                   'px-3 py-1.5 rounded-lg text-xs font-medium transition-all',
                   isActive
-                    ? 'bg-gold text-sl-bg'
+                    ? 'bg-gold text-gray-900'
                     : 'text-sl-on-surface-muted hover:text-sl-on-surface',
                 ].join(' ')}
               >

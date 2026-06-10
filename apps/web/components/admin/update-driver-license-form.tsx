@@ -74,7 +74,7 @@ export function UpdateDriverLicenseForm({ driverId, current }: Props) {
           <button
             type="submit"
             disabled={isPending}
-            className="px-4 py-2 text-xs font-semibold bg-gold text-sl-bg rounded-xl hover:bg-gold/90 disabled:opacity-60 transition-all"
+            className="px-4 py-2 text-xs font-semibold bg-gold text-gray-900 rounded-xl hover:bg-gold/90 disabled:opacity-60 transition-all"
           >
             {isPending ? 'Guardando…' : 'Actualizar'}
           </button>

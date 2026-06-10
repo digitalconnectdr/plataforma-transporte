@@ -15,7 +15,7 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       <header className="flex items-center justify-between px-8 py-6">
         <Link href="/" className="flex items-center gap-3">
           <div className="w-8 h-8 rounded-full bg-gold flex items-center justify-center">
-            <span className="text-sl-bg font-bold text-sm">L</span>
+            <span className="text-gray-900 font-bold text-sm">L</span>
           </div>
           <span className="font-playfair text-xl font-semibold text-sl-on-surface tracking-wide">
             LuxeRide
