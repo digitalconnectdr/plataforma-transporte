@@ -372,16 +372,27 @@ export async function updateBookingStatusAction(
   }
 
   const now = new Date().toISOString()
-  const timestamps: Record<string, string> = {}
-  if (newStatus === 'assigned')    timestamps.dispatched_at = now
-  if (newStatus === 'en_route')    timestamps.en_route_at   = now
-  if (newStatus === 'arrived')     timestamps.arrived_at    = now
-  if (newStatus === 'in_progress') timestamps.started_at    = now
-  if (newStatus === 'completed')   timestamps.completed_at  = now
-  if (newStatus === 'cancelled')   timestamps.cancelled_at  = now
-  if (newStatus === 'no_show')     timestamps.no_show_at    = now
+  const updates: {
+    status: BookingStatus
+    dispatched_at?: string
+    en_route_at?: string
+    arrived_at?: string
+    started_at?: string
+    completed_at?: string
+    cancelled_at?: string
+    no_show_at?: string
+    cancellation_reason?: string | null
+    cancelled_by?: string | null
+  } = { status: newStatus }
 
-  const updates: Record<string, unknown> = { status: newStatus, ...timestamps }
+  if (newStatus === 'assigned')    updates.dispatched_at = now
+  if (newStatus === 'en_route')    updates.en_route_at   = now
+  if (newStatus === 'arrived')     updates.arrived_at    = now
+  if (newStatus === 'in_progress') updates.started_at    = now
+  if (newStatus === 'completed')   updates.completed_at  = now
+  if (newStatus === 'cancelled')   updates.cancelled_at  = now
+  if (newStatus === 'no_show')     updates.no_show_at    = now
+
   if (newStatus === 'cancelled' && opts?.reason) {
     updates.cancellation_reason = opts.reason
     updates.cancelled_by = user.id
@@ -425,7 +436,12 @@ export async function assignDriverAction(
     return { success: false, error: 'Solo reservaciones pendientes o asignadas pueden recibir conductor' }
   }
 
-  const updates: Record<string, unknown> = {
+  const updates: {
+    driver_id: string
+    status: BookingStatus
+    dispatched_at: string
+    vehicle_id?: string
+  } = {
     driver_id:     driverId,
     status:        'assigned',
     dispatched_at: new Date().toISOString(),
