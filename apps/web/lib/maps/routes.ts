@@ -24,6 +24,8 @@ export async function calculateRoute(
   originLng:  number,
   destLat:    number,
   destLng:    number,
+  /** Paradas intermedias (multi-stop) — máx. 3 */
+  intermediates?: { lat: number; lng: number }[],
 ): Promise<RouteCalculation | null> {
   // Usar la key del servidor (no expuesta al browser)
   const apiKey = process.env.GOOGLE_MAPS_SERVER_KEY
@@ -43,6 +45,13 @@ export async function calculateRoute(
       body: JSON.stringify({
         origin:      { location: { latLng: { latitude: originLat, longitude: originLng } } },
         destination: { location: { latLng: { latitude: destLat,   longitude: destLng   } } },
+        ...(intermediates?.length
+          ? {
+              intermediates: intermediates.slice(0, 3).map((s) => ({
+                location: { latLng: { latitude: s.lat, longitude: s.lng } },
+              })),
+            }
+          : {}),
         travelMode:  'DRIVE',
         routingPreference: 'TRAFFIC_AWARE',
       }),

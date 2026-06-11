@@ -25,6 +25,7 @@ export interface DispatchBooking {
   flight_number?: string | null
   flight_status?: string | null
   flight_delay_minutes?: number | null
+  stops_count?: number
 }
 
 interface Driver {
@@ -206,6 +207,11 @@ export function DispatchBoard({ companyId, initialBookings, drivers }: Props) {
                         <p className="text-sl-on-surface-muted truncate" title={b.pickup_address}>
                           ▲ {b.pickup_address || '—'}
                         </p>
+                        {(b.stops_count ?? 0) > 0 && (
+                          <p className="text-sl-on-surface-muted">
+                            ◆ {b.stops_count} {b.stops_count === 1 ? 'parada' : 'paradas'}
+                          </p>
+                        )}
                         <p className="text-sl-on-surface-muted truncate" title={b.dropoff_address}>
                           ▼ {b.dropoff_address || '—'}
                         </p>

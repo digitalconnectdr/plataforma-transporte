@@ -28,7 +28,7 @@ export default async function TrackPage({ params }: { params: { id: string } }) 
   const admin = createAdminClient()
   const { data: booking } = await admin
     .from('bookings')
-    .select('id, booking_number, status, scheduled_at, pickup_location, dropoff_location, driver_id, vehicle_id, company_id, passenger_name')
+    .select('id, booking_number, status, scheduled_at, pickup_location, dropoff_location, waypoints, driver_id, vehicle_id, company_id, passenger_name')
     .eq('id', params.id)
     .single()
 
@@ -152,6 +152,19 @@ export default async function TrackPage({ params }: { params: { id: string } }) 
             <p className="text-[10px] font-semibold uppercase tracking-widest text-white/40 mb-1">{t.pickup}</p>
             <p className="text-white/80">{pickup}</p>
           </div>
+          {Array.isArray(booking.waypoints) &&
+            booking.waypoints.map((w, i) => {
+              const addr = (w as { address?: string } | null)?.address
+              if (!addr) return null
+              return (
+                <div key={i}>
+                  <p className="text-[10px] font-semibold uppercase tracking-widest text-[#e9c176]/60 mb-1">
+                    ◆ {i + 1}
+                  </p>
+                  <p className="text-white/70">{addr}</p>
+                </div>
+              )
+            })}
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-widest text-white/40 mb-1">{t.destination}</p>
             <p className="text-white/80">{dropoff}</p>

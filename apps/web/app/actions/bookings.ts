@@ -18,7 +18,44 @@ import { notifyBookingEventInBackground } from '@/lib/notifications'
 import { trackBookingFlight } from '@/lib/flights/refresh'
 import { checkRateLimit, RATE_LIMIT_ERROR } from '@/lib/security/rate-limit'
 import { calculateFare, bestRule, type PricingRuleFields } from '@/lib/pricing/engine'
-import type { BookingStatus, BookingType } from '@/lib/supabase/database.types'
+import type { BookingStatus, BookingType, Json } from '@/lib/supabase/database.types'
+
+// ─── Multi-stop: validación de paradas intermedias ────────────────────────────
+
+export interface StopInput {
+  address: string
+  lat: number
+  lng: number
+}
+
+const MAX_STOPS = 3
+
+function sanitizeStops(stops: StopInput[] | undefined): StopInput[] {
+  if (!stops?.length) return []
+  return stops
+    .filter(
+      (s) =>
+        Number.isFinite(s.lat) && Number.isFinite(s.lng) &&
+        s.lat !== 0 && s.lng !== 0 &&
+        typeof s.address === 'string' && s.address.trim().length > 0,
+    )
+    .slice(0, MAX_STOPS)
+    .map((s) => ({ address: s.address.trim().slice(0, 500), lat: s.lat, lng: s.lng }))
+}
+
+/** Extrae paradas de un FormData (stop_0, stop_0_lat, stop_0_lng, …) */
+function stopsFromFormData(formData: FormData): StopInput[] {
+  const stops: StopInput[] = []
+  for (let i = 0; i < MAX_STOPS; i++) {
+    const address = (formData.get(`stop_${i}`) as string)?.trim()
+    const lat = parseFloat(formData.get(`stop_${i}_lat`) as string)
+    const lng = parseFloat(formData.get(`stop_${i}_lng`) as string)
+    if (address && Number.isFinite(lat) && Number.isFinite(lng) && lat !== 0 && lng !== 0) {
+      stops.push({ address, lat, lng })
+    }
+  }
+  return sanitizeStops(stops)
+}
 
 // ─── Helper: datos de notificación desde una fila de booking ──────────────────
 
@@ -130,6 +167,7 @@ export async function calculateQuoteAction(
   }
   if (!scheduledAtStr) return { success: false, error: 'Fecha y hora requeridas' }
 
+  const stops = stopsFromFormData(formData)
   const scheduledAt = new Date(scheduledAtStr)
   const admin = createAdminClient()
 
@@ -157,8 +195,8 @@ export async function calculateQuoteAction(
     return { success: false, error: 'No se encontró regla de precio para este vehículo' }
   }
 
-  // Calcular ruta
-  const route = await calculateRoute(pickupLat, pickupLng, dropoffLat, dropoffLng)
+  // Calcular ruta (incluye paradas intermedias si las hay)
+  const route = await calculateRoute(pickupLat, pickupLng, dropoffLat, dropoffLng, stops)
   const distanceMiles  = route?.distanceMi ?? 0
   const durationMinutes = route?.durationMinutes ?? 0
 
@@ -285,6 +323,7 @@ export async function createBookingAction(
       passenger_email:  passengerEmail || null,
       pickup_location:  { address: pickupAddr,  lat: pickupLat,  lng: pickupLng  },
       dropoff_location: { address: dropoffAddr, lat: dropoffLat, lng: dropoffLng },
+      waypoints:        stopsFromFormData(formData) as unknown as Json[],
       scheduled_at:     scheduledAt,
       flight_number:    flightNumber || null,
       special_instructions: specialInstructions || null,
@@ -536,6 +575,7 @@ export async function getPublicVehicleQuotesAction(
     dropoffAddress: string
     scheduledAt: string
     bookingType?: BookingType
+    stops?: StopInput[]
   },
 ): Promise<{ success: boolean; error?: string; data?: VehicleQuote[] }> {
   // F1.17 — rate limit por IP (cotizaciones disparan llamadas a Google Routes)
@@ -586,10 +626,12 @@ export async function getPublicVehicleQuotesAction(
     .eq('is_active', true)
     .order('priority', { ascending: false })
 
-  // Calcular ruta una sola vez
+  // Calcular ruta una sola vez (incluye paradas intermedias)
+  const publicStops = sanitizeStops(data.stops)
   const route = await calculateRoute(
     data.pickupLat, data.pickupLng,
     data.dropoffLat, data.dropoffLng,
+    publicStops,
   )
   const distanceMiles  = route?.distanceMi ?? 0
   const durationMinutes = route?.durationMinutes ?? 0
@@ -673,6 +715,7 @@ export async function createPublicBookingAction(data: {
   dropoffAddress: string
   dropoffLat: number
   dropoffLng: number
+  stops?: StopInput[]
 }): Promise<{ success: boolean; error?: string; data?: BookingResult }> {
   // F1.17 — rate limit por IP
   if (!(await checkRateLimit('public_booking', 5))) {
@@ -741,6 +784,7 @@ export async function createPublicBookingAction(data: {
       passenger_email:  email || null,
       pickup_location:  { address: data.pickupAddress.slice(0, 500),  lat: data.pickupLat,  lng: data.pickupLng  },
       dropoff_location: { address: data.dropoffAddress.slice(0, 500), lat: data.dropoffLat, lng: data.dropoffLng },
+      waypoints:        sanitizeStops(data.stops) as unknown as Json[],
       scheduled_at:     data.scheduledAt,
       flight_number:    data.flightNumber?.trim().slice(0, 20) || null,
       special_instructions: data.specialInstructions?.trim().slice(0, 1000) || null,

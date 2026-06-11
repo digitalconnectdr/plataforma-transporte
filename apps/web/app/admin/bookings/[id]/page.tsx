@@ -161,6 +161,21 @@ export default async function BookingDetailPage({
             {dropoff.notes && <p className="text-xs text-sl-on-surface-muted mt-0.5">{dropoff.notes}</p>}
           </div>
         </div>
+        {Array.isArray(booking.waypoints) && booking.waypoints.length > 0 && (
+          <div className="pt-2 border-t border-sl-outline-variant">
+            <p className="text-xs text-sl-on-surface-muted mb-1">
+              Paradas intermedias ({booking.waypoints.length})
+            </p>
+            {booking.waypoints.map((w, i) => {
+              const stop = parseLocation(w)
+              return (
+                <p key={i} className="text-sm text-sl-on-surface">
+                  <span className="text-bronze font-medium">{i + 1}.</span> {stop.address ?? '—'}
+                </p>
+              )
+            })}
+          </div>
+        )}
         <div className="grid grid-cols-3 gap-4 pt-2 border-t border-sl-outline-variant">
           <div>
             <p className="text-xs text-sl-on-surface-muted">Fecha / Hora</p>

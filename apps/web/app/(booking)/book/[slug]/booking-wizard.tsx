@@ -102,7 +102,10 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
     pickupAddress: '', pickupLat: 0, pickupLng: 0,
     dropoffAddress: '', dropoffLat: 0, dropoffLng: 0,
     scheduledAt: '', bookingType: 'one_way' as BookingType,
+    stops: [] as { address: string; lat: number; lng: number }[],
   })
+  // Multi-stop: cantidad de inputs de parada visibles (máx. 3)
+  const [stopCount, setStopCount] = useState(0)
   const [vehicleQuotes, setVehicleQuotes] = useState<VehicleQuote[]>([])
   const [selectedQuote, setSelectedQuote] = useState<VehicleQuote | null>(null)
   const [passengerData, setPassengerData] = useState({
@@ -134,6 +137,20 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
     const scheduledAt = fd.get('scheduled_at') as string
     if (!scheduledAt) { setError(dict.selectDateTime); return }
 
+    // Multi-stop: recolectar paradas (cada una debe venir del autocomplete)
+    const stops: { address: string; lat: number; lng: number }[] = []
+    for (let i = 0; i < stopCount; i++) {
+      const address = (fd.get(`stop_${i}`) as string)?.trim()
+      if (!address) continue // parada vacía — se ignora
+      const sLat = parseFloat(fd.get(`stop_${i}_lat`) as string)
+      const sLng = parseFloat(fd.get(`stop_${i}_lng`) as string)
+      if (!sLat || !sLng) {
+        setError(dict.selectStop)
+        return
+      }
+      stops.push({ address, lat: sLat, lng: sLng })
+    }
+
     const newRouteData = {
       pickupAddress:  fd.get('pickup')  as string,
       pickupLat, pickupLng,
@@ -141,6 +158,7 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
       dropoffLat, dropoffLng,
       scheduledAt,
       bookingType: (fd.get('booking_type') as BookingType) || 'one_way',
+      stops,
     }
     setRouteData(newRouteData)
 
@@ -154,6 +172,7 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
         dropoffAddress: newRouteData.dropoffAddress,
         scheduledAt:  newRouteData.scheduledAt,
         bookingType:  newRouteData.bookingType,
+        stops:        newRouteData.stops,
       })
 
       if (!result.success || !result.data) {
@@ -222,6 +241,7 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
         dropoffAddress:      routeData.dropoffAddress,
         dropoffLat:          routeData.dropoffLat,
         dropoffLng:          routeData.dropoffLng,
+        stops:               routeData.stops,
       })
 
       if (!result.success || !result.data) {
@@ -383,6 +403,40 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
             />
           </div>
 
+          {/* Multi-stop: paradas intermedias (máx. 3) */}
+          {Array.from({ length: stopCount }).map((_, i) => (
+            <div key={i}>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-xs font-semibold uppercase tracking-widest text-gray-500">
+                  {dict.stop} {i + 1}
+                </label>
+                {i === stopCount - 1 && (
+                  <button
+                    type="button"
+                    onClick={() => setStopCount((c) => c - 1)}
+                    className="text-xs text-red-500 hover:underline"
+                  >
+                    ✕ {dict.remove}
+                  </button>
+                )}
+              </div>
+              <AddressInput
+                name={`stop_${i}`}
+                placeholder={dict.stopPlaceholder}
+              />
+            </div>
+          ))}
+
+          {stopCount < 3 && (
+            <button
+              type="button"
+              onClick={() => setStopCount((c) => c + 1)}
+              className="text-sm font-medium text-[#0071e3] hover:underline"
+            >
+              {dict.addStop}
+            </button>
+          )}
+
           <div>
             <label className="block text-xs font-semibold uppercase tracking-widest text-gray-500 mb-2">
               {dict.dropoffLabel}
@@ -418,6 +472,11 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
               <span className="text-base">📍</span>
               <div>
                 <p className="font-medium text-[#1d1d1f]">{routeData.pickupAddress}</p>
+                {routeData.stops.map((s, i) => (
+                  <p key={i} className="text-gray-400 text-xs">
+                    ◆ {dict.stop} {i + 1}: {s.address}
+                  </p>
+                ))}
                 <p className="text-gray-400">→ {routeData.dropoffAddress}</p>
                 {vehicleQuotes[0]?.distanceMiles != null && (
                   <p className="text-xs text-gray-400 mt-1">
@@ -617,6 +676,12 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
                 <span className="text-gray-400 w-20 shrink-0">{dict.pickup}</span>
                 <span className="text-[#1d1d1f] font-medium">{routeData.pickupAddress}</span>
               </div>
+              {routeData.stops.map((s, i) => (
+                <div key={i} className="flex gap-2">
+                  <span className="text-gray-400 w-20 shrink-0">{dict.stop} {i + 1}</span>
+                  <span className="text-[#1d1d1f]">{s.address}</span>
+                </div>
+              ))}
               <div className="flex gap-2">
                 <span className="text-gray-400 w-20 shrink-0">{dict.destination}</span>
                 <span className="text-[#1d1d1f] font-medium">{routeData.dropoffAddress}</span>

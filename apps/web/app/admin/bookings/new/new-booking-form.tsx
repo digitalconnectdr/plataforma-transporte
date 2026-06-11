@@ -45,6 +45,7 @@ export function NewBookingForm({ vehicleTypes, drivers, corporateAccounts = [] }
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [phase, setPhase] = useState<'route' | 'passenger'>('route')
+  const [stopCount, setStopCount] = useState(0) // multi-stop (máx. 3)
   const [quote, setQuote]  = useState<QuoteResult | null>(null)
   const [error, setError]  = useState('')
   const [success, setSuccess] = useState('')
@@ -177,6 +178,40 @@ export function NewBookingForm({ vehicleTypes, drivers, corporateAccounts = [] }
             Selecciona una sugerencia del dropdown para guardar las coordenadas
           </p>
         </div>
+
+        {/* Multi-stop: paradas intermedias */}
+        {Array.from({ length: stopCount }).map((_, i) => (
+          <div key={i}>
+            <div className="flex items-center justify-between mb-2">
+              <label className="block text-xs font-semibold uppercase tracking-widest text-sl-on-surface-muted">
+                Parada {i + 1}
+              </label>
+              {i === stopCount - 1 && (
+                <button
+                  type="button"
+                  onClick={() => setStopCount((c) => c - 1)}
+                  className="text-xs text-red-500 hover:underline"
+                >
+                  ✕ Quitar
+                </button>
+              )}
+            </div>
+            <AddressInput
+              name={`stop_${i}`}
+              placeholder="Dirección de la parada..."
+            />
+          </div>
+        ))}
+
+        {stopCount < 3 && (
+          <button
+            type="button"
+            onClick={() => setStopCount((c) => c + 1)}
+            className="text-sm font-medium text-[#0071e3] hover:underline"
+          >
+            + Agregar parada
+          </button>
+        )}
 
         {/* Dropoff */}
         <div>

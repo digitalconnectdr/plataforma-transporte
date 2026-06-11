@@ -21,7 +21,7 @@ export default async function DispatcherDashboardPage() {
   const [{ data: initialRows }, { data: drivers }] = await Promise.all([
     admin
       .from('bookings')
-      .select('id, booking_number, status, passenger_name, passenger_phone, scheduled_at, pickup_location, dropoff_location, total_amount, currency, driver_id, vehicle_type_id, flight_number, flight_status, flight_delay_minutes, flight_checked_at')
+      .select('id, booking_number, status, passenger_name, passenger_phone, scheduled_at, pickup_location, dropoff_location, waypoints, total_amount, currency, driver_id, vehicle_type_id, flight_number, flight_status, flight_delay_minutes, flight_checked_at')
       .eq('company_id', user.company_id)
       .or(
         // Activos (cualquier fecha) + finalizados de hoy
@@ -73,6 +73,7 @@ export default async function DispatcherDashboardPage() {
         flight_number: b.flight_number,
         flight_status: b.flight_status,
         flight_delay_minutes: b.flight_delay_minutes,
+        stops_count: Array.isArray(b.waypoints) ? b.waypoints.length : 0,
       }))}
       drivers={drivers ?? []}
     />
