@@ -1,75 +1,34 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 import { createAdminClient } from '@/lib/supabase/server'
+import { getLocale, getDict } from '@/lib/i18n/server'
+import { LanguageSwitcher } from '@/components/i18n/language-switcher'
+import { Reveal, RevealStagger, RevealItem } from '@/components/landing/reveal'
+import { HeroMockup } from '@/components/landing/hero-mockup'
 
 export const metadata: Metadata = {
-  title: 'LuxeRide — Plataforma para empresas de transporte premium',
+  title: 'LuxeRide — Premium Transportation Software | by JPRS Digital Connect',
   description:
-    'Software todo-en-uno para empresas de transporte de lujo: reservaciones online, dispatch en tiempo real, pagos con Stripe, flota, conductores y cuentas corporativas. Powered by JPRS Digital Connect.',
+    'All-in-one platform for limousine, airport transfer and executive chauffeur companies: online reservations, live dispatch, card payments and corporate accounts.',
 }
 
-export const revalidate = 300 // cache de 5 min — contenido casi estático
+export const dynamic = 'force-dynamic' // locale por cookie
 
-const FEATURES = [
-  {
-    n: '01',
-    title: 'Motor de reservaciones',
-    desc: 'Booking online de 4 pasos con precios calculados al instante: por milla, por hora, por zona o tarifa fija. Recargos nocturnos, de fin de semana y de aeropuerto aplicados automáticamente.',
-  },
-  {
-    n: '02',
-    title: 'Dispatch en tiempo real',
-    desc: 'Board en vivo para asignar conductores y seguir cada viaje desde pendiente hasta completado. Tus clientes siguen su servicio con un link de tracking elegante.',
-  },
-  {
-    n: '03',
-    title: 'Pagos online',
-    desc: 'Cobra con tarjeta vía Stripe: links de pago, depósitos, propinas y reembolsos. El dinero llega directo a tu cuenta con Stripe Connect.',
-  },
-  {
-    n: '04',
-    title: 'Flota y conductores',
-    desc: 'Vehículos, documentos, licencias y disponibilidad de tu equipo en un solo lugar — con alertas automáticas antes de cada vencimiento.',
-  },
-  {
-    n: '05',
-    title: 'Cuentas corporativas',
-    desc: 'Clientes empresariales con línea de crédito, límites por usuario, centros de costo y facturación automática a término.',
-  },
-  {
-    n: '06',
-    title: 'Reportes y auditoría',
-    desc: 'Ingresos, performance de conductores, exports a CSV y un registro inmutable de cada operación crítica de tu empresa.',
-  },
-]
-
-const STEPS = [
-  {
-    n: 'I',
-    title: 'Configura tu empresa',
-    desc: 'Crea tu cuenta, define zonas, tarifas, flota y equipo en minutos. Sin instalaciones ni hardware.',
-  },
-  {
-    n: 'II',
-    title: 'Comparte tu link de reservas',
-    desc: 'Tus clientes reservan online con precios en vivo, desde cualquier dispositivo, con tu marca.',
-  },
-  {
-    n: 'III',
-    title: 'Opera y cobra',
-    desc: 'Despacha en tiempo real, notifica por email y SMS, y recibe los pagos automáticamente.',
-  },
-]
-
-const STATS = [
-  { value: '5', label: 'Modelos de tarifas' },
-  { value: '9', label: 'Roles de equipo' },
-  { value: '24/7', label: 'Reservas online' },
-  { value: '100%', label: 'Multi-empresa' },
+const SHOWCASE_IMAGES = [
+  // Experiencia de reserva — auto deportivo oscuro
+  'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=1100&q=70',
+  // Dispatch — carretera de noche
+  'https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?auto=format&fit=crop&w=1100&q=70',
+  // Pagos — sedán negro
+  'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=1100&q=70',
 ]
 
 export default async function LandingPage() {
-  // Empresas activas para el directorio de reservas
+  const locale = getLocale()
+  const dict = getDict(locale)
+  const t = dict.landing
+
   const admin = createAdminClient()
   const { data: companies } = await admin
     .from('companies')
@@ -79,7 +38,7 @@ export default async function LandingPage() {
     .limit(12)
 
   return (
-    <div className="min-h-screen bg-[#0c0b0a] text-white antialiased">
+    <div className="min-h-screen bg-[#0c0b0a] text-white antialiased overflow-x-hidden">
       {/* ── Nav ── */}
       <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#0c0b0a]/90 backdrop-blur">
         <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
@@ -94,32 +53,35 @@ export default async function LandingPage() {
               </p>
             </div>
           </div>
-          <nav className="flex items-center gap-6">
+          <nav className="flex items-center gap-4 sm:gap-6">
             <a href="#features" className="hidden md:block text-[13px] text-white/55 hover:text-[#e9c176] transition-colors">
-              Plataforma
+              {t.nav.platform}
             </a>
-            <a href="#how" className="hidden md:block text-[13px] text-white/55 hover:text-[#e9c176] transition-colors">
-              Cómo funciona
+            <a href="#pricing" className="hidden md:block text-[13px] text-white/55 hover:text-[#e9c176] transition-colors">
+              {t.nav.pricing}
             </a>
-            <a href="#book" className="hidden md:block text-[13px] text-white/55 hover:text-[#e9c176] transition-colors">
-              Reservar
+            <a href="#faq" className="hidden md:block text-[13px] text-white/55 hover:text-[#e9c176] transition-colors">
+              {t.nav.faq}
             </a>
-            <Link href="/auth/login" className="text-[13px] text-white/55 hover:text-white transition-colors">
-              Iniciar sesión
+            <a href="#book" className="hidden lg:block text-[13px] text-white/55 hover:text-[#e9c176] transition-colors">
+              {t.nav.book}
+            </a>
+            <LanguageSwitcher current={locale} variant="dark" />
+            <Link href="/auth/login" className="hidden sm:block text-[13px] text-white/55 hover:text-white transition-colors">
+              {dict.common.signIn}
             </Link>
             <Link
               href="/auth/signup"
-              className="px-5 py-2.5 text-[13px] font-semibold bg-gradient-to-br from-[#f3d9a4] to-[#c89b4f] text-[#141313] rounded-full hover:opacity-90 transition-opacity"
+              className="px-4 sm:px-5 py-2.5 text-[13px] font-semibold bg-gradient-to-br from-[#f3d9a4] to-[#c89b4f] text-[#141313] rounded-full hover:opacity-90 transition-opacity"
             >
-              Crear cuenta
+              {dict.common.signUp}
             </Link>
           </nav>
         </div>
       </header>
 
       {/* ── Hero ── */}
-      <section className="relative overflow-hidden">
-        {/* Glow dorado de fondo */}
+      <section className="relative">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"
@@ -128,176 +90,303 @@ export default async function LandingPage() {
               'radial-gradient(ellipse 60% 45% at 50% -5%, rgba(233,193,118,0.14), transparent 70%)',
           }}
         />
-        <div className="relative max-w-6xl mx-auto px-6 pt-24 pb-20 text-center">
-          <div className="inline-flex items-center gap-3 mb-8">
-            <span className="h-px w-10 bg-[#e9c176]/60" />
-            <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-[#e9c176]">
-              Software para transporte premium
-            </p>
-            <span className="h-px w-10 bg-[#e9c176]/60" />
+        <div className="relative max-w-6xl mx-auto px-6 pt-16 sm:pt-20 pb-16 grid lg:grid-cols-2 gap-12 items-center">
+          <div>
+            <Reveal>
+              <div className="inline-flex items-center gap-3 mb-7">
+                <span className="h-px w-10 bg-[#e9c176]/60" />
+                <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-[#e9c176]">
+                  {t.hero.badge}
+                </p>
+              </div>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <h1 className="font-playfair text-4xl sm:text-[3.4rem] leading-[1.1] font-semibold">
+                {t.hero.title}
+                <span className="block mt-2 italic font-medium bg-gradient-to-r from-[#f3d9a4] via-[#e9c176] to-[#c89b4f] bg-clip-text text-transparent">
+                  {t.hero.titleAccent}
+                </span>
+              </h1>
+            </Reveal>
+            <Reveal delay={0.2}>
+              <p className="text-base sm:text-lg text-white/55 mt-6 leading-relaxed max-w-xl">
+                {t.hero.subtitle}
+              </p>
+            </Reveal>
+            <Reveal delay={0.3}>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mt-9">
+                <Link
+                  href="/auth/signup"
+                  className="px-8 py-4 text-sm font-semibold bg-gradient-to-br from-[#f3d9a4] to-[#c89b4f] text-[#141313] rounded-full hover:opacity-90 transition-opacity shadow-[0_8px_30px_rgba(233,193,118,0.25)]"
+                >
+                  {t.hero.ctaPrimary}
+                </Link>
+                <a
+                  href="#showcase"
+                  className="px-8 py-4 text-sm font-semibold border border-white/15 rounded-full hover:border-[#e9c176]/60 hover:text-[#e9c176] transition-colors"
+                >
+                  {t.hero.ctaSecondary}
+                </a>
+              </div>
+              <p className="text-xs text-white/35 mt-5">{t.hero.note}</p>
+            </Reveal>
           </div>
 
-          <h1 className="font-playfair text-[2.6rem] leading-[1.1] sm:text-6xl sm:leading-[1.08] font-semibold max-w-4xl mx-auto">
-            La experiencia de lujo que tus clientes esperan,
-            <span className="block mt-2 italic font-medium bg-gradient-to-r from-[#f3d9a4] via-[#e9c176] to-[#c89b4f] bg-clip-text text-transparent">
-              con la operación en piloto automático.
-            </span>
-          </h1>
+          {/* Mockup animado del producto */}
+          <Reveal delay={0.25} className="hidden lg:block">
+            <HeroMockup labels={t.mockup} />
+          </Reveal>
+        </div>
 
-          <p className="text-base sm:text-lg text-white/55 max-w-2xl mx-auto mt-7 leading-relaxed">
-            LuxeRide es la plataforma todo-en-uno para limusinas, traslados de aeropuerto
-            y chóferes ejecutivos: reservaciones online, dispatch en vivo, pagos con tarjeta
-            y cuentas corporativas — bajo tu propia marca.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-11">
-            <Link
-              href="/auth/signup"
-              className="px-9 py-4 text-sm font-semibold bg-gradient-to-br from-[#f3d9a4] to-[#c89b4f] text-[#141313] rounded-full hover:opacity-90 transition-opacity shadow-[0_8px_30px_rgba(233,193,118,0.25)]"
-            >
-              Empieza gratis →
-            </Link>
-            <a
-              href="#book"
-              className="px-9 py-4 text-sm font-semibold border border-white/15 rounded-full hover:border-[#e9c176]/60 hover:text-[#e9c176] transition-colors"
-            >
-              ¿Vas a viajar? Reserva aquí
-            </a>
-          </div>
-
-          {/* Stats band */}
-          <div className="mt-20 grid grid-cols-2 sm:grid-cols-4 gap-px bg-white/[0.06] border border-white/[0.06] rounded-2xl overflow-hidden max-w-3xl mx-auto">
-            {STATS.map((s) => (
-              <div key={s.label} className="bg-[#0c0b0a] px-6 py-6">
+        {/* Stats band */}
+        <div className="relative max-w-3xl mx-auto px-6 pb-20">
+          <RevealStagger className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-white/[0.06] border border-white/[0.06] rounded-2xl overflow-hidden">
+            {t.stats.map((s) => (
+              <RevealItem key={s.label} className="bg-[#0c0b0a] px-6 py-6">
                 <p className="font-playfair text-3xl font-semibold text-[#e9c176]">{s.value}</p>
                 <p className="text-[10px] uppercase tracking-[0.2em] text-white/40 mt-1.5">
                   {s.label}
                 </p>
-              </div>
+              </RevealItem>
             ))}
-          </div>
+          </RevealStagger>
         </div>
       </section>
 
       {/* ── Features ── */}
       <section id="features" className="border-t border-white/[0.06]">
         <div className="max-w-6xl mx-auto px-6 py-24">
-          <div className="max-w-2xl mb-16">
+          <Reveal className="max-w-2xl mb-16">
             <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-[#e9c176] mb-4">
-              La plataforma
+              {t.nav.platform}
             </p>
             <h2 className="font-playfair text-3xl sm:text-4xl font-semibold leading-snug">
-              Todo lo que tu operación necesita,
-              <span className="italic text-white/60"> nada que no.</span>
+              {t.featuresTitle}
             </h2>
-          </div>
+            <p className="text-white/45 mt-3 text-sm">{t.featuresSubtitle}</p>
+          </Reveal>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-white/[0.06] border border-white/[0.06] rounded-2xl overflow-hidden">
-            {FEATURES.map((f) => (
-              <div
-                key={f.n}
+          <RevealStagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-px bg-white/[0.06] border border-white/[0.06] rounded-2xl overflow-hidden">
+            {t.features.map((f, i) => (
+              <RevealItem
+                key={f.title}
                 className="group bg-[#0c0b0a] p-8 hover:bg-[#13110e] transition-colors"
               >
                 <p className="font-playfair text-sm text-[#e9c176]/70 group-hover:text-[#e9c176] transition-colors">
-                  {f.n}
+                  {String(i + 1).padStart(2, '0')}
                 </p>
                 <h3 className="font-playfair text-lg font-semibold mt-4 mb-3">{f.title}</h3>
                 <p className="text-[13px] text-white/45 leading-relaxed">{f.desc}</p>
-              </div>
+              </RevealItem>
             ))}
-          </div>
+          </RevealStagger>
         </div>
       </section>
 
-      {/* ── Editorial quote ── */}
-      <section className="border-t border-white/[0.06] relative overflow-hidden">
+      {/* ── Showcase: filas alternadas con fotografía ── */}
+      <section id="showcase" className="border-t border-white/[0.06] bg-[#0a0908]">
+        <div className="max-w-6xl mx-auto px-6 py-24 space-y-24">
+          {t.showcase.map((row, i) => (
+            <div
+              key={row.title}
+              className={`grid lg:grid-cols-2 gap-12 items-center ${
+                i % 2 === 1 ? 'lg:[&>*:first-child]:order-2' : ''
+              }`}
+            >
+              <Reveal>
+                <div className="relative h-72 sm:h-80 rounded-3xl overflow-hidden border border-white/[0.08]">
+                  <Image
+                    src={SHOWCASE_IMAGES[i] ?? SHOWCASE_IMAGES[0]!}
+                    alt={row.title}
+                    fill
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                    className="object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0a0908]/80 via-transparent to-[#0a0908]/20" />
+                  <div className="absolute bottom-4 left-5">
+                    <span className="inline-flex items-center gap-2 text-[10px] font-semibold uppercase tracking-[0.25em] text-[#e9c176]">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#e9c176]" />
+                      LuxeRide
+                    </span>
+                  </div>
+                </div>
+              </Reveal>
+              <Reveal delay={0.15}>
+                <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-[#e9c176] mb-4">
+                  {row.kicker}
+                </p>
+                <h3 className="font-playfair text-2xl sm:text-3xl font-semibold leading-snug mb-7">
+                  {row.title}
+                </h3>
+                <ul className="space-y-4">
+                  {row.bullets.map((b) => (
+                    <li key={b} className="flex items-start gap-3">
+                      <span className="w-5 h-5 rounded-full bg-[#e9c176]/15 text-[#e9c176] text-[10px] flex items-center justify-center shrink-0 mt-0.5">
+                        ✓
+                      </span>
+                      <span className="text-sm text-white/65 leading-relaxed">{b}</span>
+                    </li>
+                  ))}
+                </ul>
+              </Reveal>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Testimonios ── */}
+      <section className="border-t border-white/[0.06]">
+        <div className="max-w-6xl mx-auto px-6 py-24">
+          <Reveal className="text-center mb-14">
+            <h2 className="font-playfair text-3xl sm:text-4xl font-semibold">
+              {t.testimonialsTitle}
+            </h2>
+          </Reveal>
+          <RevealStagger className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {t.testimonials.map((tm) => (
+              <RevealItem
+                key={tm.company}
+                className="bg-white/[0.025] border border-white/[0.08] rounded-3xl p-8 flex flex-col"
+              >
+                <span className="font-playfair text-4xl text-[#e9c176]/50 leading-none mb-4">
+                  &ldquo;
+                </span>
+                <p className="text-sm text-white/70 leading-relaxed italic flex-1">{tm.quote}</p>
+                <div className="mt-6 pt-5 border-t border-white/[0.07]">
+                  <p className="text-sm font-semibold">{tm.name}</p>
+                  <p className="text-xs text-white/40 mt-1">{tm.company}</p>
+                </div>
+              </RevealItem>
+            ))}
+          </RevealStagger>
+        </div>
+      </section>
+
+      {/* ── Pricing ── */}
+      <section id="pricing" className="border-t border-white/[0.06] bg-[#0a0908] relative overflow-hidden">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              'radial-gradient(ellipse 50% 60% at 50% 50%, rgba(233,193,118,0.07), transparent 70%)',
+              'radial-gradient(ellipse 50% 50% at 50% 0%, rgba(233,193,118,0.07), transparent 70%)',
           }}
         />
-        <div className="relative max-w-4xl mx-auto px-6 py-24 text-center">
-          <span className="font-playfair text-6xl text-[#e9c176]/40 leading-none">&ldquo;</span>
-          <p className="font-playfair text-2xl sm:text-3xl italic font-medium leading-relaxed text-white/85 -mt-4">
-            El lujo está en los detalles: la confirmación instantánea, el chofer puntual,
-            el recibo impecable. LuxeRide se encarga de todos.
-          </p>
-          <div className="mt-8 inline-flex items-center gap-3">
-            <span className="h-px w-8 bg-[#e9c176]/50" />
-            <p className="text-[11px] uppercase tracking-[0.3em] text-white/40">
-              JPRS Digital Connect
+        <div className="relative max-w-6xl mx-auto px-6 py-24">
+          <Reveal className="text-center mb-14">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-[#e9c176] mb-4">
+              {t.nav.pricing}
             </p>
-            <span className="h-px w-8 bg-[#e9c176]/50" />
-          </div>
+            <h2 className="font-playfair text-3xl sm:text-4xl font-semibold">{t.pricingTitle}</h2>
+            <p className="text-white/45 mt-3 text-sm">{t.pricingSubtitle}</p>
+          </Reveal>
+
+          <RevealStagger className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
+            {t.plans.map((plan, i) => {
+              const popular = i === 1
+              return (
+                <RevealItem
+                  key={plan.name}
+                  className={`relative rounded-3xl p-8 flex flex-col ${
+                    popular
+                      ? 'bg-gradient-to-b from-[#1a1712] to-[#12100d] border-2 border-[#e9c176]/60 shadow-[0_0_50px_rgba(233,193,118,0.12)]'
+                      : 'bg-white/[0.025] border border-white/[0.08]'
+                  }`}
+                >
+                  {popular && (
+                    <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 text-[10px] font-bold uppercase tracking-[0.2em] bg-gradient-to-br from-[#f3d9a4] to-[#c89b4f] text-[#141313] rounded-full">
+                      {t.pricingPopular}
+                    </span>
+                  )}
+                  <h3 className="font-playfair text-xl font-semibold">{plan.name}</h3>
+                  <p className="text-xs text-white/45 mt-2 leading-relaxed">{plan.desc}</p>
+                  <p className="mt-6 mb-7">
+                    <span className="font-playfair text-4xl font-semibold text-[#e9c176]">
+                      {plan.price}
+                    </span>
+                    <span className="text-sm text-white/40 ml-1">{plan.period}</span>
+                  </p>
+                  <ul className="space-y-3 flex-1">
+                    {plan.features.map((f) => (
+                      <li key={f} className="flex items-start gap-2.5">
+                        <span className="text-[#e9c176] text-xs mt-0.5 shrink-0">✓</span>
+                        <span className="text-[13px] text-white/60 leading-snug">{f}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    href="/auth/signup"
+                    className={`mt-8 block text-center px-6 py-3.5 text-sm font-semibold rounded-full transition-all ${
+                      popular
+                        ? 'bg-gradient-to-br from-[#f3d9a4] to-[#c89b4f] text-[#141313] hover:opacity-90'
+                        : 'border border-white/20 hover:border-[#e9c176]/60 hover:text-[#e9c176]'
+                    }`}
+                  >
+                    {i === 2 ? t.pricingContact : t.pricingCta}
+                  </Link>
+                </RevealItem>
+              )
+            })}
+          </RevealStagger>
         </div>
       </section>
 
-      {/* ── Cómo funciona ── */}
-      <section id="how" className="border-t border-white/[0.06]">
-        <div className="max-w-5xl mx-auto px-6 py-24">
-          <div className="text-center mb-16">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-[#e9c176] mb-4">
-              Cómo funciona
-            </p>
-            <h2 className="font-playfair text-3xl sm:text-4xl font-semibold">
-              En producción en tres pasos
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-10">
-            {STEPS.map((s, i) => (
-              <div key={s.n} className="relative text-center">
-                {i < STEPS.length - 1 && (
-                  <span className="hidden sm:block absolute top-7 left-[60%] w-[80%] h-px bg-gradient-to-r from-[#e9c176]/40 to-transparent" />
-                )}
-                <div className="relative w-14 h-14 rounded-full border border-[#e9c176]/50 bg-[#0c0b0a] flex items-center justify-center mx-auto mb-6">
-                  <span className="font-playfair text-lg font-semibold text-[#e9c176]">{s.n}</span>
-                </div>
-                <h3 className="font-playfair text-lg font-semibold mb-3">{s.title}</h3>
-                <p className="text-[13px] text-white/45 leading-relaxed max-w-[260px] mx-auto">
-                  {s.desc}
-                </p>
-              </div>
+      {/* ── FAQ ── */}
+      <section id="faq" className="border-t border-white/[0.06]">
+        <div className="max-w-3xl mx-auto px-6 py-24">
+          <Reveal className="text-center mb-12">
+            <h2 className="font-playfair text-3xl sm:text-4xl font-semibold">{t.faqTitle}</h2>
+          </Reveal>
+          <RevealStagger className="space-y-3">
+            {t.faq.map((item) => (
+              <RevealItem key={item.q}>
+                <details className="group bg-white/[0.025] border border-white/[0.08] rounded-2xl open:border-[#e9c176]/40 transition-colors">
+                  <summary className="flex items-center justify-between gap-4 px-6 py-5 cursor-pointer list-none">
+                    <span className="text-sm font-semibold">{item.q}</span>
+                    <span className="text-[#e9c176] text-lg leading-none transition-transform group-open:rotate-45">
+                      +
+                    </span>
+                  </summary>
+                  <p className="px-6 pb-5 text-sm text-white/55 leading-relaxed">{item.a}</p>
+                </details>
+              </RevealItem>
             ))}
-          </div>
+          </RevealStagger>
         </div>
       </section>
 
       {/* ── Directorio de reservas ── */}
       <section id="book" className="border-t border-white/[0.06] bg-[#0a0908]">
         <div className="max-w-5xl mx-auto px-6 py-24 text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-[#e9c176] mb-4">
-            Para viajeros
-          </p>
-          <h2 className="font-playfair text-3xl sm:text-4xl font-semibold mb-4">
-            Reserva tu próximo traslado
-          </h2>
-          <p className="text-white/45 mb-12 max-w-xl mx-auto text-sm leading-relaxed">
-            Estas empresas operan con LuxeRide. Reserva online con precios al instante
-            y confirmación inmediata.
-          </p>
-          {!companies?.length ? (
-            <p className="text-sm text-white/35">
-              Pronto habrá empresas disponibles para reservar online.
+          <Reveal>
+            <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-[#e9c176] mb-4">
+              {t.nav.book}
             </p>
+            <h2 className="font-playfair text-3xl sm:text-4xl font-semibold mb-4">
+              {t.directoryTitle}
+            </h2>
+            <p className="text-white/45 mb-12 max-w-xl mx-auto text-sm leading-relaxed">
+              {t.directorySubtitle}
+            </p>
+          </Reveal>
+          {!companies?.length ? (
+            <p className="text-sm text-white/35">{t.directoryEmpty}</p>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <RevealStagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {companies.map((c) => (
-                <Link
-                  key={c.slug}
-                  href={`/book/${c.slug}`}
-                  className="group bg-white/[0.025] border border-white/[0.08] rounded-2xl px-7 py-6 hover:border-[#e9c176]/50 hover:bg-white/[0.04] transition-all text-left"
-                >
-                  <p className="font-playfair font-semibold text-base">{c.name}</p>
-                  <p className="text-xs text-white/35 mt-2 group-hover:text-[#e9c176] transition-colors">
-                    {c.city ? `${c.city} · ` : ''}Reservar online →
-                  </p>
-                </Link>
+                <RevealItem key={c.slug}>
+                  <Link
+                    href={`/book/${c.slug}`}
+                    className="group block bg-white/[0.025] border border-white/[0.08] rounded-2xl px-7 py-6 hover:border-[#e9c176]/50 hover:bg-white/[0.04] transition-all text-left"
+                  >
+                    <p className="font-playfair font-semibold text-base">{c.name}</p>
+                    <p className="text-xs text-white/35 mt-2 group-hover:text-[#e9c176] transition-colors">
+                      {c.city ? `${c.city} · ` : ''}{t.directoryBook}
+                    </p>
+                  </Link>
+                </RevealItem>
               ))}
-            </div>
+            </RevealStagger>
           )}
         </div>
       </section>
@@ -313,21 +402,21 @@ export default async function LandingPage() {
           }}
         />
         <div className="relative max-w-4xl mx-auto px-6 py-28 text-center">
-          <h2 className="font-playfair text-3xl sm:text-5xl font-semibold leading-tight">
-            Eleva tu operación
-            <span className="block italic font-medium bg-gradient-to-r from-[#f3d9a4] via-[#e9c176] to-[#c89b4f] bg-clip-text text-transparent mt-2">
-              al nivel de tu servicio.
-            </span>
-          </h2>
-          <p className="text-white/45 mt-6 mb-10 text-sm sm:text-base">
-            Crea tu cuenta y recibe tu primera reservación online esta misma semana.
-          </p>
-          <Link
-            href="/auth/signup"
-            className="inline-block px-10 py-4 text-sm font-semibold bg-gradient-to-br from-[#f3d9a4] to-[#c89b4f] text-[#141313] rounded-full hover:opacity-90 transition-opacity shadow-[0_8px_30px_rgba(233,193,118,0.25)]"
-          >
-            Crear cuenta gratis →
-          </Link>
+          <Reveal>
+            <h2 className="font-playfair text-3xl sm:text-5xl font-semibold leading-tight">
+              {t.ctaTitle}
+              <span className="block italic font-medium bg-gradient-to-r from-[#f3d9a4] via-[#e9c176] to-[#c89b4f] bg-clip-text text-transparent mt-2">
+                {t.ctaAccent}
+              </span>
+            </h2>
+            <p className="text-white/45 mt-6 mb-10 text-sm sm:text-base">{t.ctaSubtitle}</p>
+            <Link
+              href="/auth/signup"
+              className="inline-block px-10 py-4 text-sm font-semibold bg-gradient-to-br from-[#f3d9a4] to-[#c89b4f] text-[#141313] rounded-full hover:opacity-90 transition-opacity shadow-[0_8px_30px_rgba(233,193,118,0.25)]"
+            >
+              {t.ctaButton}
+            </Link>
+          </Reveal>
         </div>
       </section>
 
@@ -342,10 +431,10 @@ export default async function LandingPage() {
               <span className="font-playfair text-sm font-semibold">LuxeRide</span>
             </div>
             <p className="text-[11px] uppercase tracking-[0.25em] text-[#e9c176]/70">
-              LuxeRide — Powered by JPRS Digital Connect
+              {dict.common.poweredBy}
             </p>
             <p className="text-[11px] text-white/30">
-              © {new Date().getFullYear()} Todos los derechos reservados.
+              © {new Date().getFullYear()} {t.footerRights}
             </p>
           </div>
         </div>

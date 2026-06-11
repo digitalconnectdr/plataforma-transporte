@@ -2,7 +2,10 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/server'
 import { isStripeConfigured } from '@/lib/stripe/server'
+import { getLocale, getDict } from '@/lib/i18n/server'
 import { BookingWizard } from './booking-wizard'
+
+const LOCALE_TAGS: Record<string, string> = { en: 'en-US', es: 'es-DO', pt: 'pt-BR' }
 
 interface Props {
   params: { slug: string }
@@ -22,6 +25,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function PublicBookingPage({ params }: Props) {
+  const locale = getLocale()
+  const dict = getDict(locale)
   const admin = createAdminClient()
 
   const { data: company } = await admin
@@ -59,6 +64,8 @@ export default async function PublicBookingPage({ params }: Props) {
         imageUrl:   vt.base_image_url ?? null,
       }))}
       onlinePaymentsEnabled={isStripeConfigured() && Boolean(company.stripe_connect_onboarded)}
+      dict={dict.wizard}
+      localeTag={LOCALE_TAGS[locale] ?? 'en-US'}
       gratuity={(() => {
         const g = (company.settings as {
           gratuity?: { enabled?: boolean; options?: number[]; default_percentage?: number }

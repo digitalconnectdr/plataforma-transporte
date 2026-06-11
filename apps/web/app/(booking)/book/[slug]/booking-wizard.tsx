@@ -15,6 +15,9 @@ import {
 } from '@/app/actions/bookings'
 import { createPublicCheckoutAction } from '@/app/actions/payments'
 import type { BookingType } from '@/lib/supabase/database.types'
+import type { Dictionary } from '@/lib/i18n/dictionaries/en'
+
+type WizardDict = Dictionary['wizard']
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
 
@@ -48,16 +51,16 @@ interface Props {
   vehicleTypes: VehicleTypeInfo[]
   onlinePaymentsEnabled?: boolean
   gratuity?: GratuityConfig
+  dict: WizardDict
+  localeTag: string
 }
 
 // ─── Progreso ────────────────────────────────────────────────────────────────
 
-const STEPS = ['Ruta', 'Vehículo', 'Pasajero', 'Confirmación']
-
-function StepIndicator({ current }: { current: number }) {
+function StepIndicator({ current, steps }: { current: number; steps: string[] }) {
   return (
     <div className="flex items-center gap-2 mb-8">
-      {STEPS.map((label, i) => (
+      {steps.map((label, i) => (
         <div key={i} className="flex items-center gap-2">
           <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
             i < current ? 'bg-green-500 text-white' :
@@ -71,7 +74,7 @@ function StepIndicator({ current }: { current: number }) {
           }`}>
             {label}
           </span>
-          {i < STEPS.length - 1 && (
+          {i < steps.length - 1 && (
             <div className={`h-0.5 w-8 mx-1 rounded ${i < current ? 'bg-green-400' : 'bg-gray-200'}`} />
           )}
         </div>
@@ -88,7 +91,7 @@ const CLASS_ICONS: Record<string, string> = {
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 
-export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = false, gratuity }: Props) {
+export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = false, gratuity, dict, localeTag }: Props) {
   const [step, setStep] = useState(0)
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState('')
@@ -120,16 +123,16 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
     const dropoffLng = parseFloat(fd.get('dropoff_lng') as string)
 
     if (!pickupLat || !pickupLng) {
-      setError('Selecciona la dirección de pickup del dropdown de sugerencias')
+      setError(dict.selectPickup)
       return
     }
     if (!dropoffLat || !dropoffLng) {
-      setError('Selecciona la dirección de destino del dropdown de sugerencias')
+      setError(dict.selectDropoff)
       return
     }
 
     const scheduledAt = fd.get('scheduled_at') as string
-    if (!scheduledAt) { setError('Selecciona fecha y hora'); return }
+    if (!scheduledAt) { setError(dict.selectDateTime); return }
 
     const newRouteData = {
       pickupAddress:  fd.get('pickup')  as string,
@@ -181,8 +184,8 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
     const name = (fd.get('name') as string)?.trim()
     const phone = (fd.get('phone') as string)?.trim()
 
-    if (!name)  { setError('Nombre requerido'); return }
-    if (!phone) { setError('Teléfono requerido'); return }
+    if (!name)  { setError(dict.nameRequired); return }
+    if (!phone) { setError(dict.phoneRequired); return }
 
     setPassengerData({
       name,
@@ -257,20 +260,20 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
         <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto text-3xl">
           ✓
         </div>
-        <h2 className="font-semibold text-2xl text-[#1d1d1f]">¡Reservación confirmada!</h2>
-        <p className="text-gray-500">Tu número de reservación es:</p>
+        <h2 className="font-semibold text-2xl text-[#1d1d1f]">{dict.confirmed}</h2>
+        <p className="text-gray-500">{dict.yourNumber}</p>
         <p className="font-mono text-2xl font-bold text-[#0071e3] bg-blue-50 rounded-2xl px-8 py-4 inline-block">
           {confirmation.bookingNumber}
         </p>
         <p className="text-sm text-gray-500 max-w-sm mx-auto">
-          Un representante de {company.name} se comunicará contigo para confirmar los detalles.
+          {dict.contactSoon.replace('{company}', company.name)}
         </p>
         <p className="text-sm">
           <a
             href={`/track/${confirmation.bookingId}`}
             className="text-[#0071e3] hover:underline font-medium"
           >
-            📍 Seguir mi viaje en vivo →
+            {dict.trackTrip}
           </a>
         </p>
         {onlinePaymentsEnabled && (
@@ -278,7 +281,7 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
             {gratuity?.enabled && (
               <div className="max-w-sm mx-auto">
                 <p className="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-2">
-                  ¿Agregar propina para tu chofer?
+                  {dict.addTip}
                 </p>
                 <div className="flex justify-center gap-2">
                   {[0, ...gratuity.options].map((pct) => (
@@ -292,7 +295,7 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
                           : 'bg-white text-[#1d1d1f] border-gray-200 hover:border-[#0071e3]'
                       }`}
                     >
-                      {pct === 0 ? 'Sin propina' : `${pct}%`}
+                      {pct === 0 ? dict.noTip : `${pct}%`}
                     </button>
                   ))}
                 </div>
@@ -303,9 +306,9 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
               disabled={isPending}
               className="px-8 py-3.5 bg-[#0071e3] text-white font-semibold rounded-2xl hover:bg-[#0077ed] disabled:opacity-50 transition-colors text-sm"
             >
-              {isPending ? 'Redirigiendo…' : '💳 Pagar online ahora'}
+              {isPending ? dict.redirecting : dict.payOnline}
             </button>
-            <p className="text-xs text-gray-400">Pago seguro procesado por Stripe</p>
+            <p className="text-xs text-gray-400">{dict.securePayment}</p>
             {error && (
               <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 max-w-sm mx-auto">
                 {error}
@@ -329,36 +332,36 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
     <div>
       <div className="mb-4">
         <h1 className="text-2xl font-semibold text-[#1d1d1f]">
-          Reservar con {company.name}
+          {dict.bookWith} {company.name}
         </h1>
-        <p className="text-sm text-gray-500 mt-1">Servicio de transporte premium</p>
+        <p className="text-sm text-gray-500 mt-1">{dict.premiumService}</p>
       </div>
 
-      <StepIndicator current={step} />
+      <StepIndicator current={step} steps={dict.steps} />
 
       {/* ─── PASO 0: Ruta ──────────────────────────────────────────────────── */}
       {step === 0 && (
         <form onSubmit={handleRouteSubmit} className="space-y-5">
           <div>
             <label className="block text-xs font-semibold uppercase tracking-widest text-gray-500 mb-2">
-              Tipo de servicio
+              {dict.serviceType}
             </label>
             <select
               name="booking_type"
               defaultValue="one_way"
               className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-[#1d1d1f] focus:border-[#0071e3] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20"
             >
-              <option value="one_way">Solo ida</option>
-              <option value="airport_pickup">Pickup aeropuerto</option>
-              <option value="airport_dropoff">Dropoff aeropuerto</option>
-              <option value="round_trip">Ida y vuelta</option>
-              <option value="hourly">Por hora</option>
+              <option value="one_way">{dict.types.one_way}</option>
+              <option value="airport_pickup">{dict.types.airport_pickup}</option>
+              <option value="airport_dropoff">{dict.types.airport_dropoff}</option>
+              <option value="round_trip">{dict.types.round_trip}</option>
+              <option value="hourly">{dict.types.hourly}</option>
             </select>
           </div>
 
           <div>
             <label className="block text-xs font-semibold uppercase tracking-widest text-gray-500 mb-2">
-              Fecha y hora
+              {dict.dateTime}
             </label>
             <input
               type="datetime-local"
@@ -371,22 +374,22 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
 
           <div>
             <label className="block text-xs font-semibold uppercase tracking-widest text-gray-500 mb-2">
-              Pickup — ¿Dónde te recogemos?
+              {dict.pickupLabel}
             </label>
             <AddressInput
               name="pickup"
-              placeholder="Dirección de recogida..."
+              placeholder={dict.pickupPlaceholder}
               required
             />
           </div>
 
           <div>
             <label className="block text-xs font-semibold uppercase tracking-widest text-gray-500 mb-2">
-              Destino — ¿A dónde vas?
+              {dict.dropoffLabel}
             </label>
             <AddressInput
               name="dropoff"
-              placeholder="Dirección de destino..."
+              placeholder={dict.dropoffPlaceholder}
               required
             />
           </div>
@@ -402,7 +405,7 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
             disabled={isPending}
             className="w-full py-3.5 bg-[#0071e3] text-white font-semibold rounded-2xl hover:bg-[#0077ed] disabled:opacity-50 transition-colors text-sm"
           >
-            {isPending ? 'Calculando precios...' : 'Ver vehículos disponibles →'}
+            {isPending ? dict.calculating : dict.seePrices}
           </button>
         </form>
       )}
@@ -418,14 +421,14 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
                 <p className="text-gray-400">→ {routeData.dropoffAddress}</p>
                 {vehicleQuotes[0]?.distanceMiles != null && (
                   <p className="text-xs text-gray-400 mt-1">
-                    {vehicleQuotes[0].distanceMiles.toFixed(1)} mi · {vehicleQuotes[0].durationMinutes} min est.
+                    {vehicleQuotes[0].distanceMiles.toFixed(1)} mi · {vehicleQuotes[0].durationMinutes} {dict.estimate}
                   </p>
                 )}
               </div>
             </div>
           </div>
 
-          <p className="text-sm font-medium text-[#1d1d1f]">Selecciona tu vehículo:</p>
+          <p className="text-sm font-medium text-[#1d1d1f]">{dict.selectVehicle}</p>
 
           <div className="space-y-3">
             {vehicleQuotes.map((q) => (
@@ -445,7 +448,7 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
                     <div>
                       <p className="font-semibold text-[#1d1d1f]">{q.vehicleType.name}</p>
                       <p className="text-xs text-gray-500">
-                        Hasta {q.vehicleType.capacity} pasajeros
+                        {dict.upTo} {q.vehicleType.capacity} {dict.passengers}
                         {q.vehicleType.amenities.length > 0 && (
                           <> · {q.vehicleType.amenities.slice(0, 2).join(', ')}</>
                         )}
@@ -454,7 +457,7 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
                   </div>
                   <div className="text-right">
                     {q.noPrice ? (
-                      <p className="text-xs text-gray-400">Sin precio</p>
+                      <p className="text-xs text-gray-400">{dict.noPrice}</p>
                     ) : (
                       <>
                         <p className="font-bold text-xl text-[#1d1d1f]">
@@ -463,7 +466,7 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
                         <p className="text-xs text-gray-400">{q.currency}</p>
                         {q.surchargeAmount > 0 && (
                           <p className="text-xs text-gray-400">
-                            incl. recargo ${q.surchargeAmount.toFixed(2)}
+                            {dict.inclSurcharge} ${q.surchargeAmount.toFixed(2)}
                           </p>
                         )}
                       </>
@@ -478,7 +481,7 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
             onClick={() => { setStep(0); setError('') }}
             className="text-sm text-gray-500 hover:text-[#0071e3] mt-2"
           >
-            ← Cambiar ruta
+            {dict.changeRoute}
           </button>
         </div>
       )}
@@ -500,7 +503,7 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
 
           <div>
             <label className="block text-xs font-semibold uppercase tracking-widest text-gray-500 mb-2">
-              Nombre completo <span className="text-red-500">*</span>
+              {dict.fullName} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -513,7 +516,7 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
 
           <div>
             <label className="block text-xs font-semibold uppercase tracking-widest text-gray-500 mb-2">
-              Teléfono <span className="text-red-500">*</span>
+              {dict.phone} <span className="text-red-500">*</span>
             </label>
             <input
               type="tel"
@@ -526,7 +529,7 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
 
           <div>
             <label className="block text-xs font-semibold uppercase tracking-widest text-gray-500 mb-2">
-              Email <span className="font-normal normal-case text-gray-400">(opcional)</span>
+              {dict.email} <span className="font-normal normal-case text-gray-400">{dict.optional}</span>
             </label>
             <input
               type="email"
@@ -538,7 +541,7 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
 
           <div>
             <label className="block text-xs font-semibold uppercase tracking-widest text-gray-500 mb-2">
-              Número de pasajeros
+              {dict.passengerCount}
             </label>
             <input
               type="number"
@@ -553,7 +556,7 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
           {(routeData.bookingType === 'airport_pickup' || routeData.bookingType === 'airport_dropoff') && (
             <div>
               <label className="block text-xs font-semibold uppercase tracking-widest text-gray-500 mb-2">
-                Número de vuelo <span className="font-normal normal-case text-gray-400">(recomendado)</span>
+                {dict.flightNumber} <span className="font-normal normal-case text-gray-400">{dict.recommended}</span>
               </label>
               <input
                 type="text"
@@ -566,12 +569,12 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
 
           <div>
             <label className="block text-xs font-semibold uppercase tracking-widest text-gray-500 mb-2">
-              Instrucciones especiales <span className="font-normal normal-case text-gray-400">(opcional)</span>
+              {dict.specialInstructions} <span className="font-normal normal-case text-gray-400">{dict.optional}</span>
             </label>
             <textarea
               name="instructions"
               rows={2}
-              placeholder="Silla de bebé, equipaje extra, acceso especial..."
+              placeholder={dict.instructionsPlaceholder}
               className="w-full rounded-xl border border-gray-200 bg-white px-4 py-2.5 text-sm text-[#1d1d1f] focus:border-[#0071e3] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20 resize-none"
             />
           </div>
@@ -588,13 +591,13 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
               onClick={() => { setStep(1); setError('') }}
               className="px-5 py-3 border border-gray-200 text-sm font-medium rounded-xl hover:border-[#0071e3] transition-colors text-[#1d1d1f]"
             >
-              ← Volver
+              {dict.back}
             </button>
             <button
               type="submit"
               className="flex-1 py-3 bg-[#0071e3] text-white font-semibold rounded-2xl hover:bg-[#0077ed] transition-colors text-sm"
             >
-              Continuar →
+              {dict.continue}
             </button>
           </div>
         </form>
@@ -605,23 +608,23 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
         <div className="space-y-5">
           <div className="bg-white rounded-2xl border border-gray-200 p-5 space-y-4 text-sm">
             <p className="text-xs font-semibold uppercase tracking-widest text-gray-500">
-              Resumen de tu reservación
+              {dict.summary}
             </p>
 
             {/* Ruta */}
             <div className="space-y-2">
               <div className="flex gap-2">
-                <span className="text-gray-400 w-14 shrink-0">Pickup</span>
+                <span className="text-gray-400 w-20 shrink-0">{dict.pickup}</span>
                 <span className="text-[#1d1d1f] font-medium">{routeData.pickupAddress}</span>
               </div>
               <div className="flex gap-2">
-                <span className="text-gray-400 w-14 shrink-0">Destino</span>
+                <span className="text-gray-400 w-20 shrink-0">{dict.destination}</span>
                 <span className="text-[#1d1d1f] font-medium">{routeData.dropoffAddress}</span>
               </div>
               <div className="flex gap-2">
-                <span className="text-gray-400 w-14 shrink-0">Fecha</span>
+                <span className="text-gray-400 w-20 shrink-0">{dict.date}</span>
                 <span className="text-[#1d1d1f]">
-                  {new Date(routeData.scheduledAt).toLocaleString('es-DO', {
+                  {new Date(routeData.scheduledAt).toLocaleString(localeTag, {
                     dateStyle: 'medium', timeStyle: 'short',
                   })}
                 </span>
@@ -630,26 +633,26 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
 
             <div className="border-t border-gray-100 pt-3 space-y-2">
               <div className="flex gap-2">
-                <span className="text-gray-400 w-14 shrink-0">Vehículo</span>
+                <span className="text-gray-400 w-20 shrink-0">{dict.vehicle}</span>
                 <span className="text-[#1d1d1f]">{selectedQuote.vehicleType.name}</span>
               </div>
               <div className="flex gap-2">
-                <span className="text-gray-400 w-14 shrink-0">Pasajero</span>
+                <span className="text-gray-400 w-20 shrink-0">{dict.passenger}</span>
                 <span className="text-[#1d1d1f]">{passengerData.name}</span>
               </div>
               <div className="flex gap-2">
-                <span className="text-gray-400 w-14 shrink-0">Tel.</span>
+                <span className="text-gray-400 w-20 shrink-0">{dict.phone}</span>
                 <span className="text-[#1d1d1f]">{passengerData.phone}</span>
               </div>
               {passengerData.count > 1 && (
                 <div className="flex gap-2">
-                  <span className="text-gray-400 w-14 shrink-0">Pax</span>
+                  <span className="text-gray-400 w-20 shrink-0">Pax</span>
                   <span className="text-[#1d1d1f]">{passengerData.count}</span>
                 </div>
               )}
               {passengerData.instructions && (
                 <div className="flex gap-2">
-                  <span className="text-gray-400 w-14 shrink-0">Notas</span>
+                  <span className="text-gray-400 w-20 shrink-0">{dict.notes}</span>
                   <span className="text-[#1d1d1f]">{passengerData.instructions}</span>
                 </div>
               )}
@@ -657,7 +660,7 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
 
             <div className="border-t border-gray-100 pt-3">
               <div className="flex justify-between items-center">
-                <span className="font-semibold text-[#1d1d1f]">Total a pagar</span>
+                <span className="font-semibold text-[#1d1d1f]">{dict.totalToPay}</span>
                 <span className="font-bold text-2xl text-[#1d1d1f]">
                   ${selectedQuote.totalAmount.toFixed(2)}
                   <span className="text-sm font-normal text-gray-400 ml-1">
@@ -665,7 +668,7 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
                   </span>
                 </span>
               </div>
-              <p className="text-xs text-gray-400 mt-1 text-right">Pago al conductor</p>
+              <p className="text-xs text-gray-400 mt-1 text-right">{dict.payToDriver}</p>
             </div>
           </div>
 
@@ -680,19 +683,19 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
               onClick={() => { setStep(2); setError('') }}
               className="px-5 py-3 border border-gray-200 text-sm font-medium rounded-xl hover:border-[#0071e3] transition-colors text-[#1d1d1f]"
             >
-              ← Volver
+              {dict.back}
             </button>
             <button
               onClick={handleConfirm}
               disabled={isPending}
               className="flex-1 py-3.5 bg-[#0071e3] text-white font-semibold rounded-2xl hover:bg-[#0077ed] disabled:opacity-50 transition-colors text-sm"
             >
-              {isPending ? 'Confirmando...' : '✓ Confirmar reservación'}
+              {isPending ? dict.confirming : dict.confirmBooking}
             </button>
           </div>
 
           <p className="text-xs text-center text-gray-400">
-            Al confirmar, recibirás un número de reservación. Un agente se comunicará contigo para coordinar el pago.
+            {dict.confirmNote}
           </p>
         </div>
       )}

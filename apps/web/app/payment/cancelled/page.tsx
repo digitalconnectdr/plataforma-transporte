@@ -1,12 +1,15 @@
 import type { Metadata } from 'next'
+import { getDict } from '@/lib/i18n/server'
 
-export const metadata: Metadata = { title: 'Pago cancelado | LuxeRide' }
+export const metadata: Metadata = { title: 'Payment | LuxeRide' }
+export const dynamic = 'force-dynamic'
 
 export default function PaymentCancelledPage({
   searchParams,
 }: {
   searchParams: { booking?: string }
 }) {
+  const t = getDict().payment
   const bookingNumber = searchParams.booking ?? ''
 
   return (
@@ -15,16 +18,13 @@ export default function PaymentCancelledPage({
         <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto text-3xl">
           !
         </div>
-        <h1 className="font-semibold text-2xl text-[#1d1d1f]">Pago no completado</h1>
+        <h1 className="font-semibold text-2xl text-[#1d1d1f]">{t.cancelledTitle}</h1>
         {bookingNumber && (
           <p className="font-mono text-lg font-bold text-gray-500 bg-gray-50 rounded-2xl px-6 py-3 inline-block">
             {bookingNumber}
           </p>
         )}
-        <p className="text-sm text-gray-500">
-          El pago fue cancelado. Tu reservación sigue activa — un representante se
-          comunicará contigo para coordinar el pago.
-        </p>
+        <p className="text-sm text-gray-500">{t.cancelledBody}</p>
       </div>
     </div>
   )

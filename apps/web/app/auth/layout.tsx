@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import { getLocale, getDict } from '@/lib/i18n/server'
+import { LanguageSwitcher } from '@/components/i18n/language-switcher'
 
 export const metadata: Metadata = {
   title: {
@@ -9,6 +11,9 @@ export const metadata: Metadata = {
 }
 
 export default function AuthLayout({ children }: { children: React.ReactNode }) {
+  const locale = getLocale()
+  const dict = getDict(locale)
+
   return (
     <div className="min-h-screen bg-sl-bg flex flex-col">
       {/* Header */}
@@ -21,9 +26,12 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
             LuxeRide
           </span>
         </Link>
-        <p className="text-sm text-sl-on-surface-muted">
-          Premium Transportation Platform
-        </p>
+        <div className="flex items-center gap-4">
+          <p className="hidden sm:block text-sm text-sl-on-surface-muted">
+            {dict.auth.tagline}
+          </p>
+          <LanguageSwitcher current={locale} variant="light" />
+        </div>
       </header>
 
       {/* Content */}

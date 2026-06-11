@@ -3,6 +3,8 @@ import { createAdminClient } from '@/lib/supabase/server'
 import { logoutAction } from '@/app/actions/auth'
 import { NavLink } from '@/components/admin/nav-link'
 import { MapsProvider } from '@/components/maps/maps-provider'
+import { getLocale, getDict } from '@/lib/i18n/server'
+import { LanguageSwitcher } from '@/components/i18n/language-switcher'
 
 export default async function AdminLayout({
   children,
@@ -42,6 +44,9 @@ export default async function AdminLayout({
   const isDispatcher   = user.role === 'dispatcher'
   const isAccounting   = user.role === 'accounting'
 
+  const locale = getLocale()
+  const nav = getDict(locale).adminNav
+
   return (
     <div className="min-h-screen bg-sl-bg flex">
       {/* ── Sidebar ── */}
@@ -66,19 +71,19 @@ export default async function AdminLayout({
 
           {/* OVERVIEW */}
           <p className="px-3 pt-3 pb-1 text-[10px] font-semibold uppercase tracking-widest text-sl-on-surface-muted">
-            Overview
+            {nav.overview}
           </p>
-          <NavLink href="/admin/dashboard" label="Dashboard" />
+          <NavLink href="/admin/dashboard" label={nav.dashboard} />
 
           {/* OPERATIONS */}
           {(isOwnerOrAdmin || isDispatcher) && (
             <>
               <p className="px-3 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-widest text-sl-on-surface-muted">
-                Operations
+                {nav.operations}
               </p>
-              <NavLink href="/dispatcher/dashboard" label="Dispatch (Live)" />
-              <NavLink href="/admin/fleet"   label="Fleet"   />
-              <NavLink href="/admin/drivers" label="Drivers" />
+              <NavLink href="/dispatcher/dashboard" label={nav.dispatch} />
+              <NavLink href="/admin/fleet"   label={nav.fleet}   />
+              <NavLink href="/admin/drivers" label={nav.drivers} />
             </>
           )}
 
@@ -86,10 +91,10 @@ export default async function AdminLayout({
           {(isOwnerOrAdmin || isDispatcher) && (
             <>
               <p className="px-3 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-widest text-sl-on-surface-muted">
-                Geography
+                {nav.geography}
               </p>
-              <NavLink href="/admin/zones"    label="Service Zones" />
-              <NavLink href="/admin/airports" label="Airports"      />
+              <NavLink href="/admin/zones"    label={nav.zones} />
+              <NavLink href="/admin/airports" label={nav.airports} />
             </>
           )}
 
@@ -97,9 +102,9 @@ export default async function AdminLayout({
           {isOwnerOrAdmin && (
             <>
               <p className="px-3 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-widest text-sl-on-surface-muted">
-                Pricing
+                {nav.pricing}
               </p>
-              <NavLink href="/admin/pricing" label="Pricing Rules" />
+              <NavLink href="/admin/pricing" label={nav.pricingRules} />
             </>
           )}
 
@@ -107,9 +112,9 @@ export default async function AdminLayout({
           {(isOwnerOrAdmin || isDispatcher) && (
             <>
               <p className="px-3 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-widest text-sl-on-surface-muted">
-                Bookings
+                {nav.bookings}
               </p>
-              <NavLink href="/admin/bookings" label="Reservaciones" />
+              <NavLink href="/admin/bookings" label={nav.reservations} />
             </>
           )}
 
@@ -117,10 +122,10 @@ export default async function AdminLayout({
           {(isOwnerOrAdmin || isAccounting) && (
             <>
               <p className="px-3 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-widest text-sl-on-surface-muted">
-                Finance
+                {nav.finance}
               </p>
-              <NavLink href="/admin/reports" label="Reports" />
-              <NavLink href="/admin/audit"   label="Audit Log" />
+              <NavLink href="/admin/reports" label={nav.reports} />
+              <NavLink href="/admin/audit"   label={nav.auditLog} />
             </>
           )}
 
@@ -128,11 +133,11 @@ export default async function AdminLayout({
           {isOwnerOrAdmin && (
             <>
               <p className="px-3 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-widest text-sl-on-surface-muted">
-                Management
+                {nav.management}
               </p>
-              <NavLink href="/admin/corporate" label="Corporate" />
-              <NavLink href="/admin/team" label="Team" />
-              {isOwner && <NavLink href="/admin/settings" label="Settings" />}
+              <NavLink href="/admin/corporate" label={nav.corporate} />
+              <NavLink href="/admin/team" label={nav.team} />
+              {isOwner && <NavLink href="/admin/settings" label={nav.settings} />}
             </>
           )}
 
@@ -144,6 +149,9 @@ export default async function AdminLayout({
             {user.profile.first_name} {user.profile.last_name}
           </p>
           <p className="text-[11px] text-sl-on-surface-muted truncate mt-0.5">{user.email}</p>
+          <div className="mt-2">
+            <LanguageSwitcher current={locale} variant="light" />
+          </div>
           <form action={logoutAction} className="mt-2">
             <button
               type="submit"
