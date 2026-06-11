@@ -161,25 +161,30 @@ Set environment variables in Vercel Dashboard → Project → Settings → Envir
 
 ## Module Roadmap
 
-**Phase 1 (current)**
+**Phase 1 — COMPLETE ✅**
 - [x] F1.0 Foundation — Monorepo, Next.js, Supabase, Vercel
-- [ ] F1.1 Database Schema + RLS Policies
-- [ ] F1.2 Auth + RBAC (9 roles)
-- [ ] F1.3 Company Management + Super Admin
-- [ ] F1.4 Fleet + Drivers + Documents
-- [ ] F1.5 Services + Zones + Airports
-- [ ] F1.6 Pricing Engine (5 models)
-- [ ] F1.7 Google Maps Integration
-- [ ] F1.8 Booking Engine + State Machine
-- [ ] F1.9 Stripe + Stripe Connect
-- [ ] F1.10 Policy Engine
-- [ ] F1.11 Corporate Accounts
-- [ ] F1.12 Admin Dashboard
-- [ ] F1.13 Dispatcher (Real-time)
-- [ ] F1.14 Notifications (Email + SMS)
-- [ ] F1.15 Reports + Audit Logs
-- [ ] F1.16 Public Web (Revival-branded)
-- [ ] F1.17 Security Review
+- [x] F1.1 Database Schema + RLS Policies (24 tables, 12 migrations)
+- [x] F1.2 Auth + RBAC (9 roles)
+- [x] F1.3 Company Management + Super Admin
+- [x] F1.4 Fleet + Drivers + Documents
+- [x] F1.5 Services + Zones + Airports
+- [x] F1.6 Pricing Engine (5 models)
+- [x] F1.7 Google Maps Integration
+- [x] F1.8 Booking Engine + State Machine
+- [x] F1.9 Stripe + Stripe Connect (checkout, payment links, webhooks, refunds)
+- [x] F1.10 Policy Engine (cancellation/no-show fees, booking windows)
+- [x] F1.11 Corporate Accounts (credit, members, limits, cost centers)
+- [x] F1.12 Admin Dashboard (revenue KPIs, 7-day trend, upcoming trips)
+- [x] F1.13 Dispatcher (Real-time board via Supabase Realtime)
+- [x] F1.14 Notifications (Resend email + Twilio SMS, template-driven)
+- [x] F1.15 Reports + Audit Logs (date-range KPIs, CSV export, audit viewer)
+- [x] F1.16 Public Web (landing + booking flow + driver/customer portals)
+- [x] F1.17 Security Review (rate limiting, input hardening, HSTS, RLS audit)
+
+> Stripe/Resend/Twilio ship **placeholder-safe**: without real API keys the
+> features degrade gracefully (payments UI shows "not configured",
+> notifications are logged to the `notifications` table as `pending`).
+> Add real keys in Vercel env vars to activate them — no code changes needed.
 
 **Phase 2 — Mobile Apps** (after Phase 1 is live in production)
 - React Native + Expo + EAS Build
