@@ -28,6 +28,9 @@ jobs:
       - name: Type check
         run: npm run type-check
 
+      - name: Unit tests
+        run: npm run test --workspace=@plataforma/web
+
   build:
     name: Build
     runs-on: ubuntu-latest
