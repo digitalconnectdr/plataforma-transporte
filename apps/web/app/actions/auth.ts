@@ -74,7 +74,7 @@ export async function loginAction(
   }
 
   // F1.17 — frenar fuerza bruta por IP
-  if (!checkRateLimit('login', 10)) {
+  if (!(await checkRateLimit('login', 10))) {
     return { success: false, error: RATE_LIMIT_ERROR }
   }
 
@@ -126,7 +126,7 @@ export async function signupAction(
   }
 
   // F1.17 — frenar creación masiva de cuentas por IP
-  if (!checkRateLimit('signup', 3, 5 * 60_000)) {
+  if (!(await checkRateLimit('signup', 3, 5 * 60_000))) {
     return { success: false, error: RATE_LIMIT_ERROR }
   }
 

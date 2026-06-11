@@ -13,7 +13,7 @@ import {
   computeCancellationFee,
   validateBookingTime,
 } from '@/lib/policy/engine'
-import { notifyBookingEvent } from '@/lib/notifications'
+import { notifyBookingEventInBackground } from '@/lib/notifications'
 import { checkRateLimit, RATE_LIMIT_ERROR } from '@/lib/security/rate-limit'
 import { calculateFare, bestRule, type PricingRuleFields } from '@/lib/pricing/engine'
 import type { BookingStatus, BookingType } from '@/lib/supabase/database.types'
@@ -317,7 +317,7 @@ export async function createBookingAction(
   if (fees.length > 0) await admin.from('booking_fees').insert(fees)
 
   // F1.14 — confirmación al pasajero (email + SMS)
-  await notifyBookingEvent('booking_confirmation', toNotifyData({
+  notifyBookingEventInBackground('booking_confirmation', toNotifyData({
     id: booking.id,
     company_id: user.company_id,
     booking_number: booking.booking_number,
@@ -438,7 +438,7 @@ export async function updateBookingStatusAction(
   }
   const notifyType = NOTIFY_BY_STATUS[newStatus]
   if (notifyType) {
-    await notifyBookingEvent(notifyType, toNotifyData(booking, {
+    notifyBookingEventInBackground(notifyType, toNotifyData(booking, {
       cancellation_reason: opts?.reason ?? '',
       eta_minutes: '15',
     }))
@@ -503,7 +503,7 @@ export async function assignDriverAction(
   ])
   const vehicle = vehicleRes.data as { make?: string; model?: string; plate_number?: string } | null
 
-  await notifyBookingEvent('driver_assigned', toNotifyData(booking, {
+  notifyBookingEventInBackground('driver_assigned', toNotifyData(booking, {
     driver_name: driverProfile ? `${driverProfile.first_name} ${driverProfile.last_name}` : 'Tu conductor',
     vehicle_make: vehicle?.make ?? '',
     vehicle_model: vehicle?.model ?? '',
@@ -532,7 +532,7 @@ export async function getPublicVehicleQuotesAction(
   },
 ): Promise<{ success: boolean; error?: string; data?: VehicleQuote[] }> {
   // F1.17 — rate limit por IP (cotizaciones disparan llamadas a Google Routes)
-  if (!checkRateLimit('public_quote', 20)) {
+  if (!(await checkRateLimit('public_quote', 20))) {
     return { success: false, error: RATE_LIMIT_ERROR }
   }
 
@@ -668,7 +668,7 @@ export async function createPublicBookingAction(data: {
   dropoffLng: number
 }): Promise<{ success: boolean; error?: string; data?: BookingResult }> {
   // F1.17 — rate limit por IP
-  if (!checkRateLimit('public_booking', 5)) {
+  if (!(await checkRateLimit('public_booking', 5))) {
     return { success: false, error: RATE_LIMIT_ERROR }
   }
 
@@ -764,7 +764,7 @@ export async function createPublicBookingAction(data: {
   if (fees.length > 0) await admin.from('booking_fees').insert(fees)
 
   // F1.14 — confirmación al pasajero (email + SMS)
-  await notifyBookingEvent('booking_confirmation', toNotifyData({
+  notifyBookingEventInBackground('booking_confirmation', toNotifyData({
     id: booking.id,
     company_id: company.id,
     booking_number: booking.booking_number,

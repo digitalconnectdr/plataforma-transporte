@@ -5,6 +5,7 @@
 // Flujo: notify() → busca template (empresa → default del sistema) → renderiza
 // {{variables}} → respeta settings.notifications de la empresa → envía → registra.
 
+import { waitUntil } from '@vercel/functions'
 import { createAdminClient } from '@/lib/supabase/server'
 import type { NotificationChannel } from '@/lib/supabase/database.types'
 
@@ -256,4 +257,22 @@ export async function notifyBookingEvent(
   }
 
   await Promise.allSettled(jobs)
+}
+
+/**
+ * Versión NO bloqueante de notifyBookingEvent: la server action responde de
+ * inmediato y el envío continúa en background (waitUntil de Vercel mantiene
+ * viva la función serverless hasta que termine; en dev local el proceso es
+ * long-running, así que el promise flotante también completa).
+ */
+export function notifyBookingEventInBackground(
+  type: string,
+  data: BookingNotificationData,
+): void {
+  const job = notifyBookingEvent(type, data).catch((err) => {
+    console.error('[notifyBookingEventInBackground]', err)
+  })
+  // waitUntil es no-op fuera de Vercel; en dev el proceso es long-running
+  // y el promise flotante completa igual.
+  waitUntil(job)
 }

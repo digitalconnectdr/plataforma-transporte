@@ -1,8 +1,28 @@
 // ── F1.17 — Rate limiting para endpoints públicos ─────────────────────────────
-// Sliding-window en memoria por instancia serverless. No sustituye un WAF,
-// pero frena abuso básico (scraping de cotizaciones, spam de reservaciones).
+// Distribuido vía Upstash Redis cuando UPSTASH_REDIS_REST_URL/TOKEN están
+// configurados (ventana fija INCR+PEXPIRE). Fallback a memoria por instancia
+// si Redis no está configurado o falla — nunca bloquea por error de infra.
 
 import { headers } from 'next/headers'
+import { Redis } from '@upstash/redis'
+
+// ─── Redis (lazy, placeholder-safe) ───────────────────────────────────────────
+
+let redisSingleton: Redis | null | undefined
+
+function getRedis(): Redis | null {
+  if (redisSingleton !== undefined) return redisSingleton
+  const url = process.env.UPSTASH_REDIS_REST_URL ?? ''
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN ?? ''
+  if (!url.startsWith('https://') || !token || token.includes('placeholder')) {
+    redisSingleton = null
+    return null
+  }
+  redisSingleton = new Redis({ url, token })
+  return redisSingleton
+}
+
+// ─── Fallback en memoria ──────────────────────────────────────────────────────
 
 interface Window {
   count: number
@@ -19,6 +39,21 @@ function prune(now: number) {
   }
 }
 
+function checkInMemory(key: string, limit: number, windowMs: number): boolean {
+  const now = Date.now()
+  prune(now)
+
+  const win = buckets.get(key)
+  if (!win || win.resetAt <= now) {
+    buckets.set(key, { count: 1, resetAt: now + windowMs })
+    return true
+  }
+  win.count += 1
+  return win.count <= limit
+}
+
+// ─── API ──────────────────────────────────────────────────────────────────────
+
 /** IP del cliente desde los headers del proxy (Vercel setea x-forwarded-for). */
 export function getClientIp(): string {
   const h = headers()
@@ -29,24 +64,31 @@ export function getClientIp(): string {
 
 /**
  * true si la petición está dentro del límite; false si debe rechazarse.
- * @param action  nombre lógico del endpoint ('public_quote', 'public_booking', …)
+ * @param action  nombre lógico del endpoint ('public_quote', 'login', …)
  * @param limit   peticiones permitidas por ventana
  * @param windowMs duración de la ventana en ms (default 60s)
  */
-export function checkRateLimit(action: string, limit: number, windowMs = 60_000): boolean {
-  const now = Date.now()
-  prune(now)
+export async function checkRateLimit(
+  action: string,
+  limit: number,
+  windowMs = 60_000,
+): Promise<boolean> {
+  const key = `rl:${action}:${getClientIp()}`
 
-  const key = `${action}:${getClientIp()}`
-  const win = buckets.get(key)
-
-  if (!win || win.resetAt <= now) {
-    buckets.set(key, { count: 1, resetAt: now + windowMs })
-    return true
+  const redis = getRedis()
+  if (redis) {
+    try {
+      const count = await redis.incr(key)
+      if (count === 1) {
+        await redis.pexpire(key, windowMs)
+      }
+      return count <= limit
+    } catch (err) {
+      console.error('[rate-limit] Redis error — usando fallback en memoria', err)
+    }
   }
 
-  win.count += 1
-  return win.count <= limit
+  return checkInMemory(key, limit, windowMs)
 }
 
 export const RATE_LIMIT_ERROR =

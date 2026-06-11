@@ -34,16 +34,39 @@ export default async function AdminDashboardPage() {
     const next24h = new Date(Date.now() + 24 * 3_600_000)
     const weekAgo = new Date(todayStart.getTime() - 6 * 24 * 3_600_000)
 
+    const activeStatuses = ['pending', 'assigned', 'en_route', 'arrived', 'in_progress'] as const
+
+    // Counts vía head:true — no se transfieren filas, solo el conteo.
+    // Las únicas filas que viajan están acotadas (mes actual / 7 días / top N).
     const [
-      { data: vehicles },
-      { data: drivers },
-      { data: bookings },
+      { count: vehiclesCount },
+      { count: vehiclesAvailCount },
+      { count: driversAvailCount },
+      { count: pendingCount },
+      { count: activeCount },
+      { count: todayCount },
+      { data: completedMonth },
+      { data: weekRows },
       { data: recent },
       { data: upcoming },
     ] = await Promise.all([
-      admin.from('vehicles').select('id, status').eq('company_id', companyId),
-      admin.from('drivers').select('id, is_available').eq('company_id', companyId),
-      admin.from('bookings').select('id, status, scheduled_at, completed_at, total_amount, created_at').eq('company_id', companyId),
+      admin.from('vehicles').select('id', { count: 'exact', head: true }).eq('company_id', companyId),
+      admin.from('vehicles').select('id', { count: 'exact', head: true }).eq('company_id', companyId).eq('status', 'available'),
+      admin.from('drivers').select('id', { count: 'exact', head: true }).eq('company_id', companyId).eq('is_available', true),
+      admin.from('bookings').select('id', { count: 'exact', head: true }).eq('company_id', companyId).eq('status', 'pending'),
+      admin.from('bookings').select('id', { count: 'exact', head: true }).eq('company_id', companyId).in('status', activeStatuses),
+      admin.from('bookings').select('id', { count: 'exact', head: true }).eq('company_id', companyId).gte('scheduled_at', todayStart.toISOString()),
+      admin
+        .from('bookings')
+        .select('total_amount, completed_at')
+        .eq('company_id', companyId)
+        .eq('status', 'completed')
+        .gte('completed_at', monthStart.toISOString()),
+      admin
+        .from('bookings')
+        .select('created_at')
+        .eq('company_id', companyId)
+        .gte('created_at', weekAgo.toISOString()),
       admin
         .from('bookings')
         .select('id, booking_number, status, passenger_name, scheduled_at, total_amount')
@@ -62,25 +85,21 @@ export default async function AdminDashboardPage() {
     ])
 
     stats = {
-      vehicles:     vehicles?.length ?? 0,
-      driversAvail: drivers?.filter((d) => d.is_available).length ?? 0,
-      fleet:        vehicles?.filter((v) => v.status === 'available').length ?? 0,
+      vehicles:     vehiclesCount ?? 0,
+      driversAvail: driversAvailCount ?? 0,
+      fleet:        vehiclesAvailCount ?? 0,
     }
 
-    const activeStatuses = ['pending', 'assigned', 'en_route', 'arrived', 'in_progress']
-    const completedMonth = (bookings ?? []).filter(
-      (b) => b.status === 'completed' && b.completed_at && new Date(b.completed_at) >= monthStart,
-    )
     bookingStats = {
-      pending:        bookings?.filter((b) => b.status === 'pending').length ?? 0,
-      active:         bookings?.filter((b) => activeStatuses.includes(b.status)).length ?? 0,
-      today:          bookings?.filter((b) => new Date(b.scheduled_at) >= todayStart).length ?? 0,
-      completedMonth: completedMonth.length,
+      pending:        pendingCount ?? 0,
+      active:         activeCount ?? 0,
+      today:          todayCount ?? 0,
+      completedMonth: completedMonth?.length ?? 0,
     }
 
     revenue = {
-      month: completedMonth.reduce((s, b) => s + Number(b.total_amount ?? 0), 0),
-      today: completedMonth
+      month: (completedMonth ?? []).reduce((s, b) => s + Number(b.total_amount ?? 0), 0),
+      today: (completedMonth ?? [])
         .filter((b) => b.completed_at && new Date(b.completed_at) >= todayStart)
         .reduce((s, b) => s + Number(b.total_amount ?? 0), 0),
     }
@@ -92,7 +111,7 @@ export default async function AdminDashboardPage() {
       const dayEnd = new Date(dayStart.getTime() + 24 * 3_600_000)
       return {
         day: DAY_LABELS[dayStart.getDay()],
-        count: (bookings ?? []).filter((b) => {
+        count: (weekRows ?? []).filter((b) => {
           const created = new Date(b.created_at)
           return created >= dayStart && created < dayEnd
         }).length,

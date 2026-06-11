@@ -5,7 +5,7 @@
 import { revalidatePath } from 'next/cache'
 import { createAdminClient } from '@/lib/supabase/server'
 import { requireRole } from '@/lib/auth/session'
-import { notifyBookingEvent } from '@/lib/notifications'
+import { notifyBookingEventInBackground } from '@/lib/notifications'
 import type { BookingStatus } from '@/lib/supabase/database.types'
 
 // Transiciones permitidas al conductor (subset de la máquina de estados)
@@ -75,7 +75,7 @@ export async function driverAdvanceTripAction(
   if (notifyType) {
     const pickup  = (booking.pickup_location as { address?: string } | null)?.address ?? ''
     const dropoff = (booking.dropoff_location as { address?: string } | null)?.address ?? ''
-    await notifyBookingEvent(notifyType, {
+    notifyBookingEventInBackground(notifyType, {
       companyId: booking.company_id,
       bookingId: booking.id,
       bookingNumber: booking.booking_number,

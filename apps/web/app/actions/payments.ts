@@ -177,7 +177,7 @@ export async function createPublicCheckoutAction(
   gratuityPct?: number,
 ): Promise<ActionResult<{ url: string }>> {
   // F1.17 — rate limit por IP
-  if (!checkRateLimit('public_checkout', 5)) {
+  if (!(await checkRateLimit('public_checkout', 5))) {
     return { success: false, error: RATE_LIMIT_ERROR }
   }
 
