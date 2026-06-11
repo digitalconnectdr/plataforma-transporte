@@ -54,7 +54,7 @@ export default function DriversError({ error, reset }: ErrorProps) {
           Para ver el detalle del error, revisa los{' '}
           <strong className="text-sl-on-surface">Vercel Function Logs</strong>{' '}
           en tu proyecto y busca líneas que comiencen con{' '}
-          <code className="font-mono text-gold">[drivers/page]</code>.
+          <code className="font-mono text-bronze">[drivers/page]</code>.
         </p>
       </div>
     </div>

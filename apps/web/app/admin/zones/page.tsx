@@ -57,7 +57,7 @@ export default async function ZonesPage() {
                 name="name"
                 required
                 placeholder="e.g. Downtown Manhattan"
-                className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface placeholder:text-sl-on-surface-muted/50 focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold"
+                className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface placeholder:text-sl-on-surface-muted/50 focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze"
               />
             </div>
             <div>
@@ -65,7 +65,7 @@ export default async function ZonesPage() {
               <select
                 name="type"
                 defaultValue="standard"
-                className="text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold"
+                className="text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze"
               >
                 {ZONE_TYPES.map((t) => (
                   <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>

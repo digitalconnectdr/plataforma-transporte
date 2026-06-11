@@ -16,7 +16,7 @@ const ROLE_BADGE: Record<string, string> = {
 const inputCls =
   'w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 ' +
   'text-sl-on-surface placeholder:text-sl-on-surface-muted/50 ' +
-  'focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold'
+  'focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze'
 
 export default async function TeamPage() {
   const user = await requireRole('company_owner', 'company_admin')

@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: 'Companies — Super Admin | LuxeRide
 
 const STATUS_BADGE: Record<CompanyStatus, string> = {
   active:    'bg-green-500/10 text-green-400 border-green-500/20',
-  trial:     'bg-gold/10 text-gold border-gold/20',
+  trial:     'bg-gold/10 text-bronze border-bronze/20',
   suspended: 'bg-red-500/10 text-red-400 border-red-500/20',
   cancelled: 'bg-sl-outline-variant/20 text-sl-on-surface-muted border-sl-outline-variant/40',
 }
@@ -17,7 +17,7 @@ const PLAN_COLOR: Record<CompanyPlan, string> = {
   free:         'text-sl-on-surface-muted',
   starter:      'text-blue-400',
   professional: 'text-purple-400',
-  enterprise:   'text-gold',
+  enterprise:   'text-bronze',
 }
 
 const STATUS_TABS = [
@@ -99,7 +99,7 @@ export default async function CompaniesPage({ searchParams }: PageProps) {
             name="q"
             defaultValue={typeof rawQ === 'string' ? rawQ : undefined}
             placeholder="Search by name or slug…"
-            className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-xl px-4 py-2 text-sl-on-surface placeholder:text-sl-on-surface-muted focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold transition-all"
+            className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-xl px-4 py-2 text-sl-on-surface placeholder:text-sl-on-surface-muted focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze transition-all"
           />
         </form>
       </div>
@@ -167,7 +167,7 @@ export default async function CompaniesPage({ searchParams }: PageProps) {
                   <td className="px-5 py-4 text-right">
                     <Link
                       href={`/super-admin/companies/${c.id}`}
-                      className="text-xs text-gold opacity-0 group-hover:opacity-100 hover:text-gold/80 transition-all"
+                      className="text-xs text-bronze opacity-0 group-hover:opacity-100 hover:text-bronze/80 transition-all"
                     >
                       Details →
                     </Link>

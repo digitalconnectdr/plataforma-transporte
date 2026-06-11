@@ -6,7 +6,7 @@ import type { CompanyStatus, CompanyPlan } from '@/lib/supabase/database.types'
 
 const selectCls =
   'text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-1.5 text-sl-on-surface ' +
-  'focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold ' +
+  'focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze ' +
   'disabled:opacity-60 disabled:cursor-not-allowed transition-all'
 
 export function StatusSelect({

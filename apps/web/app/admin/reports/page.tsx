@@ -14,7 +14,7 @@ function parseDate(s: string | undefined, fallback: Date): Date {
 
 const inputCls =
   'text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 ' +
-  'text-sl-on-surface focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold'
+  'text-sl-on-surface focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze'
 
 export default async function ReportsPage({
   searchParams,
@@ -105,7 +105,7 @@ export default async function ReportsPage({
         <div className="flex items-center gap-2">
           <Link
             href="/admin/audit"
-            className="px-3 py-2 text-xs font-medium border border-sl-outline-variant text-sl-on-surface rounded-lg hover:border-gold transition-colors"
+            className="px-3 py-2 text-xs font-medium border border-sl-outline-variant text-sl-on-surface rounded-lg hover:border-bronze transition-colors"
           >
             Audit Log
           </Link>

@@ -105,7 +105,7 @@ export default async function VehicleDetailPage({ params }: PageProps) {
               {vehicle.current_driver_id && (
                 <Link
                   href={`/admin/drivers/${vehicle.current_driver_id}`}
-                  className="text-xs text-gold hover:text-gold/80 transition-colors"
+                  className="text-xs text-bronze hover:text-bronze/80 transition-colors"
                 >
                   Ver perfil del conductor →
                 </Link>

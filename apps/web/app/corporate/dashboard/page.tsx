@@ -70,7 +70,7 @@ export default async function CorporateDashboardPage() {
         </h1>
         <p className="text-sm text-sl-on-surface-muted mt-1">
           Bienvenido, {user.profile.first_name} —{' '}
-          <span className="text-gold">{isManager ? 'Manager' : 'Usuario'}</span>
+          <span className="text-bronze">{isManager ? 'Manager' : 'Usuario'}</span>
           {membership.cost_center && ` · ${membership.cost_center}`}
         </p>
       </div>

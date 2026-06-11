@@ -61,7 +61,7 @@ export function TeamMemberRoleSelect({
             await updateTeamMemberRoleAction(memberId, e.target.value as UserRole)
           })
         }
-        className="text-xs bg-sl-bg border border-sl-outline-variant rounded-lg px-2 py-1 text-sl-on-surface focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold disabled:opacity-60 disabled:cursor-not-allowed"
+        className="text-xs bg-sl-bg border border-sl-outline-variant rounded-lg px-2 py-1 text-sl-on-surface focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze disabled:opacity-60 disabled:cursor-not-allowed"
       >
         {ASSIGNABLE_ROLES.map((r) => (
           <option key={r.value} value={r.value}>{r.label}</option>

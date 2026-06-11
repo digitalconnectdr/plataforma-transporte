@@ -18,7 +18,7 @@ export function NavLink({ href, label }: NavLinkProps) {
       className={[
         'flex items-center px-3 py-2.5 rounded-xl text-sm font-medium transition-all',
         isActive
-          ? 'bg-gold/10 text-gold'
+          ? 'bg-gold/10 text-bronze'
           : 'text-sl-on-surface-muted hover:text-sl-on-surface hover:bg-sl-bg/60',
       ].join(' ')}
     >

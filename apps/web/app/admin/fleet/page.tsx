@@ -103,7 +103,7 @@ export default async function FleetPage({ searchParams }: PageProps) {
           {allVehicles.length === 0 ? (
             <div className="px-6 py-16 text-center space-y-3">
               <p className="text-sm text-sl-on-surface-muted">No hay vehículos registrados.</p>
-              <Link href="/admin/fleet/new" className="text-xs text-gold hover:text-gold/80 transition-colors">
+              <Link href="/admin/fleet/new" className="text-xs text-bronze hover:text-bronze/80 transition-colors">
                 Agregar primer vehículo →
               </Link>
             </div>
@@ -152,7 +152,7 @@ export default async function FleetPage({ searchParams }: PageProps) {
                       <td className="px-5 py-4 text-right">
                         <Link
                           href={`/admin/fleet/${v.id}`}
-                          className="text-xs text-gold opacity-0 group-hover:opacity-100 hover:text-gold/80 transition-all"
+                          className="text-xs text-bronze opacity-0 group-hover:opacity-100 hover:text-bronze/80 transition-all"
                         >
                           Detalles →
                         </Link>

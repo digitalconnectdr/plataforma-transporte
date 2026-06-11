@@ -7,7 +7,7 @@ export const metadata: Metadata = { title: 'Dashboard — Super Admin | LuxeRide
 
 const STATUS_BADGE: Record<CompanyStatus, string> = {
   active:    'bg-green-500/10 text-green-400 border-green-500/20',
-  trial:     'bg-gold/10 text-gold border-gold/20',
+  trial:     'bg-gold/10 text-bronze border-bronze/20',
   suspended: 'bg-red-500/10 text-red-400 border-red-500/20',
   cancelled: 'bg-sl-outline-variant/20 text-sl-on-surface-muted border-sl-outline-variant/40',
 }
@@ -59,7 +59,7 @@ export default async function SuperAdminDashboardPage() {
         {[
           { label: 'Total',      value: stats.total,       color: 'text-sl-on-surface' },
           { label: 'Active',     value: stats.active,      color: 'text-green-400' },
-          { label: 'Trial',      value: stats.trial,       color: 'text-gold' },
+          { label: 'Trial',      value: stats.trial,       color: 'text-bronze' },
           { label: 'New (7 d)',  value: stats.newThisWeek, color: 'text-blue-400' },
         ].map((s) => (
           <div
@@ -98,7 +98,7 @@ export default async function SuperAdminDashboardPage() {
           <h2 className="text-sm font-semibold text-sl-on-surface">Recent Companies</h2>
           <Link
             href="/super-admin/companies"
-            className="text-xs text-gold hover:text-gold/80 transition-colors"
+            className="text-xs text-bronze hover:text-bronze/80 transition-colors"
           >
             View all →
           </Link>
@@ -128,7 +128,7 @@ export default async function SuperAdminDashboardPage() {
                   <td className="px-6 py-4">
                     <Link
                       href={`/super-admin/companies/${c.id}`}
-                      className="font-medium text-sl-on-surface hover:text-gold transition-colors"
+                      className="font-medium text-sl-on-surface hover:text-bronze transition-colors"
                     >
                       {c.name}
                     </Link>

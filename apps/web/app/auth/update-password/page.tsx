@@ -36,7 +36,7 @@ export default function UpdatePasswordPage() {
               autoComplete="new-password"
               required
               minLength={8}
-              className="w-full rounded-lg border border-sl-outline-variant bg-sl-bg px-4 py-3 text-sm text-sl-on-surface placeholder:text-sl-on-surface-muted focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold transition-colors"
+              className="w-full rounded-lg border border-sl-outline-variant bg-sl-bg px-4 py-3 text-sm text-sl-on-surface placeholder:text-sl-on-surface-muted focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze transition-colors"
               placeholder="Minimum 8 characters"
             />
             {state?.fieldErrors?.password && (
@@ -54,7 +54,7 @@ export default function UpdatePasswordPage() {
               type="password"
               autoComplete="new-password"
               required
-              className="w-full rounded-lg border border-sl-outline-variant bg-sl-bg px-4 py-3 text-sm text-sl-on-surface placeholder:text-sl-on-surface-muted focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold transition-colors"
+              className="w-full rounded-lg border border-sl-outline-variant bg-sl-bg px-4 py-3 text-sm text-sl-on-surface placeholder:text-sl-on-surface-muted focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze transition-colors"
               placeholder="Repeat your password"
             />
             {state?.fieldErrors?.confirm_password && (

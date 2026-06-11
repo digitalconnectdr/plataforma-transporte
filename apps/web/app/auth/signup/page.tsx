@@ -56,7 +56,7 @@ export default function SignupPage() {
                 type="text"
                 required
                 onChange={handleCompanyNameChange}
-                className="w-full rounded-lg border border-sl-outline-variant bg-sl-bg px-4 py-3 text-sm text-sl-on-surface placeholder:text-sl-on-surface-muted focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold transition-colors"
+                className="w-full rounded-lg border border-sl-outline-variant bg-sl-bg px-4 py-3 text-sm text-sl-on-surface placeholder:text-sl-on-surface-muted focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze transition-colors"
                 placeholder="Elite Chauffeur Services"
               />
               {state?.fieldErrors?.company_name && (
@@ -68,7 +68,7 @@ export default function SignupPage() {
               <label htmlFor="company_slug" className="block text-sm font-medium text-sl-on-surface">
                 Company URL
               </label>
-              <div className="flex items-center rounded-lg border border-sl-outline-variant bg-sl-bg overflow-hidden focus-within:border-gold focus-within:ring-1 focus-within:ring-gold transition-colors">
+              <div className="flex items-center rounded-lg border border-sl-outline-variant bg-sl-bg overflow-hidden focus-within:border-bronze focus-within:ring-1 focus-within:ring-gold transition-colors">
                 <span className="px-3 py-3 text-sm text-sl-on-surface-muted border-r border-sl-outline-variant bg-sl-surface-high whitespace-nowrap">
                   luxeride.app/
                 </span>
@@ -108,7 +108,7 @@ export default function SignupPage() {
                   type="text"
                   autoComplete="given-name"
                   required
-                  className="w-full rounded-lg border border-sl-outline-variant bg-sl-bg px-4 py-3 text-sm text-sl-on-surface placeholder:text-sl-on-surface-muted focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold transition-colors"
+                  className="w-full rounded-lg border border-sl-outline-variant bg-sl-bg px-4 py-3 text-sm text-sl-on-surface placeholder:text-sl-on-surface-muted focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze transition-colors"
                   placeholder="James"
                 />
                 {state?.fieldErrors?.first_name && (
@@ -125,7 +125,7 @@ export default function SignupPage() {
                   type="text"
                   autoComplete="family-name"
                   required
-                  className="w-full rounded-lg border border-sl-outline-variant bg-sl-bg px-4 py-3 text-sm text-sl-on-surface placeholder:text-sl-on-surface-muted focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold transition-colors"
+                  className="w-full rounded-lg border border-sl-outline-variant bg-sl-bg px-4 py-3 text-sm text-sl-on-surface placeholder:text-sl-on-surface-muted focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze transition-colors"
                   placeholder="Wilson"
                 />
                 {state?.fieldErrors?.last_name && (
@@ -144,7 +144,7 @@ export default function SignupPage() {
                 type="email"
                 autoComplete="email"
                 required
-                className="w-full rounded-lg border border-sl-outline-variant bg-sl-bg px-4 py-3 text-sm text-sl-on-surface placeholder:text-sl-on-surface-muted focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold transition-colors"
+                className="w-full rounded-lg border border-sl-outline-variant bg-sl-bg px-4 py-3 text-sm text-sl-on-surface placeholder:text-sl-on-surface-muted focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze transition-colors"
                 placeholder="james@elitechauffeur.com"
               />
               {state?.fieldErrors?.email && (
@@ -163,7 +163,7 @@ export default function SignupPage() {
                 autoComplete="new-password"
                 required
                 minLength={8}
-                className="w-full rounded-lg border border-sl-outline-variant bg-sl-bg px-4 py-3 text-sm text-sl-on-surface placeholder:text-sl-on-surface-muted focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold transition-colors"
+                className="w-full rounded-lg border border-sl-outline-variant bg-sl-bg px-4 py-3 text-sm text-sl-on-surface placeholder:text-sl-on-surface-muted focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze transition-colors"
                 placeholder="Minimum 8 characters"
               />
               {state?.fieldErrors?.password && (
@@ -175,23 +175,23 @@ export default function SignupPage() {
           <button
             type="submit"
             disabled={isPending}
-            className="w-full rounded-lg bg-gold px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gold/90 focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 focus:ring-offset-sl-surface-high disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+            className="w-full rounded-lg bg-gold px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gold/90 focus:outline-none focus:ring-2 focus:ring-bronze focus:ring-offset-2 focus:ring-offset-sl-surface-high disabled:opacity-60 disabled:cursor-not-allowed transition-all"
           >
             {isPending ? 'Creating account…' : 'Create account — it\'s free'}
           </button>
 
           <p className="text-center text-xs text-sl-on-surface-muted">
             By creating an account you agree to our{' '}
-            <Link href="/terms" className="text-gold hover:underline">Terms</Link>
+            <Link href="/terms" className="text-bronze hover:underline">Terms</Link>
             {' '}and{' '}
-            <Link href="/privacy" className="text-gold hover:underline">Privacy Policy</Link>.
+            <Link href="/privacy" className="text-bronze hover:underline">Privacy Policy</Link>.
           </p>
         </form>
 
         <div className="mt-6 pt-6 border-t border-sl-outline-variant text-center">
           <p className="text-sm text-sl-on-surface-muted">
             Already have an account?{' '}
-            <Link href="/auth/login" className="text-gold hover:text-gold/80 font-medium transition-colors">
+            <Link href="/auth/login" className="text-bronze hover:text-bronze/80 font-medium transition-colors">
               Sign in
             </Link>
           </p>

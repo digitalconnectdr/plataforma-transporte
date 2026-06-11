@@ -22,7 +22,7 @@ export default async function SuperAdminLayout({
             <span className="font-playfair text-sm font-semibold text-sl-on-surface">
               LuxeRide
             </span>
-            <span className="ml-auto text-[9px] font-bold tracking-wider text-gold border border-gold/40 rounded px-1.5 py-0.5">
+            <span className="ml-auto text-[9px] font-bold tracking-wider text-bronze border border-bronze/40 rounded px-1.5 py-0.5">
               SA
             </span>
           </div>

@@ -16,7 +16,7 @@ export const metadata: Metadata = { title: 'Cuenta Corporativa | LuxeRide' }
 
 const inputCls =
   'w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 ' +
-  'text-sl-on-surface focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold'
+  'text-sl-on-surface focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze'
 const labelCls = 'block text-xs text-sl-on-surface-muted mb-1'
 
 export default async function CorporateAccountDetailPage({
@@ -148,7 +148,7 @@ export default async function CorporateAccountDetailPage({
                 type="checkbox"
                 value="true"
                 defaultChecked={account.require_approval ?? false}
-                className="w-4 h-4 rounded accent-gold"
+                className="w-4 h-4 rounded accent-bronze"
               />
               <span className="text-sm text-sl-on-surface">Los viajes requieren aprobación del manager</span>
             </label>

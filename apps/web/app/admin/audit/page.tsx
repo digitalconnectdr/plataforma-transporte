@@ -61,7 +61,7 @@ export default async function AuditLogPage({
         </div>
         <Link
           href="/admin/reports"
-          className="px-3 py-2 text-xs font-medium border border-sl-outline-variant text-sl-on-surface rounded-lg hover:border-gold transition-colors"
+          className="px-3 py-2 text-xs font-medium border border-sl-outline-variant text-sl-on-surface rounded-lg hover:border-bronze transition-colors"
         >
           ← Reportes
         </Link>
@@ -73,8 +73,8 @@ export default async function AuditLogPage({
           href="/admin/audit"
           className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors ${
             !searchParams.table
-              ? 'bg-gold text-gray-900 border-gold'
-              : 'border-sl-outline-variant text-sl-on-surface-muted hover:border-gold'
+              ? 'bg-gold text-gray-900 border-bronze'
+              : 'border-sl-outline-variant text-sl-on-surface-muted hover:border-bronze'
           }`}
         >
           Todas
@@ -85,8 +85,8 @@ export default async function AuditLogPage({
             href={`/admin/audit?table=${t}`}
             className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-colors ${
               searchParams.table === t
-                ? 'bg-gold text-gray-900 border-gold'
-                : 'border-sl-outline-variant text-sl-on-surface-muted hover:border-gold'
+                ? 'bg-gold text-gray-900 border-bronze'
+                : 'border-sl-outline-variant text-sl-on-surface-muted hover:border-bronze'
             }`}
           >
             {t}

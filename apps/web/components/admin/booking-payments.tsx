@@ -127,7 +127,7 @@ export function BookingPayments({ bookingId, payments, stripeConfigured, canRefu
         <div className="flex items-center gap-2">
           <button
             onClick={() => { setShowManual((v) => !v); setError('') }}
-            className="text-xs font-medium px-3 py-1.5 border border-sl-outline-variant text-sl-on-surface rounded-lg hover:border-gold transition-colors"
+            className="text-xs font-medium px-3 py-1.5 border border-sl-outline-variant text-sl-on-surface rounded-lg hover:border-bronze transition-colors"
           >
             {showManual ? '✕ Cancelar' : '+ Pago manual'}
           </button>
@@ -164,7 +164,7 @@ export function BookingPayments({ bookingId, payments, stripeConfigured, canRefu
               <select
                 name="method"
                 defaultValue="cash"
-                className="w-full text-sm bg-white border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-gold focus:outline-none"
+                className="w-full text-sm bg-white border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-bronze focus:outline-none"
               >
                 <option value="cash">Efectivo</option>
                 <option value="zelle">Zelle</option>
@@ -180,7 +180,7 @@ export function BookingPayments({ bookingId, payments, stripeConfigured, canRefu
                 step="0.01"
                 required
                 defaultValue={remaining != null && remaining > 0 ? remaining.toFixed(2) : undefined}
-                className="w-full text-sm bg-white border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-gold focus:outline-none"
+                className="w-full text-sm bg-white border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-bronze focus:outline-none"
               />
             </div>
             <div className="col-span-2">
@@ -192,7 +192,7 @@ export function BookingPayments({ bookingId, payments, stripeConfigured, canRefu
                 type="text"
                 maxLength={120}
                 placeholder="p. ej. ZELLE-83749"
-                className="w-full text-sm bg-white border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-gold focus:outline-none"
+                className="w-full text-sm bg-white border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-bronze focus:outline-none"
               />
             </div>
           </div>

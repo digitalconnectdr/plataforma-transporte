@@ -10,8 +10,8 @@ export default function ResetPasswordPage() {
   if (state?.success) {
     return (
       <div className="text-center space-y-4">
-        <div className="w-16 h-16 rounded-full bg-gold/10 border border-gold/30 flex items-center justify-center mx-auto">
-          <svg className="w-8 h-8 text-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <div className="w-16 h-16 rounded-full bg-gold/10 border border-bronze/30 flex items-center justify-center mx-auto">
+          <svg className="w-8 h-8 text-bronze" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
           </svg>
         </div>
@@ -23,7 +23,7 @@ export default function ResetPasswordPage() {
         </p>
         <Link
           href="/auth/login"
-          className="inline-block mt-4 text-sm text-gold hover:text-gold/80 transition-colors"
+          className="inline-block mt-4 text-sm text-bronze hover:text-bronze/80 transition-colors"
         >
           ← Back to sign in
         </Link>
@@ -60,7 +60,7 @@ export default function ResetPasswordPage() {
               type="email"
               autoComplete="email"
               required
-              className="w-full rounded-lg border border-sl-outline-variant bg-sl-bg px-4 py-3 text-sm text-sl-on-surface placeholder:text-sl-on-surface-muted focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold transition-colors"
+              className="w-full rounded-lg border border-sl-outline-variant bg-sl-bg px-4 py-3 text-sm text-sl-on-surface placeholder:text-sl-on-surface-muted focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze transition-colors"
               placeholder="you@company.com"
             />
           </div>
@@ -75,7 +75,7 @@ export default function ResetPasswordPage() {
         </form>
 
         <div className="mt-6 pt-6 border-t border-sl-outline-variant text-center">
-          <Link href="/auth/login" className="text-sm text-sl-on-surface-muted hover:text-gold transition-colors">
+          <Link href="/auth/login" className="text-sm text-sl-on-surface-muted hover:text-bronze transition-colors">
             ← Back to sign in
           </Link>
         </div>

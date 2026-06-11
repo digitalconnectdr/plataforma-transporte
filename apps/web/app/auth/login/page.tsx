@@ -40,7 +40,7 @@ export default function LoginPage() {
               type="email"
               autoComplete="email"
               required
-              className="w-full rounded-lg border border-sl-outline-variant bg-sl-bg px-4 py-3 text-sm text-sl-on-surface placeholder:text-sl-on-surface-muted focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold transition-colors"
+              className="w-full rounded-lg border border-sl-outline-variant bg-sl-bg px-4 py-3 text-sm text-sl-on-surface placeholder:text-sl-on-surface-muted focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze transition-colors"
               placeholder="you@company.com"
             />
             {state?.fieldErrors?.email && (
@@ -56,7 +56,7 @@ export default function LoginPage() {
               </label>
               <Link
                 href="/auth/reset-password"
-                className="text-xs text-gold hover:text-gold/80 transition-colors"
+                className="text-xs text-bronze hover:text-bronze/80 transition-colors"
               >
                 Forgot password?
               </Link>
@@ -67,7 +67,7 @@ export default function LoginPage() {
               type="password"
               autoComplete="current-password"
               required
-              className="w-full rounded-lg border border-sl-outline-variant bg-sl-bg px-4 py-3 text-sm text-sl-on-surface placeholder:text-sl-on-surface-muted focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold transition-colors"
+              className="w-full rounded-lg border border-sl-outline-variant bg-sl-bg px-4 py-3 text-sm text-sl-on-surface placeholder:text-sl-on-surface-muted focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze transition-colors"
               placeholder="••••••••"
             />
             {state?.fieldErrors?.password && (
@@ -79,7 +79,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={isPending}
-            className="w-full rounded-lg bg-gold px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gold/90 focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 focus:ring-offset-sl-surface-high disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+            className="w-full rounded-lg bg-gold px-4 py-3 text-sm font-semibold text-gray-900 hover:bg-gold/90 focus:outline-none focus:ring-2 focus:ring-bronze focus:ring-offset-2 focus:ring-offset-sl-surface-high disabled:opacity-60 disabled:cursor-not-allowed transition-all"
           >
             {isPending ? 'Signing in…' : 'Sign in'}
           </button>
@@ -89,7 +89,7 @@ export default function LoginPage() {
         <div className="mt-6 pt-6 border-t border-sl-outline-variant text-center">
           <p className="text-sm text-sl-on-surface-muted">
             Don&apos;t have an account?{' '}
-            <Link href="/auth/signup" className="text-gold hover:text-gold/80 font-medium transition-colors">
+            <Link href="/auth/signup" className="text-bronze hover:text-bronze/80 font-medium transition-colors">
               Start free trial
             </Link>
           </p>

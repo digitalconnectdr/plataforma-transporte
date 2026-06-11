@@ -109,7 +109,7 @@ export default async function DriversPage() {
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-8 h-8 rounded-full bg-gold/10 flex items-center justify-center shrink-0">
-                          <span className="text-xs font-semibold text-gold">
+                          <span className="text-xs font-semibold text-bronze">
                             {p.first_name?.[0]}{p.last_name?.[0]}
                           </span>
                         </div>
@@ -154,7 +154,7 @@ export default async function DriversPage() {
                     {/* Rating */}
                     <td className="px-5 py-4">
                       {dr?.rating != null ? (
-                        <span className="text-xs text-gold font-medium">
+                        <span className="text-xs text-bronze font-medium">
                           ★ {Number(dr.rating).toFixed(1)}
                         </span>
                       ) : (
@@ -177,7 +177,7 @@ export default async function DriversPage() {
                     <td className="px-5 py-4 text-right">
                       <Link
                         href={`/admin/drivers/${p.id}`}
-                        className="text-xs text-gold opacity-0 group-hover:opacity-100 hover:text-gold/80 transition-all"
+                        className="text-xs text-bronze opacity-0 group-hover:opacity-100 hover:text-bronze/80 transition-all"
                       >
                         Perfil →
                       </Link>

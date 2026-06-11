@@ -109,7 +109,7 @@ export default async function DriverDetailPage({ params }: PageProps) {
         </nav>
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-full bg-gold/10 flex items-center justify-center shrink-0">
-            <span className="text-lg font-semibold text-gold">
+            <span className="text-lg font-semibold text-bronze">
               {profile.first_name?.[0]}{profile.last_name?.[0]}
             </span>
           </div>
@@ -190,7 +190,7 @@ export default async function DriverDetailPage({ params }: PageProps) {
                 </div>
                 <Link
                   href={`/admin/fleet/${currentVehicle.id}`}
-                  className="text-xs text-gold hover:text-gold/80 transition-colors"
+                  className="text-xs text-bronze hover:text-bronze/80 transition-colors"
                 >
                   Ver vehículo →
                 </Link>

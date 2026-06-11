@@ -13,7 +13,7 @@ import {
 const inputCls =
   'w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 ' +
   'text-sl-on-surface placeholder:text-sl-on-surface-muted/50 ' +
-  'focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold'
+  'focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze'
 
 const labelCls = 'block text-xs text-sl-on-surface-muted mb-1'
 
@@ -107,7 +107,7 @@ export function CreateCorporateAccountForm() {
       </div>
 
       <label className="flex items-center gap-3 cursor-pointer">
-        <input name="require_approval" type="checkbox" value="true" className="w-4 h-4 rounded accent-gold" />
+        <input name="require_approval" type="checkbox" value="true" className="w-4 h-4 rounded accent-bronze" />
         <span className="text-sm text-sl-on-surface">Los viajes requieren aprobación del manager</span>
       </label>
 

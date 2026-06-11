@@ -247,7 +247,7 @@ export function DispatchBoard({ companyId, initialBookings, drivers }: Props) {
                           defaultValue={b.driver_id ?? ''}
                           disabled={isPending}
                           onChange={(e) => assign(b.id, e.target.value)}
-                          className="w-full text-[11px] bg-white border border-sl-outline-variant rounded-lg px-2 py-1.5 text-sl-on-surface focus:border-gold focus:outline-none disabled:opacity-50"
+                          className="w-full text-[11px] bg-white border border-sl-outline-variant rounded-lg px-2 py-1.5 text-sl-on-surface focus:border-bronze focus:outline-none disabled:opacity-50"
                         >
                           <option value="">— Asignar conductor —</option>
                           {drivers.map((d) => (

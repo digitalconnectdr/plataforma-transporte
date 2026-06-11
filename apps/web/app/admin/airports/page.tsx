@@ -60,7 +60,7 @@ export default async function AirportsPage() {
               <select
                 name="airport_id"
                 required
-                className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold"
+                className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze"
               >
                 <option value="">Select airport…</option>
                 {notAddedAirports.map((a) => (
@@ -78,7 +78,7 @@ export default async function AirportsPage() {
                 step="0.01"
                 min="0"
                 defaultValue="0"
-                className="w-24 text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold"
+                className="w-24 text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze"
               />
             </div>
             <div>
@@ -89,7 +89,7 @@ export default async function AirportsPage() {
                 step="0.01"
                 min="0"
                 defaultValue="0"
-                className="w-24 text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold"
+                className="w-24 text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze"
               />
             </div>
             <button

@@ -33,7 +33,7 @@ const COUNTRIES = [
 const inputCls =
   'w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 ' +
   'text-sl-on-surface placeholder:text-sl-on-surface-muted/50 ' +
-  'focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold'
+  'focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze'
 
 const labelCls = 'block text-xs text-sl-on-surface-muted mb-1'
 
@@ -194,7 +194,7 @@ export default async function SettingsPage({
                 type="checkbox"
                 value="true"
                 defaultChecked={booking.allow_instant_booking ?? true}
-                className="w-4 h-4 rounded accent-gold"
+                className="w-4 h-4 rounded accent-bronze"
               />
               <span className="text-sm text-sl-on-surface">Allow instant booking (no confirmation required)</span>
             </label>
@@ -204,7 +204,7 @@ export default async function SettingsPage({
                 type="checkbox"
                 value="true"
                 defaultChecked={booking.require_deposit ?? false}
-                className="w-4 h-4 rounded accent-gold"
+                className="w-4 h-4 rounded accent-bronze"
               />
               <span className="text-sm text-sl-on-surface">Require deposit at booking</span>
             </label>
@@ -368,7 +368,7 @@ export default async function SettingsPage({
                 <form action={refreshAction}>
                   <button
                     type="submit"
-                    className="px-4 py-2 text-sm font-medium border border-sl-outline-variant text-sl-on-surface rounded-lg hover:border-gold transition-colors"
+                    className="px-4 py-2 text-sm font-medium border border-sl-outline-variant text-sl-on-surface rounded-lg hover:border-bronze transition-colors"
                   >
                     Actualizar estado
                   </button>
@@ -389,7 +389,7 @@ export default async function SettingsPage({
               type="checkbox"
               value="true"
               defaultChecked={gratuity.enabled ?? true}
-              className="w-4 h-4 rounded accent-gold"
+              className="w-4 h-4 rounded accent-bronze"
             />
             <span className="text-sm text-sl-on-surface">Enable gratuity options at checkout</span>
           </label>

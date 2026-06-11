@@ -9,13 +9,13 @@ export const metadata: Metadata = { title: 'Company Detail — Super Admin | Lux
 
 const STATUS_BADGE: Record<CompanyStatus, string> = {
   active:    'bg-green-500/10 text-green-400 border-green-500/20',
-  trial:     'bg-gold/10 text-gold border-gold/20',
+  trial:     'bg-gold/10 text-bronze border-bronze/20',
   suspended: 'bg-red-500/10 text-red-400 border-red-500/20',
   cancelled: 'bg-sl-outline-variant/20 text-sl-on-surface-muted border-sl-outline-variant/40',
 }
 
 const ROLE_COLOR: Record<string, string> = {
-  company_owner:    'text-gold',
+  company_owner:    'text-bronze',
   company_admin:    'text-purple-400',
   dispatcher:       'text-blue-400',
   accounting:       'text-green-400',
@@ -70,7 +70,7 @@ export default async function CompanyDetailPage({ params }: PageProps) {
     <div className="p-8 space-y-8 max-w-4xl">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-sm text-sl-on-surface-muted">
-        <Link href="/super-admin/companies" className="hover:text-gold transition-colors">
+        <Link href="/super-admin/companies" className="hover:text-bronze transition-colors">
           Companies
         </Link>
         <span>/</span>
@@ -84,7 +84,7 @@ export default async function CompanyDetailPage({ params }: PageProps) {
             {company.name}
           </h1>
           <p className="text-sm text-sl-on-surface-muted mt-1">
-            <span className="text-gold font-medium">{company.slug}</span>
+            <span className="text-bronze font-medium">{company.slug}</span>
             <span className="mx-2 text-sl-outline-variant">·</span>
             <code className="text-xs">{company.id}</code>
           </p>

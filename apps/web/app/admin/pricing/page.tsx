@@ -81,7 +81,7 @@ export default async function PricingPage() {
                 name="name"
                 required
                 placeholder="e.g. Standard Sedan Rate"
-                className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface placeholder:text-sl-on-surface-muted/50 focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold"
+                className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface placeholder:text-sl-on-surface-muted/50 focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze"
               />
             </div>
 
@@ -91,7 +91,7 @@ export default async function PricingPage() {
               <select
                 name="model"
                 required
-                className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold"
+                className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze"
               >
                 <option value="">Select model…</option>
                 {Object.entries(MODEL_LABELS).map(([val, label]) => (
@@ -105,7 +105,7 @@ export default async function PricingPage() {
               <label className="block text-xs text-sl-on-surface-muted mb-1">Vehicle Type (optional)</label>
               <select
                 name="vehicle_type_id"
-                className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold"
+                className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze"
               >
                 <option value="">All vehicle types</option>
                 {(vehicleTypes ?? []).map((vt) => (
@@ -122,7 +122,7 @@ export default async function PricingPage() {
                 type="number"
                 defaultValue="0"
                 min="0"
-                className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold"
+                className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze"
               />
             </div>
 
@@ -135,7 +135,7 @@ export default async function PricingPage() {
                 step="0.01"
                 min="0"
                 defaultValue="0"
-                className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold"
+                className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze"
               />
             </div>
 
@@ -148,7 +148,7 @@ export default async function PricingPage() {
                 step="0.0001"
                 min="0"
                 defaultValue="0"
-                className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold"
+                className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze"
               />
             </div>
 
@@ -161,7 +161,7 @@ export default async function PricingPage() {
                 step="0.01"
                 min="0"
                 defaultValue="0"
-                className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold"
+                className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze"
               />
             </div>
 
@@ -174,7 +174,7 @@ export default async function PricingPage() {
                 step="0.01"
                 min="0"
                 defaultValue="0"
-                className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold"
+                className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze"
               />
             </div>
 
@@ -187,7 +187,7 @@ export default async function PricingPage() {
                 step="0.01"
                 min="0"
                 defaultValue="0"
-                className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold"
+                className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze"
               />
             </div>
 
@@ -200,7 +200,7 @@ export default async function PricingPage() {
                 step="0.01"
                 min="0"
                 defaultValue="0"
-                className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold"
+                className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze"
               />
             </div>
 

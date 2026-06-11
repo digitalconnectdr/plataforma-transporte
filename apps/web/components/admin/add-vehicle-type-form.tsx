@@ -9,7 +9,7 @@ const VEHICLE_CLASSES = [
 
 const inputCls =
   'w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-xl px-4 py-2.5 text-sl-on-surface ' +
-  'placeholder:text-sl-on-surface-muted focus:border-gold focus:outline-none focus:ring-1 focus:ring-gold transition-all'
+  'placeholder:text-sl-on-surface-muted focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze transition-all'
 
 export function AddVehicleTypeForm() {
   const [state, action, isPending] = useFormState(createVehicleTypeAction, null)

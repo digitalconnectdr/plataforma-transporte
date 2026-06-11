@@ -20,21 +20,23 @@ const config: Config = {
       // sl-* tokens remapped to Luminous Editorial light palette.
       // All components use sl-* classes — only these values change, zero component edits needed.
       colors: {
-        // Light surfaces — warm off-white
-        'sl-bg': '#faf9f6',
+        // ─── IVORY — tema aprobado (opción B) ──────────────────────────────
+        // Fondo marfil + tarjetas BLANCAS con borde fino cálido. Todos los
+        // componentes usan sl-* — cambiar estos valores re-tematiza todo.
+        'sl-bg': '#f6f4ef',
         'sl-surface-lowest': '#ffffff',
-        'sl-surface-low': '#f4f3f0',
-        'sl-surface': '#efeeeb',
-        'sl-surface-high': '#e9e8e5',
-        'sl-surface-highest': '#e3e2df',
-        'sl-surface-bright': '#dddcda',
-        // Text — near-black on light background
-        'sl-on-surface': '#1a1c1a',
+        'sl-surface-low': '#faf8f3',
+        'sl-surface': '#ffffff',
+        'sl-surface-high': '#ffffff',
+        'sl-surface-highest': '#faf8f3',
+        'sl-surface-bright': '#f0ede5',
+        // Text — tinta cálida sobre claro
+        'sl-on-surface': '#1d1b18',
         'sl-on-surface-variant': '#4e4639',
-        'sl-on-surface-muted': '#7f7667',
-        // Outline — subtle light borders
-        'sl-outline': '#7f7667',
-        'sl-outline-variant': '#e5e4e0',
+        'sl-on-surface-muted': '#75716a',
+        // Outline — bordes finos cálidos
+        'sl-outline': '#75716a',
+        'sl-outline-variant': '#e5e1d8',
 
         // Luminous Editorial — Light Design System
         'le-bg': '#faf9f6',
@@ -59,6 +61,14 @@ const config: Config = {
           container: '#604403',
           'on-dark': '#dab36a',
           'on-light': '#6a4e0c',
+        },
+
+        // Bronce — versión del dorado LEGIBLE sobre superficies claras.
+        // text/border de acento en Ivory; bg-gold sigue champagne en botones.
+        bronze: {
+          DEFAULT: '#8a6520',
+          dark: '#6e4f17',
+          light: '#a87f33',
         },
 
         // Semantic status — desaturated for luxury context
