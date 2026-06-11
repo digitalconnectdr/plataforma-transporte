@@ -3,6 +3,7 @@ import Link from 'next/link'
 import { requireRole } from '@/lib/auth/session'
 import { createAdminClient } from '@/lib/supabase/server'
 import { DriverAvailabilityToggle } from '@/components/admin/fleet-controls'
+import { getDict } from '@/lib/i18n/server'
 
 export const metadata: Metadata = { title: 'Conductores | LuxeRide' }
 
@@ -10,6 +11,7 @@ export default async function DriversPage() {
   const user = await requireRole('company_owner', 'company_admin', 'dispatcher', 'accounting')
   const companyId = user.company_id!
   const admin = createAdminClient()
+  const tf = getDict().admin.fleet
 
   // ── Queries separadas con manejo individual de errores ─────────────────────
   // Usamos bloques try/catch independientes en lugar de Promise.all para:
@@ -165,7 +167,12 @@ export default async function DriversPage() {
                     {/* Availability toggle */}
                     <td className="px-5 py-4">
                       {dr && !isAccounting ? (
-                        <DriverAvailabilityToggle driverId={dr.id} isAvailable={dr.is_available} />
+                        <DriverAvailabilityToggle
+                          driverId={dr.id}
+                          isAvailable={dr.is_available}
+                          labels={tf.availability}
+                          saving={tf.saving}
+                        />
                       ) : (
                         <span className={`text-xs ${dr?.is_available ? 'text-green-400' : 'text-sl-on-surface-muted'}`}>
                           {dr?.is_available ? 'Disponible' : 'No disponible'}

@@ -8,6 +8,11 @@ import {
   toggleVehicleTypeActive,
 } from '@/app/actions/fleet'
 import type { VehicleStatus } from '@/lib/supabase/database.types'
+import type { Dictionary } from '@/lib/i18n/dictionaries/en'
+
+type FleetDict = Dictionary['admin']['fleet']
+
+const EN_STATUSES = { available: 'Available', on_trip: 'On trip', maintenance: 'Maintenance', offline: 'Offline', retired: 'Retired' }
 
 const selectCls =
   'text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-1.5 text-sl-on-surface ' +
@@ -19,9 +24,13 @@ const selectCls =
 export function VehicleStatusSelect({
   vehicleId,
   current,
+  statuses = EN_STATUSES,
+  saving = 'Saving…',
 }: {
   vehicleId: string
   current: VehicleStatus
+  statuses?: FleetDict['statuses']
+  saving?: string
 }) {
   const [isPending, startTransition] = useTransition()
 
@@ -37,11 +46,11 @@ export function VehicleStatusSelect({
         }
         className={selectCls}
       >
-        <option value="available">Available</option>
-        <option value="on_trip">On trip</option>
-        <option value="maintenance">Maintenance</option>
-        <option value="offline">Offline</option>
-        <option value="retired">Retired</option>
+        <option value="available">{statuses.available}</option>
+        <option value="on_trip">{statuses.on_trip}</option>
+        <option value="maintenance">{statuses.maintenance}</option>
+        <option value="offline">{statuses.offline}</option>
+        <option value="retired">{statuses.retired}</option>
       </select>
       {isPending && <span className="text-xs text-sl-on-surface-muted animate-pulse">Saving…</span>}
     </div>
@@ -54,10 +63,12 @@ export function DriverAssignSelect({
   vehicleId,
   currentDriverId,
   drivers,
+  unassigned = 'Unassigned',
 }: {
   vehicleId: string
   currentDriverId: string | null
   drivers: Array<{ id: string; first_name: string; last_name: string }>
+  unassigned?: string
 }) {
   const [isPending, startTransition] = useTransition()
 
@@ -74,7 +85,7 @@ export function DriverAssignSelect({
         }}
         className={selectCls}
       >
-        <option value="">Unassigned</option>
+        <option value="">{unassigned}</option>
         {drivers.map((d) => (
           <option key={d.id} value={d.id}>
             {d.first_name} {d.last_name}
@@ -91,9 +102,13 @@ export function DriverAssignSelect({
 export function DriverAvailabilityToggle({
   driverId,
   isAvailable,
+  labels = { available: 'Available', unavailable: 'Unavailable' },
+  saving = 'Saving…',
 }: {
   driverId: string
   isAvailable: boolean
+  labels?: FleetDict['availability']
+  saving?: string
 }) {
   const [isPending, startTransition] = useTransition()
 
@@ -114,7 +129,7 @@ export function DriverAvailabilityToggle({
       ].join(' ')}
     >
       <span className={`w-1.5 h-1.5 rounded-full ${isAvailable ? 'bg-green-400' : 'bg-sl-on-surface-muted'}`} />
-      {isPending ? 'Saving…' : isAvailable ? 'Available' : 'Unavailable'}
+      {isPending ? saving : isAvailable ? labels.available : labels.unavailable}
     </button>
   )
 }
@@ -124,9 +139,11 @@ export function DriverAvailabilityToggle({
 export function VehicleTypeActiveToggle({
   typeId,
   isActive,
+  labels = { active: 'Active', inactive: 'Inactive' },
 }: {
   typeId: string
   isActive: boolean
+  labels?: FleetDict['activeToggle']
 }) {
   const [isPending, startTransition] = useTransition()
 
@@ -146,7 +163,7 @@ export function VehicleTypeActiveToggle({
           : 'text-sl-on-surface-muted border-sl-outline-variant/40 hover:bg-green-500/10 hover:text-green-400 hover:border-green-500/20',
       ].join(' ')}
     >
-      {isPending ? '…' : isActive ? 'Active' : 'Inactive'}
+      {isPending ? '…' : isActive ? labels.active : labels.inactive}
     </button>
   )
 }

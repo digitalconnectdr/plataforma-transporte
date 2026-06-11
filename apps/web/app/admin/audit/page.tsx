@@ -12,30 +12,41 @@ const ACTION_STYLES: Record<string, string> = {
   DELETE: 'bg-red-100 text-red-600',
 }
 
+const PAGE_SIZE = 50
+
 export default async function AuditLogPage({
   searchParams,
 }: {
-  searchParams: { table?: string }
+  searchParams: { table?: string; page?: string }
 }) {
   const user = await requireRole('company_owner', 'company_admin', 'accounting')
   if (!user.company_id) {
     return <p className="p-8 text-sl-on-surface-muted">Sin empresa asignada.</p>
   }
 
+  const page = Math.max(1, parseInt(searchParams.page ?? '1', 10) || 1)
+  const fromRow = (page - 1) * PAGE_SIZE
+  const toRow = fromRow + PAGE_SIZE - 1
+
   const admin = createAdminClient()
 
   let query = admin
     .from('audit_logs')
-    .select('id, user_id, action, table_name, record_id, created_at')
+    .select('id, user_id, action, table_name, record_id, created_at', { count: 'exact' })
     .eq('company_id', user.company_id)
     .order('created_at', { ascending: false })
-    .limit(100)
+    .range(fromRow, toRow)
 
   if (searchParams.table) {
     query = query.eq('table_name', searchParams.table)
   }
 
-  const { data: logs } = await query
+  const { data: logs, count } = await query
+
+  const total = count ?? 0
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE))
+  const pageUrl = (p: number) =>
+    `/admin/audit?${searchParams.table ? `table=${searchParams.table}&` : ''}page=${p}`
 
   // Nombres de los usuarios involucrados
   const userIds = [...new Set((logs ?? []).map((l) => l.user_id).filter(Boolean))] as string[]
@@ -56,7 +67,7 @@ export default async function AuditLogPage({
         <div>
           <h1 className="font-playfair text-3xl font-semibold text-sl-on-surface">Audit Log</h1>
           <p className="text-sm text-sl-on-surface-muted mt-1">
-            Registro inmutable de operaciones críticas (últimas 100).
+            Registro inmutable de operaciones críticas — {total} en total.
           </p>
         </div>
         <Link
@@ -134,6 +145,44 @@ export default async function AuditLogPage({
               ))}
             </tbody>
           </table>
+        )}
+
+        {/* Paginación — 50 por página */}
+        {total > PAGE_SIZE && (
+          <div className="flex items-center justify-between px-5 py-3 border-t border-sl-outline-variant">
+            <p className="text-xs text-sl-on-surface-muted">
+              {fromRow + 1}–{Math.min(toRow + 1, total)} de {total}
+            </p>
+            <div className="flex items-center gap-2">
+              {page > 1 ? (
+                <Link
+                  href={pageUrl(page - 1)}
+                  className="px-3 py-1.5 text-xs font-medium border border-sl-outline-variant rounded-lg text-sl-on-surface hover:border-bronze transition-colors"
+                >
+                  ← Anterior
+                </Link>
+              ) : (
+                <span className="px-3 py-1.5 text-xs border border-sl-outline-variant rounded-lg text-sl-on-surface-muted/40">
+                  ← Anterior
+                </span>
+              )}
+              <span className="text-xs text-sl-on-surface-muted px-1">
+                {page} / {totalPages}
+              </span>
+              {page < totalPages ? (
+                <Link
+                  href={pageUrl(page + 1)}
+                  className="px-3 py-1.5 text-xs font-medium border border-sl-outline-variant rounded-lg text-sl-on-surface hover:border-bronze transition-colors"
+                >
+                  Siguiente →
+                </Link>
+              ) : (
+                <span className="px-3 py-1.5 text-xs border border-sl-outline-variant rounded-lg text-sl-on-surface-muted/40">
+                  Siguiente →
+                </span>
+              )}
+            </div>
+          </div>
         )}
       </div>
     </div>

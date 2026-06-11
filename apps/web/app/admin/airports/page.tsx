@@ -1,8 +1,9 @@
 import { requireRole } from '@/lib/auth/session'
 import { createAdminClient } from '@/lib/supabase/server'
-import { addCompanyAirportAction } from '@/app/actions/services'
+import { addCompanyAirportAction, createCustomAirportAction } from '@/app/actions/services'
 import { AirportActiveToggle, AirportRemoveButton } from '@/components/admin/airport-controls'
 import { getDict } from '@/lib/i18n/server'
+import { InfoTip } from '@/components/ui/info-tip'
 
 export default async function AirportsPage() {
   const user = await requireRole('company_owner', 'company_admin', 'dispatcher')
@@ -32,7 +33,12 @@ export default async function AirportsPage() {
 
   // void cast — TypeScript void-callback rule
   const airportAction: (fd: FormData) => void = addCompanyAirportAction
+  const customAirportAction: (fd: FormData) => void = createCustomAirportAction
   const t = getDict().admin.airports
+
+  const fieldCls =
+    'text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface ' +
+    'placeholder:text-sl-on-surface-muted/50 focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze'
 
   return (
     <div className="p-8 max-w-[1400px] mx-auto">
@@ -73,7 +79,7 @@ export default async function AirportsPage() {
               </select>
             </div>
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.pickupFee}</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.pickupFee}<InfoTip text={t.pickupFeeHelp} /></label>
               <input
                 name="pickup_fee"
                 type="number"
@@ -84,7 +90,7 @@ export default async function AirportsPage() {
               />
             </div>
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.dropoffFee}</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.dropoffFee}<InfoTip text={t.dropoffFeeHelp} /></label>
               <input
                 name="dropoff_fee"
                 type="number"
@@ -102,6 +108,50 @@ export default async function AirportsPage() {
             </button>
           </form>
         </div>
+      )}
+
+      {/* Crear aeropuerto fuera del catálogo */}
+      {isAdmin && (
+        <details className="bg-sl-surface border border-sl-outline-variant rounded-xl mb-6 group">
+          <summary className="px-5 py-4 text-sm font-medium text-bronze cursor-pointer list-none hover:text-bronze/80 transition-colors">
+            ✈ {t.custom.toggle}
+          </summary>
+          <div className="px-5 pb-5">
+            <p className="text-xs text-sl-on-surface-muted mb-4">{t.custom.hint}</p>
+            <form action={customAirportAction} className="flex flex-wrap gap-3 items-end">
+              <div>
+                <label className="block text-xs text-sl-on-surface-muted mb-1">{t.custom.iata} *</label>
+                <input name="iata_code" required maxLength={3} placeholder="SDQ" className={`w-20 uppercase ${fieldCls}`} />
+              </div>
+              <div className="flex-1 min-w-[200px]">
+                <label className="block text-xs text-sl-on-surface-muted mb-1">{t.custom.name} *</label>
+                <input name="airport_name" required placeholder="Las Américas International" className={`w-full ${fieldCls}`} />
+              </div>
+              <div>
+                <label className="block text-xs text-sl-on-surface-muted mb-1">{t.custom.city} *</label>
+                <input name="city" required placeholder="Santo Domingo" className={`w-36 ${fieldCls}`} />
+              </div>
+              <div>
+                <label className="block text-xs text-sl-on-surface-muted mb-1">{t.custom.country} *</label>
+                <input name="country" required maxLength={2} placeholder="DO" className={`w-16 uppercase ${fieldCls}`} />
+              </div>
+              <div>
+                <label className="block text-xs text-sl-on-surface-muted mb-1">{t.pickupFee}</label>
+                <input name="pickup_fee" type="number" step="0.01" min="0" defaultValue="0" className={`w-24 ${fieldCls}`} />
+              </div>
+              <div>
+                <label className="block text-xs text-sl-on-surface-muted mb-1">{t.dropoffFee}</label>
+                <input name="dropoff_fee" type="number" step="0.01" min="0" defaultValue="0" className={`w-24 ${fieldCls}`} />
+              </div>
+              <button
+                type="submit"
+                className="px-4 py-2 text-sm font-medium bg-gold text-gray-900 rounded-lg hover:bg-gold/90 transition-colors"
+              >
+                {t.custom.create}
+              </button>
+            </form>
+          </div>
+        </details>
       )}
 
       {/* Airports Table */}

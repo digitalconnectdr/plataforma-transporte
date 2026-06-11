@@ -141,7 +141,7 @@ export default async function FleetPage({ searchParams }: PageProps) {
                         </span>
                       </td>
                       <td className="px-5 py-4">
-                        <VehicleStatusSelect vehicleId={v.id} current={v.status} />
+                        <VehicleStatusSelect vehicleId={v.id} current={v.status} statuses={t.statuses} saving={t.saving} />
                       </td>
                       <td className="px-5 py-4">
                         {driver ? (
@@ -191,24 +191,26 @@ export default async function FleetPage({ searchParams }: PageProps) {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-sl-outline-variant/50">
-                  {allTypes.map((t) => (
-                    <tr key={t.id} className="hover:bg-sl-bg/40 transition-colors">
+                  {allTypes.map((vt) => (
+                    <tr key={vt.id} className="hover:bg-sl-bg/40 transition-colors">
                       <td className="px-5 py-4">
-                        <p className="font-medium text-sl-on-surface">{t.name}</p>
-                      </td>
-                      <td className="px-5 py-4">
-                        <span className="text-xs text-sl-on-surface-muted capitalize">{t.class}</span>
-                      </td>
-                      <td className="px-5 py-4">
-                        <span className="text-xs text-sl-on-surface-muted">{t.capacity} pax</span>
+                        <p className="font-medium text-sl-on-surface">{vt.name}</p>
                       </td>
                       <td className="px-5 py-4">
                         <span className="text-xs text-sl-on-surface-muted">
-                          {t.amenities.length > 0 ? t.amenities.join(', ') : '—'}
+                          {t.classes[vt.class as keyof typeof t.classes] ?? vt.class}
                         </span>
                       </td>
                       <td className="px-5 py-4">
-                        <VehicleTypeActiveToggle typeId={t.id} isActive={t.is_active} />
+                        <span className="text-xs text-sl-on-surface-muted">{vt.capacity} pax</span>
+                      </td>
+                      <td className="px-5 py-4">
+                        <span className="text-xs text-sl-on-surface-muted">
+                          {vt.amenities.length > 0 ? vt.amenities.join(', ') : '—'}
+                        </span>
+                      </td>
+                      <td className="px-5 py-4">
+                        <VehicleTypeActiveToggle typeId={vt.id} isActive={vt.is_active} labels={t.activeToggle} />
                       </td>
                     </tr>
                   ))}
@@ -217,7 +219,7 @@ export default async function FleetPage({ searchParams }: PageProps) {
             </div>
           )}
 
-          <AddVehicleTypeForm />
+          <AddVehicleTypeForm labels={t.typeForm} classes={t.classes} />
         </div>
       )}
     </div>

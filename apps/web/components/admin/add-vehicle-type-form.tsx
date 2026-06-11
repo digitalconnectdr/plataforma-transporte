@@ -2,6 +2,10 @@
 
 import { useFormState } from 'react-dom'
 import { createVehicleTypeAction } from '@/app/actions/fleet'
+import type { Dictionary } from '@/lib/i18n/dictionaries/en'
+
+type TypeFormDict = Dictionary['admin']['fleet']['typeForm']
+type ClassesDict = Dictionary['admin']['fleet']['classes']
 
 const VEHICLE_CLASSES = [
   'sedan', 'suv', 'van', 'limousine', 'sprinter', 'bus', 'exotic',
@@ -11,13 +15,19 @@ const inputCls =
   'w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-xl px-4 py-2.5 text-sl-on-surface ' +
   'placeholder:text-sl-on-surface-muted focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze transition-all'
 
-export function AddVehicleTypeForm() {
+export function AddVehicleTypeForm({
+  labels,
+  classes,
+}: {
+  labels: TypeFormDict
+  classes: ClassesDict
+}) {
   const [state, action, isPending] = useFormState(createVehicleTypeAction, null)
 
   return (
     <div className="bg-sl-surface-high border border-sl-outline-variant rounded-2xl p-6">
       <h2 className="text-xs font-semibold uppercase tracking-widest text-sl-on-surface-muted mb-4">
-        Add Vehicle Type
+        {labels.title}
       </h2>
 
       {state && !state.success && (
@@ -27,31 +37,31 @@ export function AddVehicleTypeForm() {
       )}
       {state?.success && (
         <div className="mb-4 rounded-lg bg-green-500/10 border border-green-500/20 px-4 py-3">
-          <p className="text-sm text-green-400">Vehicle type added.</p>
+          <p className="text-sm text-green-400">{labels.success}</p>
         </div>
       )}
 
       <form action={action} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
         <div className="space-y-1">
-          <label className="text-xs text-sl-on-surface-muted">Name *</label>
+          <label className="text-xs text-sl-on-surface-muted">{labels.name} *</label>
           <input name="name" type="text" required placeholder="Executive Black Sedan" className={inputCls} />
         </div>
         <div className="space-y-1">
-          <label className="text-xs text-sl-on-surface-muted">Class *</label>
+          <label className="text-xs text-sl-on-surface-muted">{labels.class} *</label>
           <select name="class" required className={inputCls}>
-            <option value="">Select class…</option>
+            <option value="">{labels.selectClass}</option>
             {VEHICLE_CLASSES.map((c) => (
-              <option key={c} value={c} className="capitalize">{c}</option>
+              <option key={c} value={c}>{classes[c]}</option>
             ))}
           </select>
         </div>
         <div className="space-y-1">
-          <label className="text-xs text-sl-on-surface-muted">Capacity *</label>
+          <label className="text-xs text-sl-on-surface-muted">{labels.capacity} *</label>
           <input name="capacity" type="number" min="1" max="60" required placeholder="4" className={inputCls} />
         </div>
         <div className="space-y-1">
-          <label className="text-xs text-sl-on-surface-muted">Amenities (comma-separated)</label>
-          <input name="amenities" type="text" placeholder="WiFi, Water, Charger" className={inputCls} />
+          <label className="text-xs text-sl-on-surface-muted">{labels.amenities}</label>
+          <input name="amenities" type="text" placeholder={labels.amenitiesPlaceholder} className={inputCls} />
         </div>
 
         <div className="sm:col-span-2 lg:col-span-4 flex justify-end">
@@ -60,7 +70,7 @@ export function AddVehicleTypeForm() {
             disabled={isPending}
             className="px-5 py-2 text-sm font-semibold bg-gold text-gray-900 rounded-xl hover:bg-gold/90 disabled:opacity-60 transition-all"
           >
-            {isPending ? 'Adding…' : 'Add Type'}
+            {isPending ? labels.adding : labels.addButton}
           </button>
         </div>
       </form>

@@ -3,6 +3,7 @@ import { createAdminClient } from '@/lib/supabase/server'
 import { createPricingRuleAction } from '@/app/actions/pricing'
 import { PricingRuleActiveToggle, PricingRuleDeleteButton } from '@/components/admin/pricing-controls'
 import { getDict } from '@/lib/i18n/server'
+import { InfoTip } from '@/components/ui/info-tip'
 import type { PricingModel } from '@/lib/supabase/database.types'
 
 const MODEL_BADGE: Record<PricingModel, string> = {
@@ -70,7 +71,7 @@ export default async function PricingPage() {
 
             {/* Name */}
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.ruleName} *</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.ruleName} *<InfoTip text={t.help.ruleName} /></label>
               <input
                 name="name"
                 required
@@ -81,7 +82,7 @@ export default async function PricingPage() {
 
             {/* Model */}
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.model} *</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.model} *<InfoTip text={t.help.model} /></label>
               <select
                 name="model"
                 required
@@ -96,7 +97,7 @@ export default async function PricingPage() {
 
             {/* Vehicle Type */}
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.vehicleType}</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.vehicleType}<InfoTip text={t.help.vehicleType} /></label>
               <select
                 name="vehicle_type_id"
                 className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze"
@@ -110,7 +111,7 @@ export default async function PricingPage() {
 
             {/* Priority */}
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.priority}</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.priority}<InfoTip text={t.help.priority} /></label>
               <input
                 name="priority"
                 type="number"
@@ -122,7 +123,7 @@ export default async function PricingPage() {
 
             {/* Base Price */}
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.basePrice}</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.basePrice}<InfoTip text={t.help.basePrice} /></label>
               <input
                 name="base_price"
                 type="number"
@@ -135,7 +136,7 @@ export default async function PricingPage() {
 
             {/* Per Mile Rate */}
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.perMileRate}</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.perMileRate}<InfoTip text={t.help.perMileRate} /></label>
               <input
                 name="per_mile_rate"
                 type="number"
@@ -148,7 +149,7 @@ export default async function PricingPage() {
 
             {/* Hourly Rate */}
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.hourlyRate}</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.hourlyRate}<InfoTip text={t.help.hourlyRate} /></label>
               <input
                 name="hourly_rate"
                 type="number"
@@ -161,7 +162,7 @@ export default async function PricingPage() {
 
             {/* Minimum Fare */}
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.minimumFare}</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.minimumFare}<InfoTip text={t.help.minimumFare} /></label>
               <input
                 name="minimum_fare"
                 type="number"
@@ -174,7 +175,7 @@ export default async function PricingPage() {
 
             {/* Night Surcharge */}
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.nightSurcharge}</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.nightSurcharge}<InfoTip text={t.help.nightSurcharge} /></label>
               <input
                 name="night_surcharge_pct"
                 type="number"
@@ -187,7 +188,7 @@ export default async function PricingPage() {
 
             {/* Weekend Surcharge */}
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.weekendSurcharge}</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.weekendSurcharge}<InfoTip text={t.help.weekendSurcharge} /></label>
               <input
                 name="weekend_surcharge_pct"
                 type="number"

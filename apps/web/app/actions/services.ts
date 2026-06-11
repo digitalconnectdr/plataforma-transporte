@@ -214,3 +214,73 @@ export async function removeCompanyAirportAction(
   revalidatePath('/admin/airports')
   return { success: true }
 }
+
+// ─── Crear aeropuerto personalizado (catálogo + vínculo a la empresa) ─────────
+// El catálogo de airports es global; permitimos a los admins agregar los que
+// falten (validando IATA único) y queda vinculado de una vez con sus cargos.
+
+export async function createCustomAirportAction(
+  formData: FormData,
+): Promise<{ success: boolean; error?: string }> {
+  const user = await requireRole('company_owner', 'company_admin')
+  if (!user.company_id) return { success: false, error: 'Sin empresa asignada' }
+
+  const iata = ((formData.get('iata_code') as string) ?? '').trim().toUpperCase()
+  const name = ((formData.get('airport_name') as string) ?? '').trim().slice(0, 120)
+  const city = ((formData.get('city') as string) ?? '').trim().slice(0, 80)
+  const country = ((formData.get('country') as string) ?? '').trim().toUpperCase().slice(0, 2)
+  const pickupFee = parseFloat(formData.get('pickup_fee') as string ?? '0') || 0
+  const dropoffFee = parseFloat(formData.get('dropoff_fee') as string ?? '0') || 0
+
+  if (!/^[A-Z]{3}$/.test(iata)) {
+    return { success: false, error: 'El código IATA debe tener exactamente 3 letras (ej. SDQ)' }
+  }
+  if (!name) return { success: false, error: 'Nombre del aeropuerto requerido' }
+  if (!city) return { success: false, error: 'Ciudad requerida' }
+  if (!/^[A-Z]{2}$/.test(country)) {
+    return { success: false, error: 'País debe ser el código de 2 letras (ej. US, DO, BR)' }
+  }
+
+  const admin = createAdminClient()
+
+  // ¿Ya existe en el catálogo global? Reusarlo en vez de duplicar
+  const { data: existing } = await admin
+    .from('airports')
+    .select('id')
+    .eq('iata_code', iata)
+    .maybeSingle()
+
+  let airportId = existing?.id
+
+  if (!airportId) {
+    const { data: created, error: createErr } = await admin
+      .from('airports')
+      .insert({ iata_code: iata, name, city, country })
+      .select('id')
+      .single()
+
+    if (createErr || !created) {
+      console.error('[createCustomAirportAction]', createErr)
+      return { success: false, error: 'Error al crear el aeropuerto' }
+    }
+    airportId = created.id
+  }
+
+  const { error: linkErr } = await admin.from('company_airports').insert({
+    company_id: user.company_id,
+    airport_id: airportId,
+    pickup_fee: pickupFee,
+    dropoff_fee: dropoffFee,
+  })
+
+  if (linkErr) {
+    if (linkErr.code === '23505') {
+      return { success: false, error: 'Ese aeropuerto ya está agregado a tu empresa' }
+    }
+    console.error('[createCustomAirportAction] link', linkErr)
+    return { success: false, error: 'Error al vincular el aeropuerto' }
+  }
+
+  revalidatePath('/admin/airports')
+  return { success: true }
+}

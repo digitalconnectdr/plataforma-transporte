@@ -75,11 +75,11 @@ export default async function TeamPage() {
               <label className="block text-xs text-sl-on-surface-muted mb-1">{t.role} *</label>
               <select name="role" required className={inputCls}>
                 <option value="">{t.selectRole}</option>
-                {isOwner && <option value="company_admin">Admin</option>}
-                <option value="dispatcher">Dispatcher</option>
-                <option value="accounting">Accounting</option>
-                <option value="driver">Driver</option>
-                <option value="customer">Customer</option>
+                {isOwner && <option value="company_admin">{t.roles.company_admin}</option>}
+                <option value="dispatcher">{t.roles.dispatcher}</option>
+                <option value="accounting">{t.roles.accounting}</option>
+                <option value="driver">{t.roles.driver}</option>
+                <option value="customer">{t.roles.customer}</option>
               </select>
             </div>
           </div>
@@ -136,6 +136,8 @@ export default async function TeamPage() {
                         <TeamMemberRoleSelect
                           memberId={member.id}
                           currentRole={member.role as UserRole}
+                          roleLabels={t.roles}
+                          saving={t.saving}
                         />
                       )}
                     </td>
@@ -148,6 +150,7 @@ export default async function TeamPage() {
                         <TeamMemberActiveToggle
                           memberId={member.id}
                           isActive={member.is_active}
+                          labels={{ active: t.active, inactive: t.inactive }}
                         />
                       )}
                     </td>

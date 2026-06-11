@@ -45,8 +45,25 @@ export function AddressInput({
   const [lat,     setLat]     = useState<number | ''>('')
   const [lng,     setLng]     = useState<number | ''>('')
   const [placeId, setPlaceId] = useState('')
+  const [authFailed, setAuthFailed] = useState(false)
 
   const placesLib = useMapsLibrary('places')
+
+  // Si Google rechaza la API key, deshabilita el input y le pone un
+  // placeholder de error ("Se ha producido un error."). Lo revertimos para
+  // que el usuario no quede bloqueado, y mostramos un aviso claro.
+  useEffect(() => {
+    function onAuthFailure() {
+      setAuthFailed(true)
+      if (inputRef.current) {
+        inputRef.current.disabled = false
+        inputRef.current.placeholder = placeholder
+        inputRef.current.style.backgroundImage = 'none'
+      }
+    }
+    window.addEventListener('luxeride:gm-auth-failure', onAuthFailure)
+    return () => window.removeEventListener('luxeride:gm-auth-failure', onAuthFailure)
+  }, [placeholder])
 
   const handlePlaceChanged = useCallback(() => {
     const place = acRef.current?.getPlace()
@@ -113,6 +130,13 @@ export function AddressInput({
         aria-autocomplete="list"
         aria-label={placeholder}
       />
+
+      {authFailed && (
+        <p className="mt-1 text-[11px] text-amber-600">
+          ⚠ El autocompletado de direcciones no está disponible (Google Maps rechazó la API key
+          en este dominio). Verifica las restricciones del key en Google Cloud Console.
+        </p>
+      )}
 
       {/* Hidden inputs para Server Actions — solo si se pasa name */}
       {name && (
