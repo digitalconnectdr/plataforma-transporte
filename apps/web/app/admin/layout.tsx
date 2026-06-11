@@ -40,6 +40,7 @@ export default async function AdminLayout({
   const isOwner        = user.role === 'company_owner'
   const isOwnerOrAdmin = isOwner || user.role === 'company_admin'
   const isDispatcher   = user.role === 'dispatcher'
+  const isAccounting   = user.role === 'accounting'
 
   return (
     <div className="min-h-screen bg-sl-bg flex">
@@ -109,6 +110,17 @@ export default async function AdminLayout({
                 Bookings
               </p>
               <NavLink href="/admin/bookings" label="Reservaciones" />
+            </>
+          )}
+
+          {/* FINANCE */}
+          {(isOwnerOrAdmin || isAccounting) && (
+            <>
+              <p className="px-3 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-widest text-sl-on-surface-muted">
+                Finance
+              </p>
+              <NavLink href="/admin/reports" label="Reports" />
+              <NavLink href="/admin/audit"   label="Audit Log" />
             </>
           )}
 
