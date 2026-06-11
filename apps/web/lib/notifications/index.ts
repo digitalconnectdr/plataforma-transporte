@@ -35,20 +35,23 @@ async function sendEmail(
   to: string,
   subject: string,
   body: string,
+  companyName?: string | null,
 ): Promise<{ ok: boolean; providerId?: string; error?: string }> {
   if (!isResendConfigured()) {
     return { ok: false, error: 'RESEND_API_KEY no configurada' }
   }
   try {
     const { Resend } = await import('resend')
+    const { wrapEmailHtml } = await import('./email-template')
     const resend = new Resend(process.env.RESEND_API_KEY!)
     const from = process.env.RESEND_FROM_EMAIL ?? 'notifications@luxeride.app'
 
     const { data, error } = await resend.emails.send({
-      from: `LuxeRide <${from}>`,
+      from: `${companyName ?? 'LuxeRide'} <${from}>`,
       to,
       subject,
-      text: body,
+      text: body, // fallback para clientes sin HTML
+      html: wrapEmailHtml({ body, companyName, heading: subject }),
     })
 
     if (error) return { ok: false, error: error.message }
@@ -121,7 +124,7 @@ export async function notify(params: NotifyParams): Promise<{ sent: boolean }> {
     // Settings de la empresa: ¿canal habilitado? ¿tipo habilitado?
     const { data: company } = await admin
       .from('companies')
-      .select('settings')
+      .select('settings, name')
       .eq('id', params.companyId)
       .single()
 
@@ -151,7 +154,7 @@ export async function notify(params: NotifyParams): Promise<{ sent: boolean }> {
     // Enviar
     let result: { ok: boolean; providerId?: string; error?: string }
     if (params.channel === 'email') {
-      result = await sendEmail(params.recipient, subject ?? 'LuxeRide', body)
+      result = await sendEmail(params.recipient, subject ?? 'LuxeRide', body, company?.name)
     } else if (params.channel === 'sms') {
       result = await sendSms(params.recipient, body)
     } else {

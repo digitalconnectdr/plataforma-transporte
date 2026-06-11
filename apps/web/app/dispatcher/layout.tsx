@@ -51,6 +51,11 @@ export default async function DispatcherLayout({
         </div>
       </header>
       <main className="flex-1 overflow-auto">{children}</main>
+      <footer className="px-6 py-2 border-t border-sl-outline-variant text-center shrink-0">
+        <p className="text-[9px] uppercase tracking-[0.25em] text-sl-on-surface-muted/60">
+          LuxeRide — Powered by JPRS Digital Connect
+        </p>
+      </footer>
     </div>
   )
 }

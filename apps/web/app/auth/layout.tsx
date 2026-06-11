@@ -32,7 +32,10 @@ export default function AuthLayout({ children }: { children: React.ReactNode }) 
       </main>
 
       {/* Footer */}
-      <footer className="px-8 py-6 text-center text-xs text-sl-on-surface-muted border-t border-sl-outline-variant">
+      <footer className="px-8 py-6 text-center text-xs text-sl-on-surface-muted border-t border-sl-outline-variant space-y-1.5">
+        <p className="text-[10px] uppercase tracking-[0.25em] text-gold/80">
+          LuxeRide — Powered by JPRS Digital Connect
+        </p>
         <p>
           © {new Date().getFullYear()} LuxeRide. All rights reserved. &nbsp;·&nbsp;
           <Link href="/privacy" className="hover:text-gold transition-colors">

@@ -152,6 +152,10 @@ export default async function AdminLayout({
               Sign out →
             </button>
           </form>
+          <p className="mt-3 pt-3 border-t border-sl-outline-variant text-[9px] uppercase tracking-[0.18em] text-sl-on-surface-muted/70">
+            LuxeRide · Powered by
+            <span className="block text-gold/80">JPRS Digital Connect</span>
+          </p>
         </div>
       </aside>
 

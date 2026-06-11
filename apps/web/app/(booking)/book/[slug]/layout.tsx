@@ -23,6 +23,12 @@ export default function BookingLayout({
           {children}
         </main>
       </MapsProvider>
+
+      <footer className="max-w-2xl mx-auto px-6 pb-8 text-center">
+        <p className="text-[10px] uppercase tracking-[0.25em] text-gray-400">
+          LuxeRide — Powered by JPRS Digital Connect
+        </p>
+      </footer>
     </div>
   )
 }

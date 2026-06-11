@@ -44,6 +44,11 @@ export default async function CorporateLayout({
         </div>
       </header>
       <main className="max-w-4xl mx-auto px-6 py-8">{children}</main>
+      <footer className="max-w-4xl mx-auto px-6 pb-8 text-center">
+        <p className="text-[10px] uppercase tracking-[0.25em] text-sl-on-surface-muted/60">
+          LuxeRide — Powered by JPRS Digital Connect
+        </p>
+      </footer>
     </div>
   )
 }
