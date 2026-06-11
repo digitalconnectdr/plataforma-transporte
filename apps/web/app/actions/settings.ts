@@ -97,6 +97,57 @@ export async function updateBookingSettingsAction(
   return { success: true }
 }
 
+// ── F1.10 — Policy Engine: políticas de cancelación ───────────────────────────
+
+export async function updatePolicySettingsAction(
+  formData: FormData,
+): Promise<{ success: boolean; error?: string }> {
+  const user = await requireRole('company_owner')
+  if (!user.company_id) return { success: false, error: 'Sin empresa asignada' }
+
+  const clampPct = (v: number) => Math.min(100, Math.max(0, v))
+  const clampHrs = (v: number) => Math.max(0, v)
+
+  const freeCancellationHours   = clampHrs(parseFloat(formData.get('free_cancellation_hours') as string ?? '24') || 24)
+  const lateCancellationFeePct  = clampPct(parseFloat(formData.get('late_cancellation_fee_pct') as string ?? '50') || 0)
+  const noShowFeePct            = clampPct(parseFloat(formData.get('no_show_fee_pct') as string ?? '100') || 0)
+  const modificationMinHours    = clampHrs(parseFloat(formData.get('modification_min_hours') as string ?? '4') || 4)
+
+  const admin = createAdminClient()
+
+  const { data: company } = await admin
+    .from('companies')
+    .select('settings')
+    .eq('id', user.company_id)
+    .single()
+
+  if (!company) return { success: false, error: 'Empresa no encontrada' }
+
+  const currentSettings = (company.settings as Record<string, unknown>) ?? {}
+  const updatedSettings = {
+    ...currentSettings,
+    policy: {
+      free_cancellation_hours:   freeCancellationHours,
+      late_cancellation_fee_pct: lateCancellationFeePct,
+      no_show_fee_pct:           noShowFeePct,
+      modification_min_hours:    modificationMinHours,
+    },
+  }
+
+  const { error } = await admin
+    .from('companies')
+    .update({ settings: updatedSettings })
+    .eq('id', user.company_id)
+
+  if (error) {
+    console.error('[updatePolicySettingsAction]', error)
+    return { success: false, error: 'Error al actualizar políticas' }
+  }
+
+  revalidatePath('/admin/settings')
+  return { success: true }
+}
+
 export async function updateGratuitySettingsAction(
   formData: FormData,
 ): Promise<{ success: boolean; error?: string }> {

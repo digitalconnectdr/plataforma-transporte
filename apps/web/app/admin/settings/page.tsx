@@ -4,7 +4,9 @@ import {
   updateCompanyInfoAction,
   updateBookingSettingsAction,
   updateGratuitySettingsAction,
+  updatePolicySettingsAction,
 } from '@/app/actions/settings'
+import { parsePolicy } from '@/lib/policy/engine'
 import {
   createConnectOnboardingAction,
   refreshConnectStatusAction,
@@ -71,6 +73,9 @@ export default async function SettingsPage() {
   const gratuityAction: (fd: FormData) => void = updateGratuitySettingsAction
   const connectAction:  () => void = createConnectOnboardingAction
   const refreshAction:  () => void = refreshConnectStatusAction
+  const policyAction:   (fd: FormData) => void = updatePolicySettingsAction
+
+  const policy = parsePolicy(company.settings)
 
   const stripeReady = isStripeConfigured()
   const hasConnect  = Boolean(company.stripe_connect_account_id)
@@ -210,6 +215,69 @@ export default async function SettingsPage() {
           <div className="flex justify-end pt-1">
             <button type="submit" className="px-4 py-2 text-sm font-medium bg-gold text-gray-900 rounded-lg hover:bg-gold/90 transition-colors">
               Save Booking Settings
+            </button>
+          </div>
+        </form>
+      </section>
+
+      {/* ── Cancellation Policy (F1.10) ── */}
+      <section className="bg-sl-surface border border-sl-outline-variant rounded-xl p-6">
+        <h2 className="text-sm font-semibold text-sl-on-surface mb-2">Cancellation Policy</h2>
+        <p className="text-xs text-sl-on-surface-muted mb-5">
+          Los cargos se aplican automáticamente al cancelar o marcar no-show según estas reglas.
+        </p>
+        <form action={policyAction} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className={labelCls}>Cancelación gratis hasta (horas antes)</label>
+              <input
+                name="free_cancellation_hours"
+                type="number"
+                min="0"
+                step="1"
+                defaultValue={policy.free_cancellation_hours}
+                className={inputCls}
+              />
+            </div>
+            <div>
+              <label className={labelCls}>Cargo por cancelación tardía (%)</label>
+              <input
+                name="late_cancellation_fee_pct"
+                type="number"
+                min="0"
+                max="100"
+                step="1"
+                defaultValue={policy.late_cancellation_fee_pct}
+                className={inputCls}
+              />
+            </div>
+            <div>
+              <label className={labelCls}>Cargo por no-show (%)</label>
+              <input
+                name="no_show_fee_pct"
+                type="number"
+                min="0"
+                max="100"
+                step="1"
+                defaultValue={policy.no_show_fee_pct}
+                className={inputCls}
+              />
+            </div>
+            <div>
+              <label className={labelCls}>Modificaciones hasta (horas antes)</label>
+              <input
+                name="modification_min_hours"
+                type="number"
+                min="0"
+                step="1"
+                defaultValue={policy.modification_min_hours}
+                className={inputCls}
+              />
+            </div>
+          </div>
+          <div className="flex justify-end pt-1">
+            <button type="submit" className="px-4 py-2 text-sm font-medium bg-gold text-gray-900 rounded-lg hover:bg-gold/90 transition-colors">
+              Save Policy
             </button>
           </div>
         </form>

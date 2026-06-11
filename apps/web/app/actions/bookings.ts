@@ -7,6 +7,12 @@ import { revalidatePath } from 'next/cache'
 import { createAdminClient } from '@/lib/supabase/server'
 import { requireRole } from '@/lib/auth/session'
 import { calculateRoute } from '@/lib/maps/routes'
+import {
+  parsePolicy,
+  parseBookingWindow,
+  computeCancellationFee,
+  validateBookingTime,
+} from '@/lib/policy/engine'
 import type { BookingStatus, BookingType } from '@/lib/supabase/database.types'
 
 // ─── Tipos públicos ────────────────────────────────────────────────────────────
@@ -358,7 +364,7 @@ export async function updateBookingStatusAction(
 
   const { data: booking } = await admin
     .from('bookings')
-    .select('id, status, company_id')
+    .select('id, status, company_id, scheduled_at, total_amount, booking_number')
     .eq('id', bookingId)
     .eq('company_id', user.company_id)
     .single()
@@ -402,6 +408,36 @@ export async function updateBookingStatusAction(
   if (error) {
     console.error('[updateBookingStatusAction]', error)
     return { success: false, error: 'Error al actualizar estado' }
+  }
+
+  // ── F1.10 Policy Engine: fee de cancelación / no-show ────────────────────────
+  if ((newStatus === 'cancelled' || newStatus === 'no_show') && booking.total_amount) {
+    const { data: company } = await admin
+      .from('companies')
+      .select('settings')
+      .eq('id', user.company_id)
+      .single()
+
+    const policy = parsePolicy(company?.settings)
+    const fee = computeCancellationFee(
+      policy,
+      new Date(booking.scheduled_at),
+      Number(booking.total_amount),
+      { noShow: newStatus === 'no_show' },
+    )
+
+    if (fee.feeAmount > 0) {
+      await admin.from('booking_fees').insert({
+        booking_id: bookingId,
+        company_id: user.company_id,
+        type: newStatus === 'no_show' ? 'no_show_fee' : 'cancellation_fee',
+        description:
+          newStatus === 'no_show'
+            ? `Cargo por no-show (${fee.feePct}% según política)`
+            : `Cargo por cancelación tardía (${fee.feePct}% según política)`,
+        amount: fee.feeAmount,
+      })
+    }
   }
 
   revalidatePath('/admin/bookings')
@@ -478,7 +514,7 @@ export async function getPublicVehicleQuotesAction(
 
   const { data: company } = await admin
     .from('companies')
-    .select('id, status, currency')
+    .select('id, status, currency, settings')
     .eq('slug', slug)
     .single()
 
@@ -490,6 +526,12 @@ export async function getPublicVehicleQuotesAction(
   const currency  = (company.currency as string | null) ?? 'USD'
   const scheduledAt = new Date(data.scheduledAt)
   const bookingType = data.bookingType ?? 'one_way'
+
+  // F1.10 — ventana de reservación de la empresa
+  const windowCheck = validateBookingTime(parseBookingWindow(company.settings), scheduledAt)
+  if (!windowCheck.valid) {
+    return { success: false, error: windowCheck.error }
+  }
 
   // Tipos de vehículo activos
   const { data: vehicleTypes } = await admin
@@ -601,12 +643,21 @@ export async function createPublicBookingAction(data: {
 
   const { data: company } = await admin
     .from('companies')
-    .select('id, status')
+    .select('id, status, settings')
     .eq('slug', data.slug)
     .single()
 
   if (!company || company.status !== 'active') {
     return { success: false, error: 'Empresa no disponible' }
+  }
+
+  // F1.10 — ventana de reservación de la empresa
+  const windowCheck = validateBookingTime(
+    parseBookingWindow(company.settings),
+    new Date(data.scheduledAt),
+  )
+  if (!windowCheck.valid) {
+    return { success: false, error: windowCheck.error }
   }
 
   // Validar cotización — montos SIEMPRE del server
