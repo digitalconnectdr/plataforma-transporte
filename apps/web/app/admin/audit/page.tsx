@@ -51,7 +51,7 @@ export default async function AuditLogPage({
   const TABLES = ['bookings', 'payments', 'refunds', 'user_profiles', 'companies']
 
   return (
-    <div className="p-8 max-w-4xl space-y-6">
+    <div className="p-8 max-w-[1400px] mx-auto space-y-6">
       <div className="flex items-start justify-between">
         <div>
           <h1 className="font-playfair text-3xl font-semibold text-sl-on-surface">Audit Log</h1>

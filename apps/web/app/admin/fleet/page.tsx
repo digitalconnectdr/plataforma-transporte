@@ -4,6 +4,7 @@ import { requireRole } from '@/lib/auth/session'
 import { createAdminClient } from '@/lib/supabase/server'
 import { VehicleStatusSelect, VehicleTypeActiveToggle } from '@/components/admin/fleet-controls'
 import { AddVehicleTypeForm } from '@/components/admin/add-vehicle-type-form'
+import { getDict } from '@/lib/i18n/server'
 import type { VehicleStatus } from '@/lib/supabase/database.types'
 
 export const metadata: Metadata = { title: 'Fleet | LuxeRide' }
@@ -52,21 +53,23 @@ export default async function FleetPage({ searchParams }: PageProps) {
   const typeMap   = Object.fromEntries(allTypes.map((t) => [t.id, t]))
   const driverMap = Object.fromEntries(allDrivers.map((d) => [d.id, d]))
 
+  const t = getDict().admin.fleet
+
   const tabs = [
-    { label: 'Vehicles',      value: 'vehicles' },
-    { label: 'Vehicle Types', value: 'types'    },
+    { label: t.tabVehicles, value: 'vehicles' },
+    { label: t.tabTypes,    value: 'types'    },
   ]
 
   return (
-    <div className="p-8 space-y-6 max-w-6xl">
+    <div className="p-8 space-y-6 max-w-[1400px] mx-auto">
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="font-playfair text-3xl font-semibold text-sl-on-surface">Fleet</h1>
+          <h1 className="font-playfair text-3xl font-semibold text-sl-on-surface">{t.title}</h1>
           <p className="text-sm text-sl-on-surface-muted mt-1">
-            {allVehicles.length} vehicle{allVehicles.length !== 1 ? 's' : ''}
+            {allVehicles.length} {t.vehicles}
             {' · '}
-            {allVehicles.filter((v) => v.status === 'available').length} available
+            {allVehicles.filter((v) => v.status === 'available').length} {t.available}
           </p>
         </div>
         {tab === 'vehicles' && (
@@ -74,7 +77,7 @@ export default async function FleetPage({ searchParams }: PageProps) {
             href="/admin/fleet/new"
             className="px-4 py-2 text-sm font-semibold bg-gold text-gray-900 rounded-xl hover:bg-gold/90 transition-colors"
           >
-            + Add Vehicle
+            {t.addVehicle}
           </Link>
         )}
       </div>

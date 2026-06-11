@@ -2,6 +2,7 @@ import { requireRole } from '@/lib/auth/session'
 import { createAdminClient } from '@/lib/supabase/server'
 import { inviteTeamMemberAction } from '@/app/actions/team'
 import { TeamMemberActiveToggle, TeamMemberRoleSelect } from '@/components/admin/team-controls'
+import { getDict } from '@/lib/i18n/server'
 import type { UserRole } from '@/lib/auth/permissions'
 
 const ROLE_BADGE: Record<string, string> = {
@@ -31,48 +32,49 @@ export default async function TeamPage() {
 
   // void cast — TypeScript void-callback rule
   const teamAction: (fd: FormData) => void = inviteTeamMemberAction
+  const t = getDict().admin.team
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="p-8 max-w-[1400px] mx-auto">
 
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-playfair font-semibold text-sl-on-surface">Team</h1>
+          <h1 className="text-2xl font-playfair font-semibold text-sl-on-surface">{t.title}</h1>
           <p className="mt-1 text-sm text-sl-on-surface-muted">
-            Manage your team members and their access roles.
+            {t.subtitle}
           </p>
         </div>
         <span className="text-xs text-sl-on-surface-muted">
-          {members?.length ?? 0} member{members?.length !== 1 ? 's' : ''}
+          {members?.length ?? 0} {t.members}
         </span>
       </div>
 
       {/* Invite Form */}
       <div className="bg-sl-surface border border-sl-outline-variant rounded-xl p-5 mb-6">
-        <h2 className="text-sm font-semibold text-sl-on-surface mb-4">Invite Team Member</h2>
+        <h2 className="text-sm font-semibold text-sl-on-surface mb-4">{t.inviteTitle}</h2>
         <form action={teamAction}>
           <div className="grid grid-cols-2 gap-3 mb-3">
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">First Name *</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.firstName} *</label>
               <input name="first_name" required placeholder="Jane" className={inputCls} />
             </div>
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">Last Name *</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.lastName} *</label>
               <input name="last_name" required placeholder="Smith" className={inputCls} />
             </div>
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">Email *</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.email} *</label>
               <input name="email" type="email" required placeholder="jane@example.com" className={inputCls} />
             </div>
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">Phone</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.phone}</label>
               <input name="phone" type="tel" placeholder="+1 (555) 000-0000" className={inputCls} />
             </div>
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">Role *</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.role} *</label>
               <select name="role" required className={inputCls}>
-                <option value="">Select role…</option>
+                <option value="">{t.selectRole}</option>
                 {isOwner && <option value="company_admin">Admin</option>}
                 <option value="dispatcher">Dispatcher</option>
                 <option value="accounting">Accounting</option>
@@ -86,7 +88,7 @@ export default async function TeamPage() {
               type="submit"
               className="px-4 py-2 text-sm font-medium bg-gold text-gray-900 rounded-lg hover:bg-gold/90 transition-colors"
             >
-              Send Invitation
+              {t.send}
             </button>
           </div>
         </form>
@@ -95,16 +97,16 @@ export default async function TeamPage() {
       {/* Members Table */}
       {!members || members.length === 0 ? (
         <div className="bg-sl-surface border border-sl-outline-variant rounded-xl p-12 text-center">
-          <p className="text-sm text-sl-on-surface-muted">No team members yet.</p>
+          <p className="text-sm text-sl-on-surface-muted">{t.empty}</p>
         </div>
       ) : (
         <div className="bg-sl-surface border border-sl-outline-variant rounded-xl overflow-hidden">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-sl-outline-variant">
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">Member</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">Role</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">Status</th>
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">{t.thMember}</th>
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">{t.thRole}</th>
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">{t.thStatus}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-sl-outline-variant/40">
@@ -118,7 +120,7 @@ export default async function TeamPage() {
                       <p className="font-medium text-sl-on-surface">
                         {member.first_name} {member.last_name}
                         {isSelf && (
-                          <span className="ml-2 text-xs text-sl-on-surface-muted font-normal">(you)</span>
+                          <span className="ml-2 text-xs text-sl-on-surface-muted font-normal">{t.you}</span>
                         )}
                       </p>
                       {member.phone && (
@@ -140,7 +142,7 @@ export default async function TeamPage() {
                     <td className="px-5 py-3.5">
                       {isOwnerRole || isSelf ? (
                         <span className={`text-xs font-medium ${member.is_active ? 'text-green-700' : 'text-gray-400'}`}>
-                          {member.is_active ? 'Active' : 'Inactive'}
+                          {member.is_active ? t.active : t.inactive}
                         </span>
                       ) : (
                         <TeamMemberActiveToggle

@@ -88,7 +88,7 @@ export default async function AdminBookingsPage({
     (counts['en_route'] ?? 0) + (counts['arrived'] ?? 0) + (counts['in_progress'] ?? 0)
 
   return (
-    <div className="p-8 max-w-6xl space-y-6">
+    <div className="p-8 max-w-[1400px] mx-auto space-y-6">
 
       {/* Header */}
       <div className="flex items-center justify-between">

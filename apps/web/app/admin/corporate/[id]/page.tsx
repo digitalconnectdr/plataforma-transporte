@@ -67,7 +67,7 @@ export default async function CorporateAccountDetailPage({
   const updateAction: (fd: FormData) => void = updateCorporateAccountAction
 
   return (
-    <div className="p-8 max-w-3xl space-y-6">
+    <div className="p-8 max-w-[1100px] mx-auto space-y-6">
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>

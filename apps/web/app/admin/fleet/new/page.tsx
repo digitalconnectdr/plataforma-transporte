@@ -19,7 +19,7 @@ export default async function NewVehiclePage() {
     .order('sort_order', { ascending: true })
 
   return (
-    <div className="p-8 max-w-2xl space-y-6">
+    <div className="p-8 max-w-3xl mx-auto space-y-6">
       {/* Header */}
       <div>
         <nav className="text-xs text-sl-on-surface-muted mb-1">

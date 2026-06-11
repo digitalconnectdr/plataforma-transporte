@@ -2,15 +2,8 @@ import { requireRole } from '@/lib/auth/session'
 import { createAdminClient } from '@/lib/supabase/server'
 import { createPricingRuleAction } from '@/app/actions/pricing'
 import { PricingRuleActiveToggle, PricingRuleDeleteButton } from '@/components/admin/pricing-controls'
+import { getDict } from '@/lib/i18n/server'
 import type { PricingModel } from '@/lib/supabase/database.types'
-
-const MODEL_LABELS: Record<PricingModel, string> = {
-  flat_rate:  'Flat Rate',
-  per_mile:   'Per Mile',
-  per_km:     'Per KM',
-  hourly:     'Hourly',
-  zone_based: 'Zone Based',
-}
 
 const MODEL_BADGE: Record<PricingModel, string> = {
   flat_rate:  'bg-blue-50 text-blue-700 border-blue-200',
@@ -51,32 +44,33 @@ export default async function PricingPage() {
 
   // void cast — TypeScript void-callback rule
   const pricingAction: (fd: FormData) => void = createPricingRuleAction
+  const t = getDict().admin.pricing
 
   return (
-    <div className="p-8 max-w-5xl">
+    <div className="p-8 max-w-[1400px] mx-auto">
 
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-playfair font-semibold text-sl-on-surface">Pricing Rules</h1>
+          <h1 className="text-2xl font-playfair font-semibold text-sl-on-surface">{t.title}</h1>
           <p className="mt-1 text-sm text-sl-on-surface-muted">
-            Configure rate models for your fleet. Higher priority rules are evaluated first.
+            {t.subtitle}
           </p>
         </div>
         <span className="text-xs text-sl-on-surface-muted">
-          {rules?.length ?? 0} rule{rules?.length !== 1 ? 's' : ''}
+          {rules?.length ?? 0} {t.count}
         </span>
       </div>
 
       {/* Add Rule Form */}
       <div className="bg-sl-surface border border-sl-outline-variant rounded-xl p-5 mb-6">
-        <h2 className="text-sm font-semibold text-sl-on-surface mb-4">Add Pricing Rule</h2>
+        <h2 className="text-sm font-semibold text-sl-on-surface mb-4">{t.addTitle}</h2>
         <form action={pricingAction}>
           <div className="grid grid-cols-2 gap-4 mb-4">
 
             {/* Name */}
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">Rule Name *</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.ruleName} *</label>
               <input
                 name="name"
                 required
@@ -87,14 +81,14 @@ export default async function PricingPage() {
 
             {/* Model */}
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">Pricing Model *</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.model} *</label>
               <select
                 name="model"
                 required
                 className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze"
               >
-                <option value="">Select model…</option>
-                {Object.entries(MODEL_LABELS).map(([val, label]) => (
+                <option value="">{t.selectModel}</option>
+                {Object.entries(t.models).map(([val, label]) => (
                   <option key={val} value={val}>{label}</option>
                 ))}
               </select>
@@ -102,12 +96,12 @@ export default async function PricingPage() {
 
             {/* Vehicle Type */}
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">Vehicle Type (optional)</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.vehicleType}</label>
               <select
                 name="vehicle_type_id"
                 className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze"
               >
-                <option value="">All vehicle types</option>
+                <option value="">{t.allVehicleTypes}</option>
                 {(vehicleTypes ?? []).map((vt) => (
                   <option key={vt.id} value={vt.id}>{vt.name}</option>
                 ))}
@@ -116,7 +110,7 @@ export default async function PricingPage() {
 
             {/* Priority */}
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">Priority (higher = first)</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.priority}</label>
               <input
                 name="priority"
                 type="number"
@@ -128,7 +122,7 @@ export default async function PricingPage() {
 
             {/* Base Price */}
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">Base Price ($)</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.basePrice}</label>
               <input
                 name="base_price"
                 type="number"
@@ -141,7 +135,7 @@ export default async function PricingPage() {
 
             {/* Per Mile Rate */}
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">Per Mile Rate ($)</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.perMileRate}</label>
               <input
                 name="per_mile_rate"
                 type="number"
@@ -154,7 +148,7 @@ export default async function PricingPage() {
 
             {/* Hourly Rate */}
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">Hourly Rate ($)</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.hourlyRate}</label>
               <input
                 name="hourly_rate"
                 type="number"
@@ -167,7 +161,7 @@ export default async function PricingPage() {
 
             {/* Minimum Fare */}
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">Minimum Fare ($)</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.minimumFare}</label>
               <input
                 name="minimum_fare"
                 type="number"
@@ -180,7 +174,7 @@ export default async function PricingPage() {
 
             {/* Night Surcharge */}
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">Night Surcharge (%)</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.nightSurcharge}</label>
               <input
                 name="night_surcharge_pct"
                 type="number"
@@ -193,7 +187,7 @@ export default async function PricingPage() {
 
             {/* Weekend Surcharge */}
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">Weekend Surcharge (%)</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.weekendSurcharge}</label>
               <input
                 name="weekend_surcharge_pct"
                 type="number"
@@ -211,7 +205,7 @@ export default async function PricingPage() {
               type="submit"
               className="px-4 py-2 text-sm font-medium bg-gold text-gray-900 rounded-lg hover:bg-gold/90 transition-colors"
             >
-              Create Rule
+              {t.addButton}
             </button>
           </div>
         </form>
@@ -220,21 +214,21 @@ export default async function PricingPage() {
       {/* Rules Table */}
       {!rules || rules.length === 0 ? (
         <div className="bg-sl-surface border border-sl-outline-variant rounded-xl p-12 text-center">
-          <p className="text-sm text-sl-on-surface-muted">No pricing rules yet.</p>
-          <p className="mt-1 text-xs text-sl-on-surface-muted">Create your first rule above to start calculating trip fares.</p>
+          <p className="text-sm text-sl-on-surface-muted">{t.empty}</p>
+          <p className="mt-1 text-xs text-sl-on-surface-muted">{t.emptyHint}</p>
         </div>
       ) : (
         <div className="bg-sl-surface border border-sl-outline-variant rounded-xl overflow-hidden">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-sl-outline-variant">
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">Rule</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">Model</th>
-                <th className="text-right px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">Base</th>
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">{t.thRule}</th>
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">{t.thModel}</th>
+                <th className="text-right px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">{t.thBase}</th>
                 <th className="text-right px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">Min Fare</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">Priority</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">Status</th>
-                <th className="text-right px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">Actions</th>
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">{t.thPriority}</th>
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">{t.thStatus}</th>
+                <th className="text-right px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">{t.thActions}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-sl-outline-variant/40">
@@ -248,12 +242,12 @@ export default async function PricingPage() {
                       </p>
                     )}
                     {!rule.vehicle_type_id && (
-                      <p className="text-xs text-sl-on-surface-muted mt-0.5">All vehicle types</p>
+                      <p className="text-xs text-sl-on-surface-muted mt-0.5">{t.allVehicleTypes}</p>
                     )}
                   </td>
                   <td className="px-5 py-3.5">
                     <span className={`inline-flex text-xs font-medium px-2 py-0.5 rounded-full border ${MODEL_BADGE[rule.model as PricingModel] ?? ''}`}>
-                      {MODEL_LABELS[rule.model as PricingModel] ?? rule.model}
+                      {t.models[rule.model as PricingModel] ?? rule.model}
                     </span>
                   </td>
                   <td className="px-5 py-3.5 text-right font-medium text-sl-on-surface">

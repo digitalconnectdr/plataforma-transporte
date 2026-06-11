@@ -59,7 +59,7 @@ export default async function VehicleDetailPage({ params }: PageProps) {
   }
 
   return (
-    <div className="p-8 max-w-4xl space-y-6">
+    <div className="p-8 max-w-[1100px] mx-auto space-y-6">
       {/* Breadcrumb + Header */}
       <div>
         <nav className="text-xs text-sl-on-surface-muted mb-2">

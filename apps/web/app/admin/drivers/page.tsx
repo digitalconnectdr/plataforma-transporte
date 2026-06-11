@@ -62,7 +62,7 @@ export default async function DriversPage() {
   const today = new Date()
 
   return (
-    <div className="p-8 space-y-6 max-w-5xl">
+    <div className="p-8 space-y-6 max-w-[1400px] mx-auto">
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>

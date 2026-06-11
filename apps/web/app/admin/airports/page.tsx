@@ -2,6 +2,7 @@ import { requireRole } from '@/lib/auth/session'
 import { createAdminClient } from '@/lib/supabase/server'
 import { addCompanyAirportAction } from '@/app/actions/services'
 import { AirportActiveToggle, AirportRemoveButton } from '@/components/admin/airport-controls'
+import { getDict } from '@/lib/i18n/server'
 
 export default async function AirportsPage() {
   const user = await requireRole('company_owner', 'company_admin', 'dispatcher')
@@ -31,21 +32,22 @@ export default async function AirportsPage() {
 
   // void cast — TypeScript void-callback rule
   const airportAction: (fd: FormData) => void = addCompanyAirportAction
+  const t = getDict().admin.airports
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="p-8 max-w-[1400px] mx-auto">
 
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-playfair font-semibold text-sl-on-surface">Airports</h1>
+          <h1 className="text-2xl font-playfair font-semibold text-sl-on-surface">{t.title}</h1>
           <p className="mt-1 text-sm text-sl-on-surface-muted">
-            Configure airport pickup and drop-off fees for your service area.
+            {t.subtitle}
           </p>
         </div>
         {isAdmin && (
           <span className="text-xs text-sl-on-surface-muted">
-            {companyAirports?.length ?? 0} configured
+            {companyAirports?.length ?? 0} {t.configured}
           </span>
         )}
       </div>
@@ -53,16 +55,16 @@ export default async function AirportsPage() {
       {/* Add Airport Form */}
       {isAdmin && notAddedAirports.length > 0 && (
         <div className="bg-sl-surface border border-sl-outline-variant rounded-xl p-5 mb-6">
-          <h2 className="text-sm font-semibold text-sl-on-surface mb-4">Add Airport</h2>
+          <h2 className="text-sm font-semibold text-sl-on-surface mb-4">{t.addTitle}</h2>
           <form action={airportAction} className="flex flex-wrap gap-3 items-end">
             <div className="flex-1 min-w-[200px]">
-              <label className="block text-xs text-sl-on-surface-muted mb-1">Airport</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.airportLabel}</label>
               <select
                 name="airport_id"
                 required
                 className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze"
               >
-                <option value="">Select airport…</option>
+                <option value="">{t.selectPlaceholder}</option>
                 {notAddedAirports.map((a) => (
                   <option key={a.id} value={a.id}>
                     {a.iata_code} — {a.name} ({a.city}, {a.country})
@@ -71,7 +73,7 @@ export default async function AirportsPage() {
               </select>
             </div>
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">Pickup Fee ($)</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.pickupFee}</label>
               <input
                 name="pickup_fee"
                 type="number"
@@ -82,7 +84,7 @@ export default async function AirportsPage() {
               />
             </div>
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">Drop-off Fee ($)</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.dropoffFee}</label>
               <input
                 name="dropoff_fee"
                 type="number"
@@ -96,7 +98,7 @@ export default async function AirportsPage() {
               type="submit"
               className="px-4 py-2 text-sm font-medium bg-gold text-gray-900 rounded-lg hover:bg-gold/90 transition-colors"
             >
-              Add Airport
+              {t.addButton}
             </button>
           </form>
         </div>
@@ -105,9 +107,9 @@ export default async function AirportsPage() {
       {/* Airports Table */}
       {!companyAirports || companyAirports.length === 0 ? (
         <div className="bg-sl-surface border border-sl-outline-variant rounded-xl p-12 text-center">
-          <p className="text-sm text-sl-on-surface-muted">No airports configured yet.</p>
+          <p className="text-sm text-sl-on-surface-muted">{t.empty}</p>
           {isAdmin && (
-            <p className="mt-1 text-xs text-sl-on-surface-muted">Add airports above to configure pickup and drop-off surcharges.</p>
+            <p className="mt-1 text-xs text-sl-on-surface-muted">{t.emptyHint}</p>
           )}
         </div>
       ) : (
@@ -115,12 +117,12 @@ export default async function AirportsPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-sl-outline-variant">
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">Airport</th>
-                <th className="text-right px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">Pickup</th>
-                <th className="text-right px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">Drop-off</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">Status</th>
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">{t.thAirport}</th>
+                <th className="text-right px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">{t.thPickup}</th>
+                <th className="text-right px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">{t.thDropoff}</th>
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">{t.thStatus}</th>
                 {isAdmin && (
-                  <th className="text-right px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">Actions</th>
+                  <th className="text-right px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">{t.thActions}</th>
                 )}
               </tr>
             </thead>
@@ -155,7 +157,7 @@ export default async function AirportsPage() {
                         <AirportActiveToggle id={ca.id} isActive={ca.is_active} />
                       ) : (
                         <span className={`text-xs font-medium ${ca.is_active ? 'text-green-700' : 'text-gray-400'}`}>
-                          {ca.is_active ? 'Active' : 'Inactive'}
+                          {ca.is_active ? t.active : t.inactive}
                         </span>
                       )}
                     </td>

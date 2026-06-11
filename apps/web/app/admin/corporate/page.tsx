@@ -22,7 +22,7 @@ export default async function CorporateAccountsPage() {
   const canManage = ['company_owner', 'company_admin'].includes(user.role)
 
   return (
-    <div className="p-8 max-w-4xl space-y-6">
+    <div className="p-8 max-w-[1400px] mx-auto space-y-6">
       <div className="flex items-start justify-between">
         <div>
           <h1 className="font-playfair text-3xl font-semibold text-sl-on-surface">

@@ -2,6 +2,7 @@ import { requireRole } from '@/lib/auth/session'
 import { createAdminClient } from '@/lib/supabase/server'
 import { createZoneAction } from '@/app/actions/services'
 import { ZoneActiveToggle, ZoneDeleteButton } from '@/components/admin/zone-controls'
+import { getDict } from '@/lib/i18n/server'
 
 const ZONE_TYPES = ['standard', 'airport', 'premium', 'restricted'] as const
 type ZoneType = (typeof ZONE_TYPES)[number]
@@ -27,21 +28,22 @@ export default async function ZonesPage() {
 
   // void cast — TypeScript void-callback rule: (fd) => void accepts any return type
   const zoneAction: (fd: FormData) => void = createZoneAction
+  const t = getDict().admin.zones
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="p-8 max-w-[1400px] mx-auto">
 
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-playfair font-semibold text-sl-on-surface">Service Zones</h1>
+          <h1 className="text-2xl font-playfair font-semibold text-sl-on-surface">{t.title}</h1>
           <p className="mt-1 text-sm text-sl-on-surface-muted">
-            Define geographic pricing areas for your service region.
+            {t.subtitle}
           </p>
         </div>
         {isAdmin && (
           <span className="text-xs text-sl-on-surface-muted">
-            {zones?.length ?? 0} zone{zones?.length !== 1 ? 's' : ''}
+            {zones?.length ?? 0} {t.count}
           </span>
         )}
       </div>
@@ -49,31 +51,31 @@ export default async function ZonesPage() {
       {/* Add Zone Form */}
       {isAdmin && (
         <div className="bg-sl-surface border border-sl-outline-variant rounded-xl p-5 mb-6">
-          <h2 className="text-sm font-semibold text-sl-on-surface mb-4">Add Zone</h2>
+          <h2 className="text-sm font-semibold text-sl-on-surface mb-4">{t.addTitle}</h2>
           <form action={zoneAction} className="flex flex-wrap gap-3 items-end">
             <div className="flex-1 min-w-[180px]">
-              <label className="block text-xs text-sl-on-surface-muted mb-1">Zone Name</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.nameLabel}</label>
               <input
                 name="name"
                 required
-                placeholder="e.g. Downtown Manhattan"
+                placeholder={t.namePlaceholder}
                 className="w-full text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface placeholder:text-sl-on-surface-muted/50 focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze"
               />
             </div>
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">Type</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.typeLabel}</label>
               <select
                 name="type"
                 defaultValue="standard"
                 className="text-sm bg-sl-bg border border-sl-outline-variant rounded-lg px-3 py-2 text-sl-on-surface focus:border-bronze focus:outline-none focus:ring-1 focus:ring-bronze"
               >
-                {ZONE_TYPES.map((t) => (
-                  <option key={t} value={t}>{t.charAt(0).toUpperCase() + t.slice(1)}</option>
+                {ZONE_TYPES.map((zt) => (
+                  <option key={zt} value={zt}>{t.types[zt]}</option>
                 ))}
               </select>
             </div>
             <div>
-              <label className="block text-xs text-sl-on-surface-muted mb-1">Color</label>
+              <label className="block text-xs text-sl-on-surface-muted mb-1">{t.colorLabel}</label>
               <input
                 name="color"
                 type="color"
@@ -85,7 +87,7 @@ export default async function ZonesPage() {
               type="submit"
               className="px-4 py-2 text-sm font-medium bg-gold text-gray-900 rounded-lg hover:bg-gold/90 transition-colors"
             >
-              Add Zone
+              {t.addButton}
             </button>
           </form>
         </div>
@@ -94,9 +96,9 @@ export default async function ZonesPage() {
       {/* Zones Table */}
       {!zones || zones.length === 0 ? (
         <div className="bg-sl-surface border border-sl-outline-variant rounded-xl p-12 text-center">
-          <p className="text-sm text-sl-on-surface-muted">No service zones yet.</p>
+          <p className="text-sm text-sl-on-surface-muted">{t.empty}</p>
           {isAdmin && (
-            <p className="mt-1 text-xs text-sl-on-surface-muted">Add your first zone above to start defining pricing areas.</p>
+            <p className="mt-1 text-xs text-sl-on-surface-muted">{t.emptyHint}</p>
           )}
         </div>
       ) : (
@@ -104,18 +106,17 @@ export default async function ZonesPage() {
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-sl-outline-variant">
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">Zone</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">Type</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">Radius</th>
-                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">Status</th>
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">{t.thZone}</th>
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">{t.thType}</th>
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">{t.thRadius}</th>
+                <th className="text-left px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">{t.thStatus}</th>
                 {isAdmin && (
-                  <th className="text-right px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">Actions</th>
+                  <th className="text-right px-5 py-3 text-xs font-semibold uppercase tracking-wider text-sl-on-surface-muted">{t.thActions}</th>
                 )}
               </tr>
             </thead>
             <tbody className="divide-y divide-sl-outline-variant/40">
               {zones.map((zone) => {
-                const t = zone.type as ZoneType
                 return (
                   <tr key={zone.id} className="hover:bg-sl-bg/40 transition-colors">
                     <td className="px-5 py-3.5">
@@ -128,8 +129,8 @@ export default async function ZonesPage() {
                       </div>
                     </td>
                     <td className="px-5 py-3.5">
-                      <span className={`inline-flex text-xs font-medium px-2 py-0.5 rounded-full border ${zoneBadge[t] ?? 'bg-gray-50 text-gray-600 border-gray-200'}`}>
-                        {zone.type}
+                      <span className={`inline-flex text-xs font-medium px-2 py-0.5 rounded-full border ${zoneBadge[zone.type as ZoneType] ?? 'bg-gray-50 text-gray-600 border-gray-200'}`}>
+                        {t.types[zone.type as ZoneType] ?? zone.type}
                       </span>
                     </td>
                     <td className="px-5 py-3.5 text-sl-on-surface-muted text-xs">
@@ -140,7 +141,7 @@ export default async function ZonesPage() {
                         <ZoneActiveToggle zoneId={zone.id} isActive={zone.is_active} />
                       ) : (
                         <span className={`text-xs font-medium ${zone.is_active ? 'text-green-700' : 'text-gray-400'}`}>
-                          {zone.is_active ? 'Active' : 'Inactive'}
+                          {zone.is_active ? t.active : t.inactive}
                         </span>
                       )}
                     </td>

@@ -12,6 +12,7 @@ import {
   refreshConnectStatusAction,
 } from '@/app/actions/payments'
 import { isStripeConfigured } from '@/lib/stripe/server'
+import { getDict } from '@/lib/i18n/server'
 
 const TIMEZONES = [
   'America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeles',
@@ -93,42 +94,43 @@ export default async function SettingsPage({
   const stripeReady = isStripeConfigured()
   const hasConnect  = Boolean(company.stripe_connect_account_id)
   const onboarded   = Boolean(company.stripe_connect_onboarded)
+  const t = getDict().admin.settings
 
   return (
-    <div className="p-8 max-w-3xl space-y-8">
+    <div className="p-8 max-w-[1100px] mx-auto space-y-8">
 
       <div>
-        <h1 className="text-2xl font-playfair font-semibold text-sl-on-surface">Settings</h1>
-        <p className="mt-1 text-sm text-sl-on-surface-muted">Manage your company profile and platform preferences.</p>
+        <h1 className="text-2xl font-playfair font-semibold text-sl-on-surface">{t.title}</h1>
+        <p className="mt-1 text-sm text-sl-on-surface-muted">{t.subtitle}</p>
       </div>
 
       {/* ── Company Information ── */}
       <section className="bg-sl-surface border border-sl-outline-variant rounded-xl p-6">
-        <h2 className="text-sm font-semibold text-sl-on-surface mb-5">Company Information</h2>
+        <h2 className="text-sm font-semibold text-sl-on-surface mb-5">{t.companyInfo}</h2>
         <form action={infoAction} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
-              <label className={labelCls}>Company Name *</label>
+              <label className={labelCls}>{t.companyName} *</label>
               <input name="name" required defaultValue={company.name} className={inputCls} />
             </div>
             <div>
-              <label className={labelCls}>Phone</label>
+              <label className={labelCls}>{t.phone}</label>
               <input name="phone" type="tel" defaultValue={company.phone ?? ''} className={inputCls} />
             </div>
             <div>
-              <label className={labelCls}>Email</label>
+              <label className={labelCls}>{t.email}</label>
               <input name="email" type="email" defaultValue={company.email ?? ''} className={inputCls} />
             </div>
             <div className="col-span-2">
-              <label className={labelCls}>Address</label>
+              <label className={labelCls}>{t.address}</label>
               <input name="address" defaultValue={company.address ?? ''} className={inputCls} />
             </div>
             <div>
-              <label className={labelCls}>City</label>
+              <label className={labelCls}>{t.city}</label>
               <input name="city" defaultValue={company.city ?? ''} className={inputCls} />
             </div>
             <div>
-              <label className={labelCls}>Country</label>
+              <label className={labelCls}>{t.country}</label>
               <select name="country" defaultValue={company.country ?? 'US'} className={inputCls}>
                 {COUNTRIES.map((c) => (
                   <option key={c.code} value={c.code}>{c.name}</option>
@@ -136,7 +138,7 @@ export default async function SettingsPage({
               </select>
             </div>
             <div>
-              <label className={labelCls}>Timezone</label>
+              <label className={labelCls}>{t.timezone}</label>
               <select name="timezone" defaultValue={company.timezone ?? 'America/New_York'} className={inputCls}>
                 {TIMEZONES.map((tz) => (
                   <option key={tz} value={tz}>{tz}</option>
@@ -144,7 +146,7 @@ export default async function SettingsPage({
               </select>
             </div>
             <div>
-              <label className={labelCls}>Currency</label>
+              <label className={labelCls}>{t.currency}</label>
               <select name="currency" defaultValue={company.currency ?? 'USD'} className={inputCls}>
                 {CURRENCIES.map((c) => (
                   <option key={c} value={c}>{c}</option>
@@ -154,7 +156,7 @@ export default async function SettingsPage({
           </div>
           <div className="flex justify-end pt-1">
             <button type="submit" className="px-4 py-2 text-sm font-medium bg-gold text-gray-900 rounded-lg hover:bg-gold/90 transition-colors">
-              Save Changes
+              {t.saveChanges}
             </button>
           </div>
         </form>
@@ -162,11 +164,11 @@ export default async function SettingsPage({
 
       {/* ── Booking Settings ── */}
       <section className="bg-sl-surface border border-sl-outline-variant rounded-xl p-6">
-        <h2 className="text-sm font-semibold text-sl-on-surface mb-5">Booking Settings</h2>
+        <h2 className="text-sm font-semibold text-sl-on-surface mb-5">{t.bookingSettings}</h2>
         <form action={bookingAction} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className={labelCls}>Min. Advance Booking (hours)</label>
+              <label className={labelCls}>{t.minAdvance}</label>
               <input
                 name="advance_booking_hours"
                 type="number"
@@ -176,7 +178,7 @@ export default async function SettingsPage({
               />
             </div>
             <div>
-              <label className={labelCls}>Max. Advance Booking (days)</label>
+              <label className={labelCls}>{t.maxAdvance}</label>
               <input
                 name="max_advance_days"
                 type="number"
@@ -196,7 +198,7 @@ export default async function SettingsPage({
                 defaultChecked={booking.allow_instant_booking ?? true}
                 className="w-4 h-4 rounded accent-bronze"
               />
-              <span className="text-sm text-sl-on-surface">Allow instant booking (no confirmation required)</span>
+              <span className="text-sm text-sl-on-surface">{t.allowInstant}</span>
             </label>
             <label className="flex items-center gap-3 cursor-pointer">
               <input
@@ -206,13 +208,13 @@ export default async function SettingsPage({
                 defaultChecked={booking.require_deposit ?? false}
                 className="w-4 h-4 rounded accent-bronze"
               />
-              <span className="text-sm text-sl-on-surface">Require deposit at booking</span>
+              <span className="text-sm text-sl-on-surface">{t.requireDeposit}</span>
             </label>
           </div>
 
           {booking.require_deposit && (
             <div className="w-48">
-              <label className={labelCls}>Deposit Percentage (%)</label>
+              <label className={labelCls}>{t.depositPct}</label>
               <input
                 name="deposit_percentage"
                 type="number"
@@ -227,7 +229,7 @@ export default async function SettingsPage({
 
           <div className="flex justify-end pt-1">
             <button type="submit" className="px-4 py-2 text-sm font-medium bg-gold text-gray-900 rounded-lg hover:bg-gold/90 transition-colors">
-              Save Booking Settings
+              {t.saveBooking}
             </button>
           </div>
         </form>
@@ -381,7 +383,7 @@ export default async function SettingsPage({
 
       {/* ── Gratuity Settings ── */}
       <section className="bg-sl-surface border border-sl-outline-variant rounded-xl p-6">
-        <h2 className="text-sm font-semibold text-sl-on-surface mb-5">Gratuity</h2>
+        <h2 className="text-sm font-semibold text-sl-on-surface mb-5">{t.gratuityTitle}</h2>
         <form action={gratuityAction} className="space-y-4">
           <label className="flex items-center gap-3 cursor-pointer">
             <input
@@ -391,10 +393,10 @@ export default async function SettingsPage({
               defaultChecked={gratuity.enabled ?? true}
               className="w-4 h-4 rounded accent-bronze"
             />
-            <span className="text-sm text-sl-on-surface">Enable gratuity options at checkout</span>
+            <span className="text-sm text-sl-on-surface">{t.gratuityEnable}</span>
           </label>
           <div className="w-48">
-            <label className={labelCls}>Default Gratuity (%)</label>
+            <label className={labelCls}>{t.gratuityDefault}</label>
             <input
               name="default_percentage"
               type="number"
@@ -407,7 +409,7 @@ export default async function SettingsPage({
           </div>
           <div className="flex justify-end pt-1">
             <button type="submit" className="px-4 py-2 text-sm font-medium bg-gold text-gray-900 rounded-lg hover:bg-gold/90 transition-colors">
-              Save Gratuity Settings
+              {t.saveGratuity}
             </button>
           </div>
         </form>

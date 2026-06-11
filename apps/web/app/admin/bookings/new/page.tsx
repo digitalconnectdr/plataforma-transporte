@@ -41,7 +41,7 @@ export default async function NewBookingPage() {
   ])
 
   return (
-    <div className="p-8 max-w-2xl">
+    <div className="p-8 max-w-3xl mx-auto">
       <div className="mb-6">
         <h1 className="font-playfair text-3xl font-semibold text-sl-on-surface">Nueva Reservación</h1>
         <p className="text-sm text-sl-on-surface-muted mt-1">
