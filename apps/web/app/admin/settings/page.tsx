@@ -97,7 +97,7 @@ export default async function SettingsPage({
   const t = getDict().admin.settings
 
   return (
-    <div className="p-8 max-w-[1100px] mx-auto space-y-8">
+    <div className="p-8 max-w-[1400px] mx-auto space-y-8">
 
       <div>
         <h1 className="text-2xl font-playfair font-semibold text-sl-on-surface">{t.title}</h1>
