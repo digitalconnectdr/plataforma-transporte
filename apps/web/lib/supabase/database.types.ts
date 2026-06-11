@@ -729,6 +729,9 @@ export type Database = {
           scheduled_at: string
           flight_number: string | null
           flight_arrival_at: string | null
+          flight_status: string | null
+          flight_delay_minutes: number | null
+          flight_checked_at: string | null
           meet_and_greet: boolean | null
           sign_name: string | null
           dispatched_at: string | null
@@ -779,6 +782,9 @@ export type Database = {
           scheduled_at: string
           flight_number?: string | null | undefined
           flight_arrival_at?: string | null | undefined
+          flight_status?: string | null | undefined
+          flight_delay_minutes?: number | null | undefined
+          flight_checked_at?: string | null | undefined
           meet_and_greet?: boolean | null | undefined
           sign_name?: string | null | undefined
           dispatched_at?: string | null | undefined
@@ -829,6 +835,9 @@ export type Database = {
           scheduled_at?: string | undefined
           flight_number?: string | null | undefined
           flight_arrival_at?: string | null | undefined
+          flight_status?: string | null | undefined
+          flight_delay_minutes?: number | null | undefined
+          flight_checked_at?: string | null | undefined
           meet_and_greet?: boolean | null | undefined
           sign_name?: string | null | undefined
           dispatched_at?: string | null | undefined

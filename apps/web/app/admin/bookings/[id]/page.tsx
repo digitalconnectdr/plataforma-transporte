@@ -182,7 +182,28 @@ export default async function BookingDetailPage({
         {booking.flight_number && (
           <div className="pt-2 border-t border-sl-outline-variant">
             <p className="text-xs text-sl-on-surface-muted">Vuelo</p>
-            <p className="text-sm font-mono text-sl-on-surface mt-0.5">{booking.flight_number}</p>
+            <p className="text-sm font-mono text-sl-on-surface mt-0.5">
+              ✈ {booking.flight_number}
+              {booking.flight_status === 'cancelled' && (
+                <span className="ml-2 font-sans font-semibold text-red-500">CANCELADO</span>
+              )}
+              {booking.flight_status !== 'cancelled' && (booking.flight_delay_minutes ?? 0) >= 15 && (
+                <span className="ml-2 font-sans font-semibold text-orange-500">
+                  +{booking.flight_delay_minutes} min de retraso
+                </span>
+              )}
+              {booking.flight_status === 'arrived' && (
+                <span className="ml-2 font-sans text-green-600">aterrizó</span>
+              )}
+              {booking.flight_status === 'enroute' && (
+                <span className="ml-2 font-sans text-sl-on-surface-muted">en vuelo</span>
+              )}
+            </p>
+            {booking.flight_arrival_at && (
+              <p className="text-xs text-sl-on-surface-muted mt-1">
+                Llegada estimada: {fmt(booking.flight_arrival_at)}
+              </p>
+            )}
           </div>
         )}
       </div>

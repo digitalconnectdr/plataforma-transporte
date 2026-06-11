@@ -22,6 +22,9 @@ export interface DispatchBooking {
   total_amount: number | null
   currency: string
   driver_id: string | null
+  flight_number?: string | null
+  flight_status?: string | null
+  flight_delay_minutes?: number | null
 }
 
 interface Driver {
@@ -206,6 +209,28 @@ export function DispatchBoard({ companyId, initialBookings, drivers }: Props) {
                         <p className="text-sl-on-surface-muted truncate" title={b.dropoff_address}>
                           ▼ {b.dropoff_address || '—'}
                         </p>
+                        {b.flight_number && (
+                          <p
+                            className={
+                              b.flight_status === 'cancelled'
+                                ? 'text-red-500 font-semibold'
+                                : (b.flight_delay_minutes ?? 0) >= 15
+                                  ? 'text-orange-500 font-semibold'
+                                  : 'text-sl-on-surface-muted'
+                            }
+                          >
+                            ✈ {b.flight_number}
+                            {b.flight_status === 'cancelled'
+                              ? ' · CANCELADO'
+                              : (b.flight_delay_minutes ?? 0) >= 15
+                                ? ` · +${b.flight_delay_minutes} min`
+                                : b.flight_status === 'arrived'
+                                  ? ' · aterrizó'
+                                  : b.flight_status === 'enroute'
+                                    ? ' · en vuelo'
+                                    : ''}
+                          </p>
+                        )}
                         {driverName(b.driver_id) && (
                           <p className="text-[#0071e3]">⊙ {driverName(b.driver_id)}</p>
                         )}

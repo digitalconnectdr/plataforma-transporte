@@ -13,7 +13,9 @@ import {
   computeCancellationFee,
   validateBookingTime,
 } from '@/lib/policy/engine'
+import { waitUntil } from '@vercel/functions'
 import { notifyBookingEventInBackground } from '@/lib/notifications'
+import { trackBookingFlight } from '@/lib/flights/refresh'
 import { checkRateLimit, RATE_LIMIT_ERROR } from '@/lib/security/rate-limit'
 import { calculateFare, bestRule, type PricingRuleFields } from '@/lib/pricing/engine'
 import type { BookingStatus, BookingType } from '@/lib/supabase/database.types'
@@ -315,6 +317,11 @@ export async function createBookingAction(
     fees.push({ booking_id: booking.id, company_id: user.company_id, type: 'surcharge', description: 'Recargo', amount: quote.surcharge_amount })
   }
   if (fees.length > 0) await admin.from('booking_fees').insert(fees)
+
+  // Flight tracking — consulta el vuelo en background si aplica
+  if (flightNumber && ['airport_pickup', 'airport_dropoff'].includes(bookingType)) {
+    waitUntil(trackBookingFlight(booking.id, flightNumber))
+  }
 
   // F1.14 — confirmación al pasajero (email + SMS)
   notifyBookingEventInBackground('booking_confirmation', toNotifyData({
@@ -762,6 +769,12 @@ export async function createPublicBookingAction(data: {
     fees.push({ booking_id: booking.id, company_id: company.id, type: 'surcharge', description: 'Recargo', amount: quote.surcharge_amount })
   }
   if (fees.length > 0) await admin.from('booking_fees').insert(fees)
+
+  // Flight tracking — consulta el vuelo en background si aplica
+  const publicFlightNumber = data.flightNumber?.trim()
+  if (publicFlightNumber && ['airport_pickup', 'airport_dropoff'].includes(data.bookingType)) {
+    waitUntil(trackBookingFlight(booking.id, publicFlightNumber))
+  }
 
   // F1.14 — confirmación al pasajero (email + SMS)
   notifyBookingEventInBackground('booking_confirmation', toNotifyData({
