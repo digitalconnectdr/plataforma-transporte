@@ -14,6 +14,7 @@ import {
   validateBookingTime,
 } from '@/lib/policy/engine'
 import { notifyBookingEvent } from '@/lib/notifications'
+import { checkRateLimit, RATE_LIMIT_ERROR } from '@/lib/security/rate-limit'
 import type { BookingStatus, BookingType } from '@/lib/supabase/database.types'
 
 // ─── Helper: datos de notificación desde una fila de booking ──────────────────
@@ -609,6 +610,11 @@ export async function getPublicVehicleQuotesAction(
     bookingType?: BookingType
   },
 ): Promise<{ success: boolean; error?: string; data?: VehicleQuote[] }> {
+  // F1.17 — rate limit por IP (cotizaciones disparan llamadas a Google Routes)
+  if (!checkRateLimit('public_quote', 20)) {
+    return { success: false, error: RATE_LIMIT_ERROR }
+  }
+
   const admin = createAdminClient()
 
   const { data: company } = await admin
@@ -738,6 +744,11 @@ export async function createPublicBookingAction(data: {
   dropoffLat: number
   dropoffLng: number
 }): Promise<{ success: boolean; error?: string; data?: BookingResult }> {
+  // F1.17 — rate limit por IP
+  if (!checkRateLimit('public_booking', 5)) {
+    return { success: false, error: RATE_LIMIT_ERROR }
+  }
+
   const admin = createAdminClient()
 
   const { data: company } = await admin
@@ -773,11 +784,19 @@ export async function createPublicBookingAction(data: {
     return { success: false, error: 'La cotización expiró. Regresa al paso 1 para recalcular.' }
   }
 
-  // Validar campos obligatorios
-  const name  = data.passengerName?.trim()
-  const phone = data.passengerPhone?.trim()
+  // Validar campos obligatorios + límites de tamaño (F1.17)
+  const name  = data.passengerName?.trim().slice(0, 120)
+  const phone = data.passengerPhone?.trim().slice(0, 30)
+  const email = data.passengerEmail?.trim().slice(0, 254)
   if (!name)  return { success: false, error: 'Nombre del pasajero requerido' }
   if (!phone) return { success: false, error: 'Teléfono requerido' }
+  if (!/^[+\d][\d\s().-]{6,}$/.test(phone)) {
+    return { success: false, error: 'Teléfono inválido' }
+  }
+  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    return { success: false, error: 'Email inválido' }
+  }
+  const passengerCount = Math.min(50, Math.max(1, Math.floor(data.passengerCount) || 1))
 
   const { data: booking, error } = await admin
     .from('bookings')
@@ -786,15 +805,15 @@ export async function createPublicBookingAction(data: {
       status:           'pending',
       type:             data.bookingType,
       vehicle_type_id:  quote.vehicle_type_id,
-      passenger_count:  data.passengerCount,
+      passenger_count:  passengerCount,
       passenger_name:   name,
       passenger_phone:  phone,
-      passenger_email:  data.passengerEmail?.trim() || null,
-      pickup_location:  { address: data.pickupAddress,  lat: data.pickupLat,  lng: data.pickupLng  },
-      dropoff_location: { address: data.dropoffAddress, lat: data.dropoffLat, lng: data.dropoffLng },
+      passenger_email:  email || null,
+      pickup_location:  { address: data.pickupAddress.slice(0, 500),  lat: data.pickupLat,  lng: data.pickupLng  },
+      dropoff_location: { address: data.dropoffAddress.slice(0, 500), lat: data.dropoffLat, lng: data.dropoffLng },
       scheduled_at:     data.scheduledAt,
-      flight_number:    data.flightNumber?.trim() || null,
-      special_instructions: data.specialInstructions?.trim() || null,
+      flight_number:    data.flightNumber?.trim().slice(0, 20) || null,
+      special_instructions: data.specialInstructions?.trim().slice(0, 1000) || null,
       price_quote_id:   data.quoteId,
       base_amount:      quote.base_amount,
       total_amount:     quote.total_amount,
@@ -827,7 +846,7 @@ export async function createPublicBookingAction(data: {
     company_id: company.id,
     booking_number: booking.booking_number,
     passenger_name: name,
-    passenger_email: data.passengerEmail?.trim() || null,
+    passenger_email: email || null,
     passenger_phone: phone,
     scheduled_at: data.scheduledAt,
     pickup_location: { address: data.pickupAddress },

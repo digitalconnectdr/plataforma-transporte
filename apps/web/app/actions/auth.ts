@@ -6,6 +6,7 @@ import { headers } from 'next/headers'
 import { z } from 'zod'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { getDefaultRoute } from '@/lib/auth/permissions'
+import { checkRateLimit, RATE_LIMIT_ERROR } from '@/lib/security/rate-limit'
 import type { UserRole } from '@/lib/auth/permissions'
 
 // ─── Schemas ──────────────────────────────────────────────────────────────────
@@ -72,6 +73,11 @@ export async function loginAction(
     }
   }
 
+  // F1.17 — frenar fuerza bruta por IP
+  if (!checkRateLimit('login', 10)) {
+    return { success: false, error: RATE_LIMIT_ERROR }
+  }
+
   const supabase = await createClient()
   const { data, error } = await supabase.auth.signInWithPassword({
     email: parsed.data.email,
@@ -117,6 +123,11 @@ export async function signupAction(
       error: 'Please fix the errors below',
       fieldErrors: parsed.error.flatten().fieldErrors,
     }
+  }
+
+  // F1.17 — frenar creación masiva de cuentas por IP
+  if (!checkRateLimit('signup', 3, 5 * 60_000)) {
+    return { success: false, error: RATE_LIMIT_ERROR }
   }
 
   const admin = createAdminClient()

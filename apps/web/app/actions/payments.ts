@@ -8,6 +8,7 @@ import { revalidatePath } from 'next/cache'
 import { createAdminClient } from '@/lib/supabase/server'
 import { requireRole } from '@/lib/auth/session'
 import { getStripe } from '@/lib/stripe/server'
+import { checkRateLimit, RATE_LIMIT_ERROR } from '@/lib/security/rate-limit'
 
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
 
@@ -130,6 +131,11 @@ export async function createPublicCheckoutAction(
   slug: string,
   bookingId: string,
 ): Promise<ActionResult<{ url: string }>> {
+  // F1.17 — rate limit por IP
+  if (!checkRateLimit('public_checkout', 5)) {
+    return { success: false, error: RATE_LIMIT_ERROR }
+  }
+
   const admin = createAdminClient()
 
   const { data: company } = await admin
