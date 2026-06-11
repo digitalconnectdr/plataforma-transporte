@@ -37,10 +37,17 @@ interface VehicleTypeInfo {
   imageUrl: string | null
 }
 
+interface GratuityConfig {
+  enabled: boolean
+  options: number[]
+  defaultPct: number
+}
+
 interface Props {
   company: Company
   vehicleTypes: VehicleTypeInfo[]
   onlinePaymentsEnabled?: boolean
+  gratuity?: GratuityConfig
 }
 
 // ─── Progreso ────────────────────────────────────────────────────────────────
@@ -81,10 +88,11 @@ const CLASS_ICONS: Record<string, string> = {
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 
-export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = false }: Props) {
+export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = false, gratuity }: Props) {
   const [step, setStep] = useState(0)
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState('')
+  const [gratuityPct, setGratuityPct] = useState(0)
 
   // Estado del wizard
   const [routeData, setRouteData] = useState({
@@ -228,7 +236,11 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
     if (!confirmation) return
     setError('')
     startTransition(async () => {
-      const result = await createPublicCheckoutAction(company.slug, confirmation.bookingId)
+      const result = await createPublicCheckoutAction(
+        company.slug,
+        confirmation.bookingId,
+        gratuityPct || undefined,
+      )
       if (!result.success || !result.data) {
         setError(result.error ?? 'No se pudo iniciar el pago online')
         return
@@ -254,7 +266,30 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
           Un representante de {company.name} se comunicará contigo para confirmar los detalles.
         </p>
         {onlinePaymentsEnabled && (
-          <div className="pt-2 space-y-2">
+          <div className="pt-2 space-y-3">
+            {gratuity?.enabled && (
+              <div className="max-w-sm mx-auto">
+                <p className="text-xs font-semibold uppercase tracking-widest text-gray-500 mb-2">
+                  ¿Agregar propina para tu chofer?
+                </p>
+                <div className="flex justify-center gap-2">
+                  {[0, ...gratuity.options].map((pct) => (
+                    <button
+                      key={pct}
+                      type="button"
+                      onClick={() => setGratuityPct(pct)}
+                      className={`px-4 py-2 text-sm font-semibold rounded-xl border transition-colors ${
+                        gratuityPct === pct
+                          ? 'bg-[#0071e3] text-white border-[#0071e3]'
+                          : 'bg-white text-[#1d1d1f] border-gray-200 hover:border-[#0071e3]'
+                      }`}
+                    >
+                      {pct === 0 ? 'Sin propina' : `${pct}%`}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
             <button
               onClick={handlePayOnline}
               disabled={isPending}

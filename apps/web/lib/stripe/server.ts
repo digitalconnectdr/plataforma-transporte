@@ -12,7 +12,10 @@ let stripeSingleton: Stripe | null | undefined
 
 export function isStripeConfigured(): boolean {
   const key = process.env.STRIPE_SECRET_KEY ?? ''
-  return /^sk_(test|live)_[A-Za-z0-9]{8,}/.test(key)
+  // Las keys reales de Stripe tienen 24+ caracteres aleatorios tras el prefijo.
+  // Rechaza explícitamente placeholders tipo "sk_test_placeholder".
+  if (key.toLowerCase().includes('placeholder')) return false
+  return /^sk_(test|live)_[A-Za-z0-9]{20,}/.test(key)
 }
 
 export function getStripe(): Stripe | null {

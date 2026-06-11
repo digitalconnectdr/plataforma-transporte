@@ -23,53 +23,92 @@ function platformFeePct(settings: unknown): number {
   return pct
 }
 
+/** % de depósito si la empresa lo exige (0 = pago completo). */
+function depositPct(settings: unknown): number {
+  const s = settings as {
+    booking?: { require_deposit?: boolean; deposit_percentage?: number }
+  } | null
+  if (!s?.booking?.require_deposit) return 0
+  const pct = s.booking.deposit_percentage ?? 0
+  if (typeof pct !== 'number' || pct <= 0 || pct >= 100) return 0
+  return pct
+}
+
+/** Valida el % de propina contra la configuración de la empresa. */
+function sanitizeGratuityPct(settings: unknown, requested: number | undefined): number {
+  if (!requested || requested <= 0) return 0
+  const s = settings as {
+    gratuity?: { enabled?: boolean; options?: number[] }
+  } | null
+  if (s?.gratuity?.enabled === false) return 0
+  // Acepta solo % razonables (las opciones de la empresa, o cualquier 1–50%)
+  const pct = Math.floor(requested)
+  if (pct < 1 || pct > 50) return 0
+  return pct
+}
+
 // ─── Connect: iniciar onboarding (Express) ────────────────────────────────────
 
 export async function createConnectOnboardingAction(): Promise<void> {
   const user = await requireRole('company_owner')
-  if (!user.company_id) return
+  if (!user.company_id) redirect('/admin/settings?stripe_error=no_company')
 
   const stripe = getStripe()
-  if (!stripe) return // sin keys reales — el UI muestra el estado "no configurado"
+  if (!stripe) redirect('/admin/settings?stripe_error=not_configured')
 
-  const admin = createAdminClient()
-  const { data: company } = await admin
-    .from('companies')
-    .select('id, name, email, country, stripe_connect_account_id')
-    .eq('id', user.company_id)
-    .single()
+  // redirect() lanza internamente — las llamadas a Stripe van en try/catch
+  // y el redirect final se hace FUERA del try para no capturarlo.
+  let onboardingUrl: string | null = null
+  let errorCode = 'connect_failed'
 
-  if (!company) return
-
-  let accountId = company.stripe_connect_account_id
-
-  if (!accountId) {
-    const account = await stripe.accounts.create({
-      type: 'express',
-      country: company.country ?? 'US',
-      email: company.email ?? user.email,
-      business_profile: { name: company.name },
-      capabilities: {
-        card_payments: { requested: true },
-        transfers: { requested: true },
-      },
-      metadata: { company_id: company.id },
-    })
-    accountId = account.id
-    await admin
+  try {
+    const admin = createAdminClient()
+    const { data: company } = await admin
       .from('companies')
-      .update({ stripe_connect_account_id: accountId })
-      .eq('id', company.id)
+      .select('id, name, email, country, stripe_connect_account_id')
+      .eq('id', user.company_id)
+      .single()
+
+    if (company) {
+      let accountId = company.stripe_connect_account_id
+
+      if (!accountId) {
+        const account = await stripe.accounts.create({
+          type: 'express',
+          country: company.country ?? 'US',
+          email: company.email ?? user.email,
+          business_profile: { name: company.name },
+          capabilities: {
+            card_payments: { requested: true },
+            transfers: { requested: true },
+          },
+          metadata: { company_id: company.id },
+        })
+        accountId = account.id
+        await admin
+          .from('companies')
+          .update({ stripe_connect_account_id: accountId })
+          .eq('id', company.id)
+      }
+
+      const link = await stripe.accountLinks.create({
+        account: accountId,
+        refresh_url: `${APP_URL}/admin/settings?connect=refresh`,
+        return_url: `${APP_URL}/admin/settings?connect=return`,
+        type: 'account_onboarding',
+      })
+      onboardingUrl = link.url
+    }
+  } catch (err) {
+    console.error('[createConnectOnboardingAction]', err)
+    // Mensaje típico cuando la cuenta de Stripe no tiene Connect habilitado
+    const msg = err instanceof Error ? err.message : ''
+    if (msg.includes('signed up for Connect')) errorCode = 'connect_not_enabled'
+    if (msg.includes('Invalid API Key') || msg.includes('api_key')) errorCode = 'invalid_key'
   }
 
-  const link = await stripe.accountLinks.create({
-    account: accountId,
-    refresh_url: `${APP_URL}/admin/settings?connect=refresh`,
-    return_url: `${APP_URL}/admin/settings?connect=return`,
-    type: 'account_onboarding',
-  })
-
-  redirect(link.url)
+  if (onboardingUrl) redirect(onboardingUrl)
+  redirect(`/admin/settings?stripe_error=${errorCode}`)
 }
 
 // ─── Connect: refrescar estado de onboarding ──────────────────────────────────
@@ -92,13 +131,18 @@ export async function refreshConnectStatusAction(): Promise<ActionResult> {
     return { success: false, error: 'No hay cuenta de Stripe Connect' }
   }
 
-  const account = await stripe.accounts.retrieve(company.stripe_connect_account_id)
-  const onboarded = Boolean(account.charges_enabled && account.details_submitted)
+  try {
+    const account = await stripe.accounts.retrieve(company.stripe_connect_account_id)
+    const onboarded = Boolean(account.charges_enabled && account.details_submitted)
 
-  await admin
-    .from('companies')
-    .update({ stripe_connect_onboarded: onboarded })
-    .eq('id', user.company_id)
+    await admin
+      .from('companies')
+      .update({ stripe_connect_onboarded: onboarded })
+      .eq('id', user.company_id)
+  } catch (err) {
+    console.error('[refreshConnectStatusAction]', err)
+    return { success: false, error: 'No se pudo consultar el estado en Stripe' }
+  }
 
   revalidatePath('/admin/settings')
   return { success: true }
@@ -130,6 +174,7 @@ export async function createPaymentLinkAction(
 export async function createPublicCheckoutAction(
   slug: string,
   bookingId: string,
+  gratuityPct?: number,
 ): Promise<ActionResult<{ url: string }>> {
   // F1.17 — rate limit por IP
   if (!checkRateLimit('public_checkout', 5)) {
@@ -157,7 +202,7 @@ export async function createPublicCheckoutAction(
 
   if (!booking) return { success: false, error: 'Reservación no encontrada' }
 
-  return createCheckoutForBooking(company.id, booking)
+  return createCheckoutForBooking(company.id, booking, { gratuityPct })
 }
 
 // ─── Helper compartido: crear Checkout Session ────────────────────────────────
@@ -173,6 +218,7 @@ async function createCheckoutForBooking(
     passenger_email: string | null
     passenger_name: string | null
   },
+  opts?: { gratuityPct?: number },
 ): Promise<ActionResult<{ url: string }>> {
   const stripe = getStripe()
   if (!stripe) {
@@ -207,7 +253,21 @@ async function createCheckoutForBooking(
     .single()
 
   const currency = (booking.currency ?? 'USD').toLowerCase()
-  const amountCents = Math.round(booking.total_amount * 100)
+  const totalCents = Math.round(booking.total_amount * 100)
+
+  // Depósito: si la empresa lo exige, se cobra solo el % (el balance se
+  // coordina al completar el viaje). La propina solo aplica en pago completo.
+  const depPct = depositPct(company?.settings)
+  const isDeposit = depPct > 0
+  const gratPct = isDeposit ? 0 : sanitizeGratuityPct(company?.settings, opts?.gratuityPct)
+
+  const mainCents = isDeposit ? Math.round(totalCents * (depPct / 100)) : totalCents
+  const tipCents = gratPct > 0 ? Math.round(totalCents * (gratPct / 100)) : 0
+  const amountCents = mainCents + tipCents
+
+  const mainLabel = isDeposit
+    ? `Depósito ${depPct}% — Reservación ${booking.booking_number}`
+    : `Reservación ${booking.booking_number}`
 
   // Destination charge si la empresa completó Connect onboarding
   const useConnect = Boolean(
@@ -222,13 +282,15 @@ async function createCheckoutForBooking(
     .insert({
       company_id: companyId,
       booking_id: booking.id,
-      amount: booking.total_amount,
+      amount: amountCents / 100,
       currency: currency.toUpperCase(),
       platform_fee: feeCents / 100,
       net_amount: (amountCents - feeCents) / 100,
       status: 'pending',
       payment_method: 'card',
-      description: `Booking ${booking.booking_number}`,
+      description: isDeposit
+        ? `Depósito ${depPct}% de booking ${booking.booking_number}`
+        : `Booking ${booking.booking_number}${gratPct > 0 ? ` (incl. propina ${gratPct}%)` : ''}`,
       stripe_connect_account_id: useConnect ? company!.stripe_connect_account_id : null,
     })
     .select('id')
@@ -240,24 +302,36 @@ async function createCheckoutForBooking(
   }
 
   try {
+    const lineItems: { quantity: number; price_data: { currency: string; unit_amount: number; product_data: { name: string; description?: string } } }[] = [
+      {
+        quantity: 1,
+        price_data: {
+          currency,
+          unit_amount: mainCents,
+          product_data: {
+            name: mainLabel,
+            description: booking.passenger_name
+              ? `Pasajero: ${booking.passenger_name}`
+              : undefined,
+          },
+        },
+      },
+    ]
+    if (tipCents > 0) {
+      lineItems.push({
+        quantity: 1,
+        price_data: {
+          currency,
+          unit_amount: tipCents,
+          product_data: { name: `Propina (${gratPct}%)` },
+        },
+      })
+    }
+
     const session = await stripe.checkout.sessions.create({
       mode: 'payment',
       customer_email: booking.passenger_email ?? undefined,
-      line_items: [
-        {
-          quantity: 1,
-          price_data: {
-            currency,
-            unit_amount: amountCents,
-            product_data: {
-              name: `Reservación ${booking.booking_number}`,
-              description: booking.passenger_name
-                ? `Pasajero: ${booking.passenger_name}`
-                : undefined,
-            },
-          },
-        },
-      ],
+      line_items: lineItems,
       payment_intent_data: useConnect
         ? {
             transfer_data: { destination: company!.stripe_connect_account_id! },
@@ -269,6 +343,9 @@ async function createCheckoutForBooking(
         payment_id: payment.id,
         booking_id: booking.id,
         company_id: companyId,
+        kind: isDeposit ? 'deposit' : 'full',
+        gratuity_pct: String(gratPct),
+        gratuity_cents: String(tipCents),
       },
       success_url: `${APP_URL}/payment/success?booking=${encodeURIComponent(booking.booking_number)}`,
       cancel_url: `${APP_URL}/payment/cancelled?booking=${encodeURIComponent(booking.booking_number)}`,

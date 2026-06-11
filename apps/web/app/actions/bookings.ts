@@ -15,6 +15,7 @@ import {
 } from '@/lib/policy/engine'
 import { notifyBookingEvent } from '@/lib/notifications'
 import { checkRateLimit, RATE_LIMIT_ERROR } from '@/lib/security/rate-limit'
+import { calculateFare, bestRule, type PricingRuleFields } from '@/lib/pricing/engine'
 import type { BookingStatus, BookingType } from '@/lib/supabase/database.types'
 
 // ─── Helper: datos de notificación desde una fila de booking ──────────────────
@@ -102,96 +103,7 @@ const VALID_TRANSITIONS: Record<BookingStatus, BookingStatus[]> = {
   failed:      [],
 }
 
-// ─── Helper: cálculo de tarifa (server-only) ──────────────────────────────────
-
-interface PricingRuleFields {
-  id: string
-  vehicle_type_id: string | null
-  model: string
-  base_price: number
-  per_mile_rate: number | null
-  per_km_rate: number | null
-  hourly_rate: number | null
-  minimum_fare: number | null
-  airport_pickup_fee: number | null
-  airport_dropoff_fee: number | null
-  night_surcharge_pct: number | null
-  weekend_surcharge_pct: number | null
-  surge_enabled: boolean | null
-  surge_multiplier: number | null
-}
-
-function calculateFare(
-  rule: PricingRuleFields,
-  distanceMiles: number,
-  durationMinutes: number,
-  scheduledAt: Date,
-  bookingType: BookingType,
-): { baseAmount: number; surchargeAmount: number; totalAmount: number } {
-  let base = 0
-
-  switch (rule.model) {
-    case 'flat_rate':
-      base = rule.base_price
-      break
-    case 'per_mile':
-      base = rule.base_price + (rule.per_mile_rate ?? 0) * distanceMiles
-      break
-    case 'per_km': {
-      const km = distanceMiles * 1.60934
-      base = rule.base_price + (rule.per_km_rate ?? 0) * km
-      break
-    }
-    case 'hourly':
-      base = (rule.hourly_rate ?? 0) * (durationMinutes / 60)
-      break
-    case 'zone_based':
-    default:
-      base = rule.base_price
-  }
-
-  // Mínimo
-  if (rule.minimum_fare && base < rule.minimum_fare) base = rule.minimum_fare
-
-  // Recargos
-  let surcharge = 0
-  const hour = scheduledAt.getUTCHours()
-  const day  = scheduledAt.getUTCDay()
-
-  if ((hour >= 22 || hour < 6) && rule.night_surcharge_pct) {
-    surcharge += base * (rule.night_surcharge_pct / 100)
-  }
-  if ((day === 0 || day === 6) && rule.weekend_surcharge_pct) {
-    surcharge += base * (rule.weekend_surcharge_pct / 100)
-  }
-  if (bookingType === 'airport_pickup' && rule.airport_pickup_fee) {
-    surcharge += rule.airport_pickup_fee
-  }
-  if (bookingType === 'airport_dropoff' && rule.airport_dropoff_fee) {
-    surcharge += rule.airport_dropoff_fee
-  }
-  if (rule.surge_enabled && (rule.surge_multiplier ?? 1) > 1) {
-    surcharge += base * ((rule.surge_multiplier ?? 1) - 1)
-  }
-
-  return {
-    baseAmount:     Math.round(base * 100) / 100,
-    surchargeAmount: Math.round(surcharge * 100) / 100,
-    totalAmount:    Math.round((base + surcharge) * 100) / 100,
-  }
-}
-
-// ─── Helper: mejor regla de precio para un tipo de vehículo ───────────────────
-
-function bestRule(
-  rules: PricingRuleFields[],
-  vehicleTypeId: string | null,
-): PricingRuleFields | undefined {
-  return (
-    rules.find((r) => vehicleTypeId && r.vehicle_type_id === vehicleTypeId) ??
-    rules.find((r) => r.vehicle_type_id === null)
-  )
-}
+// El cálculo de tarifa vive en lib/pricing/engine.ts (puro + timezone-aware).
 
 // ─── Admin: Calcular cotización ───────────────────────────────────────────────
 
@@ -219,6 +131,13 @@ export async function calculateQuoteAction(
   const scheduledAt = new Date(scheduledAtStr)
   const admin = createAdminClient()
 
+  // Timezone de la empresa para recargos nocturnos/fin de semana
+  const { data: companyTz } = await admin
+    .from('companies')
+    .select('timezone')
+    .eq('id', user.company_id)
+    .single()
+
   // Obtener reglas de precio
   const { data: rulesRaw } = await admin
     .from('pricing_rules')
@@ -241,7 +160,9 @@ export async function calculateQuoteAction(
   const distanceMiles  = route?.distanceMi ?? 0
   const durationMinutes = route?.durationMinutes ?? 0
 
-  const fare = calculateFare(rule, distanceMiles, durationMinutes, scheduledAt, bookingType)
+  const fare = calculateFare(
+    rule, distanceMiles, durationMinutes, scheduledAt, bookingType, companyTz?.timezone,
+  )
 
   // Guardar cotización (admin client — no hay INSERT policy de usuario en price_quotes)
   const { data: quote, error } = await admin
@@ -619,7 +540,7 @@ export async function getPublicVehicleQuotesAction(
 
   const { data: company } = await admin
     .from('companies')
-    .select('id, status, currency, settings')
+    .select('id, status, currency, settings, timezone')
     .eq('slug', slug)
     .single()
 
@@ -684,7 +605,9 @@ export async function getPublicVehicleQuotesAction(
       continue
     }
 
-    const fare = calculateFare(rule, distanceMiles, durationMinutes, scheduledAt, bookingType)
+    const fare = calculateFare(
+      rule, distanceMiles, durationMinutes, scheduledAt, bookingType, company.timezone,
+    )
 
     const { data: quote } = await admin
       .from('price_quotes')

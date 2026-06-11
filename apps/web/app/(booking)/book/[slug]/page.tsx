@@ -26,7 +26,7 @@ export default async function PublicBookingPage({ params }: Props) {
 
   const { data: company } = await admin
     .from('companies')
-    .select('id, name, slug, status, currency, primary_color, phone, email, stripe_connect_onboarded')
+    .select('id, name, slug, status, currency, primary_color, phone, email, stripe_connect_onboarded, settings')
     .eq('slug', params.slug)
     .single()
 
@@ -59,6 +59,20 @@ export default async function PublicBookingPage({ params }: Props) {
         imageUrl:   vt.base_image_url ?? null,
       }))}
       onlinePaymentsEnabled={isStripeConfigured() && Boolean(company.stripe_connect_onboarded)}
+      gratuity={(() => {
+        const g = (company.settings as {
+          gratuity?: { enabled?: boolean; options?: number[]; default_percentage?: number }
+          booking?: { require_deposit?: boolean }
+        } | null)?.gratuity
+        const requiresDeposit = Boolean(
+          (company.settings as { booking?: { require_deposit?: boolean } } | null)?.booking?.require_deposit,
+        )
+        return {
+          enabled: (g?.enabled ?? true) && !requiresDeposit,
+          options: g?.options ?? [15, 18, 20, 25],
+          defaultPct: g?.default_percentage ?? 20,
+        }
+      })()}
     />
   )
 }

@@ -37,7 +37,20 @@ const inputCls =
 
 const labelCls = 'block text-xs text-sl-on-surface-muted mb-1'
 
-export default async function SettingsPage() {
+const STRIPE_ERRORS: Record<string, string> = {
+  connect_failed: 'No se pudo iniciar el onboarding con Stripe. Revisa los logs del servidor.',
+  connect_not_enabled:
+    'Tu cuenta de Stripe no tiene Connect habilitado. Actívalo en dashboard.stripe.com → Connect.',
+  invalid_key: 'La API key de Stripe es inválida. Verifica STRIPE_SECRET_KEY en Vercel.',
+  not_configured: 'Stripe no está configurado (la key actual es un placeholder).',
+  no_company: 'Tu usuario no tiene empresa asignada.',
+}
+
+export default async function SettingsPage({
+  searchParams,
+}: {
+  searchParams: { stripe_error?: string; connect?: string }
+}) {
   const user = await requireRole('company_owner')
   if (!user.company_id) return <p className="p-8 text-sl-on-surface-muted">Sin empresa asignada.</p>
 
@@ -286,6 +299,21 @@ export default async function SettingsPage() {
       {/* ── Payments / Stripe Connect ── */}
       <section className="bg-sl-surface border border-sl-outline-variant rounded-xl p-6">
         <h2 className="text-sm font-semibold text-sl-on-surface mb-2">Payments — Stripe Connect</h2>
+
+        {searchParams.stripe_error && (
+          <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-4 py-3">
+            <p className="text-sm text-red-700 font-medium">
+              {STRIPE_ERRORS[searchParams.stripe_error] ?? 'Error al conectar con Stripe.'}
+            </p>
+          </div>
+        )}
+        {searchParams.connect === 'return' && (
+          <div className="mb-4 rounded-lg border border-green-200 bg-green-50 px-4 py-3">
+            <p className="text-sm text-green-700 font-medium">
+              Volviste de Stripe. Usa &quot;Actualizar estado&quot; para confirmar el onboarding.
+            </p>
+          </div>
+        )}
         <p className="text-xs text-sl-on-surface-muted mb-5">
           Conecta tu cuenta de Stripe para recibir pagos online de tus clientes directamente.
         </p>

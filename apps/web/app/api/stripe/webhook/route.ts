@@ -52,6 +52,26 @@ export async function POST(request: Request) {
             captured_at: new Date().toISOString(),
           })
           .eq('id', paymentId)
+
+        // Propina pagada → registrarla en el booking y su desglose
+        const gratuityCents = parseInt(session.metadata?.gratuity_cents ?? '0', 10)
+        const gratuityPct = parseInt(session.metadata?.gratuity_pct ?? '0', 10)
+        const bookingId = session.metadata?.booking_id
+        const companyId = session.metadata?.company_id
+        if (gratuityCents > 0 && bookingId && companyId) {
+          const gratuityAmount = gratuityCents / 100
+          await admin
+            .from('bookings')
+            .update({ gratuity_amount: gratuityAmount, gratuity_pct: gratuityPct })
+            .eq('id', bookingId)
+          await admin.from('booking_fees').insert({
+            booking_id: bookingId,
+            company_id: companyId,
+            type: 'gratuity',
+            description: `Propina (${gratuityPct}%)`,
+            amount: gratuityAmount,
+          })
+        }
         break
       }
 
