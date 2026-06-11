@@ -13,7 +13,43 @@ import {
   computeCancellationFee,
   validateBookingTime,
 } from '@/lib/policy/engine'
+import { notifyBookingEvent } from '@/lib/notifications'
 import type { BookingStatus, BookingType } from '@/lib/supabase/database.types'
+
+// ─── Helper: datos de notificación desde una fila de booking ──────────────────
+
+interface BookingNotifyRow {
+  id: string
+  company_id: string
+  booking_number: string
+  passenger_name: string | null
+  passenger_email: string | null
+  passenger_phone: string | null
+  scheduled_at: string
+  pickup_location: unknown
+  dropoff_location: unknown
+  total_amount: number | null
+  currency: string | null
+}
+
+function toNotifyData(b: BookingNotifyRow, extraVars?: Record<string, string>) {
+  const pickup  = (b.pickup_location as { address?: string } | null)?.address ?? ''
+  const dropoff = (b.dropoff_location as { address?: string } | null)?.address ?? ''
+  return {
+    companyId: b.company_id,
+    bookingId: b.id,
+    bookingNumber: b.booking_number,
+    passengerName: b.passenger_name,
+    passengerEmail: b.passenger_email,
+    passengerPhone: b.passenger_phone,
+    scheduledAt: b.scheduled_at,
+    pickupAddress: pickup,
+    dropoffAddress: dropoff,
+    totalAmount: b.total_amount,
+    currency: b.currency ?? 'USD',
+    extraVars,
+  }
+}
 
 // ─── Tipos públicos ────────────────────────────────────────────────────────────
 
@@ -358,6 +394,21 @@ export async function createBookingAction(
   }
   if (fees.length > 0) await admin.from('booking_fees').insert(fees)
 
+  // F1.14 — confirmación al pasajero (email + SMS)
+  await notifyBookingEvent('booking_confirmation', toNotifyData({
+    id: booking.id,
+    company_id: user.company_id,
+    booking_number: booking.booking_number,
+    passenger_name: passengerName,
+    passenger_email: passengerEmail || null,
+    passenger_phone: passengerPhone || null,
+    scheduled_at: scheduledAt,
+    pickup_location: { address: pickupAddr },
+    dropoff_location: { address: dropoffAddr },
+    total_amount: quote.total_amount,
+    currency: quote.currency,
+  }))
+
   revalidatePath('/admin/bookings')
   revalidatePath('/admin/dashboard')
   return {
@@ -380,7 +431,7 @@ export async function updateBookingStatusAction(
 
   const { data: booking } = await admin
     .from('bookings')
-    .select('id, status, company_id, scheduled_at, total_amount, booking_number')
+    .select('id, status, company_id, scheduled_at, total_amount, booking_number, passenger_name, passenger_email, passenger_phone, pickup_location, dropoff_location, currency')
     .eq('id', bookingId)
     .eq('company_id', user.company_id)
     .single()
@@ -456,6 +507,21 @@ export async function updateBookingStatusAction(
     }
   }
 
+  // F1.14 — notificar al pasajero según el nuevo estado
+  const NOTIFY_BY_STATUS: Partial<Record<BookingStatus, string>> = {
+    en_route:  'driver_en_route',
+    arrived:   'driver_arrived',
+    completed: 'trip_completed',
+    cancelled: 'booking_cancelled',
+  }
+  const notifyType = NOTIFY_BY_STATUS[newStatus]
+  if (notifyType) {
+    await notifyBookingEvent(notifyType, toNotifyData(booking, {
+      cancellation_reason: opts?.reason ?? '',
+      eta_minutes: '15',
+    }))
+  }
+
   revalidatePath('/admin/bookings')
   revalidatePath(`/admin/bookings/${bookingId}`)
   revalidatePath('/admin/dashboard')
@@ -476,7 +542,7 @@ export async function assignDriverAction(
 
   const { data: booking } = await admin
     .from('bookings')
-    .select('id, status, company_id')
+    .select('id, status, company_id, scheduled_at, total_amount, booking_number, passenger_name, passenger_email, passenger_phone, pickup_location, dropoff_location, currency')
     .eq('id', bookingId)
     .eq('company_id', user.company_id)
     .single()
@@ -505,6 +571,23 @@ export async function assignDriverAction(
     console.error('[assignDriverAction]', error)
     return { success: false, error: 'Error al asignar conductor' }
   }
+
+  // F1.14 — notificar asignación de conductor al pasajero
+  const [{ data: driverProfile }, vehicleRes] = await Promise.all([
+    admin.from('user_profiles').select('first_name, last_name').eq('id', driverId).single(),
+    vehicleId
+      ? admin.from('vehicles').select('make, model, plate_number').eq('id', vehicleId).single()
+      : Promise.resolve({ data: null }),
+  ])
+  const vehicle = vehicleRes.data as { make?: string; model?: string; plate_number?: string } | null
+
+  await notifyBookingEvent('driver_assigned', toNotifyData(booking, {
+    driver_name: driverProfile ? `${driverProfile.first_name} ${driverProfile.last_name}` : 'Tu conductor',
+    vehicle_make: vehicle?.make ?? '',
+    vehicle_model: vehicle?.model ?? '',
+    plate_number: vehicle?.plate_number ?? '',
+    tracking_url: '',
+  }))
 
   revalidatePath('/admin/bookings')
   revalidatePath(`/admin/bookings/${bookingId}`)
@@ -737,6 +820,21 @@ export async function createPublicBookingAction(data: {
     fees.push({ booking_id: booking.id, company_id: company.id, type: 'surcharge', description: 'Recargo', amount: quote.surcharge_amount })
   }
   if (fees.length > 0) await admin.from('booking_fees').insert(fees)
+
+  // F1.14 — confirmación al pasajero (email + SMS)
+  await notifyBookingEvent('booking_confirmation', toNotifyData({
+    id: booking.id,
+    company_id: company.id,
+    booking_number: booking.booking_number,
+    passenger_name: name,
+    passenger_email: data.passengerEmail?.trim() || null,
+    passenger_phone: phone,
+    scheduled_at: data.scheduledAt,
+    pickup_location: { address: data.pickupAddress },
+    dropoff_location: { address: data.dropoffAddress },
+    total_amount: quote.total_amount,
+    currency: quote.currency,
+  }))
 
   return {
     success: true,
