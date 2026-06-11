@@ -102,6 +102,7 @@ export type Database = {
           stripe_connect_onboarded: boolean | null
           settings: Json
           trial_ends_at: string | null
+          subscription_ends_at: string | null
           created_at: string
           updated_at: string
         }
@@ -127,6 +128,7 @@ export type Database = {
           stripe_connect_onboarded?: boolean | null | undefined
           settings?: Json | undefined
           trial_ends_at?: string | null | undefined
+          subscription_ends_at?: string | null | undefined
           created_at?: string | undefined
           updated_at?: string | undefined
         }
@@ -152,6 +154,7 @@ export type Database = {
           stripe_connect_onboarded?: boolean | null | undefined
           settings?: Json | undefined
           trial_ends_at?: string | null | undefined
+          subscription_ends_at?: string | null | undefined
           created_at?: string | undefined
           updated_at?: string | undefined
         }

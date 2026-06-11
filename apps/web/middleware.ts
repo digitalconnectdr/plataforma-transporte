@@ -81,9 +81,17 @@ export async function middleware(request: NextRequest) {
   if (isProtected && user) {
     const { data: profile } = await supabase
       .from('user_profiles')
-      .select('role')
+      .select('role, is_active')
       .eq('id', user.id)
       .single()
+
+    // Usuario bloqueado (is_active = false): cerrar sesión y expulsar
+    if (profile && profile.is_active === false) {
+      await supabase.auth.signOut()
+      const loginUrl = new URL('/auth/login', request.url)
+      loginUrl.searchParams.set('blocked', '1')
+      return NextResponse.redirect(loginUrl)
+    }
 
     const role = (profile?.role ?? 'customer') as UserRole
 

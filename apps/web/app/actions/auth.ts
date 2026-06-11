@@ -88,14 +88,25 @@ export async function loginAction(
     return { success: false, error: 'Invalid email or password' }
   }
 
-  // Get user profile to determine redirect
+  // Get user profile to determine redirect (+ enforcement de bloqueo)
   const { data: profile } = await supabase
     .from('user_profiles')
-    .select('role')
+    .select('role, is_active')
     .eq('id', data.user.id)
     .single()
 
-  const role = ((profile as { role?: string } | null)?.role ?? 'customer') as UserRole
+  const typedProfile = profile as { role?: string; is_active?: boolean } | null
+
+  // Usuario bloqueado: cerrar la sesión recién creada y rechazar
+  if (typedProfile && typedProfile.is_active === false) {
+    await supabase.auth.signOut()
+    return {
+      success: false,
+      error: 'Tu cuenta ha sido desactivada. Contacta al administrador de tu empresa.',
+    }
+  }
+
+  const role = (typedProfile?.role ?? 'customer') as UserRole
   revalidatePath('/', 'layout')
   redirect(getDefaultRoute(role))
 }

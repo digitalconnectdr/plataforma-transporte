@@ -1,8 +1,22 @@
 'use client'
 
+import { Suspense } from 'react'
 import { useFormState } from 'react-dom'
+import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { loginAction } from '@/app/actions/auth'
+
+function BlockedBanner() {
+  const params = useSearchParams()
+  if (params.get('blocked') !== '1') return null
+  return (
+    <div className="rounded-lg bg-error/10 border border-error/30 px-4 py-3">
+      <p className="text-sm text-error">
+        Tu cuenta ha sido desactivada. Contacta al administrador de tu empresa.
+      </p>
+    </div>
+  )
+}
 
 export default function LoginPage() {
   const [state, action, isPending] = useFormState(loginAction, null)
@@ -22,6 +36,10 @@ export default function LoginPage() {
       {/* Card */}
       <div className="bg-sl-surface-high border border-sl-outline-variant rounded-2xl p-8 shadow-luxury">
         <form action={action} className="space-y-5">
+          <Suspense fallback={null}>
+            <BlockedBanner />
+          </Suspense>
+
           {/* Error message */}
           {state && !state.success && (
             <div className="rounded-lg bg-error/10 border border-error/30 px-4 py-3">

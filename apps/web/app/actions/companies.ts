@@ -48,3 +48,77 @@ export async function updateCompanyPlan(
   revalidatePath(`/super-admin/companies/${companyId}`)
   return { success: true }
 }
+
+// ─── Suscripciones (panel del owner de la plataforma) ─────────────────────────
+
+/**
+ * Renueva la suscripción de una empresa: extiende subscription_ends_at
+ * `months` meses desde max(hoy, vencimiento actual) y la activa.
+ */
+export async function renewSubscriptionAction(
+  companyId: string,
+  months: number,
+): Promise<CompanyActionResult> {
+  await requireRole('super_admin')
+
+  const safeMonths = Math.min(24, Math.max(1, Math.floor(months) || 1))
+  const admin = createAdminClient()
+
+  const { data: company } = await admin
+    .from('companies')
+    .select('subscription_ends_at')
+    .eq('id', companyId)
+    .single()
+
+  if (!company) return { success: false, error: 'Empresa no encontrada' }
+
+  const current = company.subscription_ends_at
+    ? new Date(company.subscription_ends_at)
+    : null
+  const base = current && current > new Date() ? current : new Date()
+  const newEnd = new Date(base)
+  newEnd.setMonth(newEnd.getMonth() + safeMonths)
+
+  const { error } = await admin
+    .from('companies')
+    .update({
+      subscription_ends_at: newEnd.toISOString(),
+      status: 'active',
+    })
+    .eq('id', companyId)
+
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath('/super-admin/subscriptions')
+  revalidatePath('/super-admin/companies')
+  return { success: true }
+}
+
+/**
+ * Aprueba una solicitud pendiente (empresa en trial creada desde el landing):
+ * la activa y le da su primer mes de suscripción.
+ */
+export async function approveCompanyAction(
+  companyId: string,
+): Promise<CompanyActionResult> {
+  return renewSubscriptionAction(companyId, 1)
+}
+
+/** Rechaza/da de baja una solicitud: la marca como cancelada. */
+export async function rejectCompanyAction(
+  companyId: string,
+): Promise<CompanyActionResult> {
+  await requireRole('super_admin')
+
+  const admin = createAdminClient()
+  const { error } = await admin
+    .from('companies')
+    .update({ status: 'cancelled' })
+    .eq('id', companyId)
+
+  if (error) return { success: false, error: error.message }
+
+  revalidatePath('/super-admin/subscriptions')
+  revalidatePath('/super-admin/companies')
+  return { success: true }
+}

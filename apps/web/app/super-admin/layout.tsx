@@ -39,6 +39,7 @@ export default async function SuperAdminLayout({
             Management
           </p>
           <NavLink href="/super-admin/companies" label="Companies" />
+          <NavLink href="/super-admin/subscriptions" label="Suscripciones" />
         </nav>
 
         {/* User */}
