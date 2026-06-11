@@ -508,7 +508,7 @@ export async function assignDriverAction(
     vehicle_make: vehicle?.make ?? '',
     vehicle_model: vehicle?.model ?? '',
     plate_number: vehicle?.plate_number ?? '',
-    tracking_url: '',
+    tracking_url: `${process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'}/track/${booking.id}`,
   }))
 
   revalidatePath('/admin/bookings')

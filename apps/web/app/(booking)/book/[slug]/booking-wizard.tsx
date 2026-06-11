@@ -265,6 +265,14 @@ export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = f
         <p className="text-sm text-gray-500 max-w-sm mx-auto">
           Un representante de {company.name} se comunicará contigo para confirmar los detalles.
         </p>
+        <p className="text-sm">
+          <a
+            href={`/track/${confirmation.bookingId}`}
+            className="text-[#0071e3] hover:underline font-medium"
+          >
+            📍 Seguir mi viaje en vivo →
+          </a>
+        </p>
         {onlinePaymentsEnabled && (
           <div className="pt-2 space-y-3">
             {gratuity?.enabled && (

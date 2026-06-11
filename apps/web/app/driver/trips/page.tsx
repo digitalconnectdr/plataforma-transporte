@@ -3,6 +3,7 @@ import { requireRole } from '@/lib/auth/session'
 import { createAdminClient } from '@/lib/supabase/server'
 import { logoutAction } from '@/app/actions/auth'
 import { BookingStatusBadge } from '@/components/bookings/booking-status-badge'
+import { DriverTripActions } from '@/components/driver/trip-actions'
 import type { BookingStatus } from '@/lib/supabase/database.types'
 
 export const metadata: Metadata = { title: 'Mis Viajes | LuxeRide' }
@@ -75,6 +76,7 @@ export default async function DriverTripsPage() {
                     </a>
                   )}
                 </div>
+                <DriverTripActions bookingId={t.id} status={t.status} />
               </div>
             )
           })
