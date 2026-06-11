@@ -95,6 +95,23 @@ export const en = {
         ],
       },
     ],
+    fleet: {
+      kicker: 'The fleet',
+      title: 'Built for every class of premium vehicle',
+      subtitle:
+        'From executive sedans to stretch limousines — configure your fleet, your capacities and your rates per vehicle class.',
+      vehicles: [
+        { name: 'Executive Sedan', capacity: 'Up to 3 passengers' },
+        { name: 'Premium SUV', capacity: 'Up to 6 passengers' },
+        { name: 'Executive SUV', capacity: 'Up to 7 passengers' },
+        { name: 'Sprinter Van', capacity: 'Up to 14 passengers' },
+        { name: 'Stretch Limousine', capacity: 'Up to 10 passengers' },
+      ],
+      ctaCard: {
+        title: 'Your fleet here',
+        desc: 'Add your vehicles with photos, capacities and rates in minutes.',
+      },
+    },
     testimonialsTitle: 'Operators who made the switch',
     testimonials: [
       {

@@ -314,9 +314,15 @@ export default async function SettingsPage({
             </p>
           </div>
         )}
-        <p className="text-xs text-sl-on-surface-muted mb-5">
-          Conecta tu cuenta de Stripe para recibir pagos online de tus clientes directamente.
+        <p className="text-xs text-sl-on-surface-muted mb-2">
+          Cada empresa conecta <strong>su propia cuenta de Stripe</strong> — los pagos de tus
+          clientes se depositan directo en <strong>tu cuenta bancaria</strong>, no en la de la plataforma.
         </p>
+        <ul className="text-xs text-sl-on-surface-muted mb-5 space-y-1 list-disc pl-4">
+          <li>No necesitas API keys ni configuración técnica: un clic y Stripe te guía (datos del negocio + cuenta bancaria).</li>
+          <li>Tarjetas, Apple Pay y Google Pay quedan habilitados automáticamente en tu link de reservas.</li>
+          <li>Los cobros en efectivo, Zelle o transferencia se registran manualmente en cada reservación.</li>
+        </ul>
 
         {!stripeReady ? (
           <div className="rounded-lg border border-yellow-200 bg-yellow-50 px-4 py-3">

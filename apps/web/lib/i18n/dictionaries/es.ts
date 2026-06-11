@@ -97,6 +97,23 @@ export const es: Dictionary = {
         ],
       },
     ],
+    fleet: {
+      kicker: 'La flota',
+      title: 'Hecho para cada clase de vehículo premium',
+      subtitle:
+        'Desde sedanes ejecutivos hasta limusinas — configura tu flota, tus capacidades y tus tarifas por clase de vehículo.',
+      vehicles: [
+        { name: 'Sedán Ejecutivo', capacity: 'Hasta 3 pasajeros' },
+        { name: 'SUV Premium', capacity: 'Hasta 6 pasajeros' },
+        { name: 'SUV Ejecutiva', capacity: 'Hasta 7 pasajeros' },
+        { name: 'Sprinter Van', capacity: 'Hasta 14 pasajeros' },
+        { name: 'Limusina', capacity: 'Hasta 10 pasajeros' },
+      ],
+      ctaCard: {
+        title: 'Tu flota aquí',
+        desc: 'Agrega tus vehículos con fotos, capacidades y tarifas en minutos.',
+      },
+    },
     testimonialsTitle: 'Operadores que dieron el salto',
     testimonials: [
       {

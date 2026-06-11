@@ -21,6 +21,12 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'images.unsplash.com',
       },
+      // Endpoint de descarga por slug de Unsplash (redirige a images.unsplash.com)
+      {
+        protocol: 'https',
+        hostname: 'unsplash.com',
+        pathname: '/photos/**',
+      },
     ],
   },
 

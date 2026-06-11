@@ -24,6 +24,17 @@ const SHOWCASE_IMAGES = [
   'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?auto=format&fit=crop&w=1100&q=70',
 ]
 
+// Flota por clase de vehículo (Unsplash, licencia libre — endpoint estable por slug).
+// Para usar fotos propias/oficiales: colocar archivos en public/vehicles/ y
+// cambiar estas URLs por '/vehicles/<archivo>.jpg'.
+const FLEET_IMAGES = [
+  'https://unsplash.com/photos/NjQmytqwDGs/download?force=true&w=900', // Sedán Mercedes negro
+  'https://unsplash.com/photos/9XVJ-Jq7Ke8/download?force=true&w=900', // Cadillac Escalade negra
+  'https://unsplash.com/photos/4Dofvf-eUMs/download?force=true&w=900', // SUV ejecutiva negra (Suburban)
+  'https://unsplash.com/photos/7I8qdKTHDp4/download?force=true&w=900', // Mercedes Sprinter
+  'https://unsplash.com/photos/FZ5MkHkeyKM/download?force=true&w=900', // Limusina stretch
+]
+
 export default async function LandingPage() {
   const locale = getLocale()
   const dict = getDict(locale)
@@ -231,6 +242,58 @@ export default async function LandingPage() {
               </Reveal>
             </div>
           ))}
+        </div>
+      </section>
+
+      {/* ── Flota por clase de vehículo ── */}
+      <section id="fleet" className="border-t border-white/[0.06]">
+        <div className="max-w-6xl mx-auto px-6 py-24">
+          <Reveal className="text-center mb-14">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-[#e9c176] mb-4">
+              {t.fleet.kicker}
+            </p>
+            <h2 className="font-playfair text-3xl sm:text-4xl font-semibold">{t.fleet.title}</h2>
+            <p className="text-white/45 mt-3 text-sm max-w-xl mx-auto">{t.fleet.subtitle}</p>
+          </Reveal>
+
+          <RevealStagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {t.fleet.vehicles.map((v, i) => (
+              <RevealItem key={v.name}>
+                <div className="group relative h-56 rounded-3xl overflow-hidden border border-white/[0.08] hover:border-[#e9c176]/50 transition-colors">
+                  <Image
+                    src={FLEET_IMAGES[i] ?? FLEET_IMAGES[0]!}
+                    alt={v.name}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-[#0c0b0a]/95 via-[#0c0b0a]/20 to-transparent" />
+                  <div className="absolute bottom-0 left-0 right-0 p-5">
+                    <p className="font-playfair text-lg font-semibold">{v.name}</p>
+                    <p className="text-[11px] uppercase tracking-[0.18em] text-[#e9c176] mt-1">
+                      {v.capacity}
+                    </p>
+                  </div>
+                </div>
+              </RevealItem>
+            ))}
+
+            {/* Card CTA: tu flota aquí */}
+            <RevealItem>
+              <Link
+                href="/auth/signup"
+                className="group flex flex-col items-center justify-center h-56 rounded-3xl border border-dashed border-[#e9c176]/40 hover:border-[#e9c176] hover:bg-[#e9c176]/[0.04] transition-all text-center px-8"
+              >
+                <span className="w-12 h-12 rounded-full border border-[#e9c176]/50 flex items-center justify-center text-[#e9c176] text-2xl mb-4 group-hover:scale-110 transition-transform">
+                  +
+                </span>
+                <p className="font-playfair text-lg font-semibold text-[#e9c176]">
+                  {t.fleet.ctaCard.title}
+                </p>
+                <p className="text-xs text-white/40 mt-2 leading-relaxed">{t.fleet.ctaCard.desc}</p>
+              </Link>
+            </RevealItem>
+          </RevealStagger>
         </div>
       </section>
 
