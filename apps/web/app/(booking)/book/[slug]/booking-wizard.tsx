@@ -13,6 +13,7 @@ import {
   type VehicleQuote,
   type BookingResult,
 } from '@/app/actions/bookings'
+import { createPublicCheckoutAction } from '@/app/actions/payments'
 import type { BookingType } from '@/lib/supabase/database.types'
 
 // ─── Tipos ────────────────────────────────────────────────────────────────────
@@ -39,6 +40,7 @@ interface VehicleTypeInfo {
 interface Props {
   company: Company
   vehicleTypes: VehicleTypeInfo[]
+  onlinePaymentsEnabled?: boolean
 }
 
 // ─── Progreso ────────────────────────────────────────────────────────────────
@@ -79,7 +81,7 @@ const CLASS_ICONS: Record<string, string> = {
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 
-export function BookingWizard({ company, vehicleTypes }: Props) {
+export function BookingWizard({ company, vehicleTypes, onlinePaymentsEnabled = false }: Props) {
   const [step, setStep] = useState(0)
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState('')
@@ -220,6 +222,21 @@ export function BookingWizard({ company, vehicleTypes }: Props) {
     })
   }
 
+  // ─── Pago online (post-confirmación) ─────────────────────────────────────
+
+  function handlePayOnline() {
+    if (!confirmation) return
+    setError('')
+    startTransition(async () => {
+      const result = await createPublicCheckoutAction(company.slug, confirmation.bookingId)
+      if (!result.success || !result.data) {
+        setError(result.error ?? 'No se pudo iniciar el pago online')
+        return
+      }
+      window.location.href = result.data.url
+    })
+  }
+
   // ─── ÉXITO ────────────────────────────────────────────────────────────────
 
   if (confirmation) {
@@ -236,6 +253,23 @@ export function BookingWizard({ company, vehicleTypes }: Props) {
         <p className="text-sm text-gray-500 max-w-sm mx-auto">
           Un representante de {company.name} se comunicará contigo para confirmar los detalles.
         </p>
+        {onlinePaymentsEnabled && (
+          <div className="pt-2 space-y-2">
+            <button
+              onClick={handlePayOnline}
+              disabled={isPending}
+              className="px-8 py-3.5 bg-[#0071e3] text-white font-semibold rounded-2xl hover:bg-[#0077ed] disabled:opacity-50 transition-colors text-sm"
+            >
+              {isPending ? 'Redirigiendo…' : '💳 Pagar online ahora'}
+            </button>
+            <p className="text-xs text-gray-400">Pago seguro procesado por Stripe</p>
+            {error && (
+              <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-600 max-w-sm mx-auto">
+                {error}
+              </p>
+            )}
+          </div>
+        )}
         {(company.phone || company.email) && (
           <div className="text-sm text-gray-500 space-y-1 pt-2">
             {company.phone && <p>📞 {company.phone}</p>}

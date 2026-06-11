@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { createAdminClient } from '@/lib/supabase/server'
+import { isStripeConfigured } from '@/lib/stripe/server'
 import { BookingWizard } from './booking-wizard'
 
 interface Props {
@@ -25,7 +26,7 @@ export default async function PublicBookingPage({ params }: Props) {
 
   const { data: company } = await admin
     .from('companies')
-    .select('id, name, slug, status, currency, primary_color, phone, email')
+    .select('id, name, slug, status, currency, primary_color, phone, email, stripe_connect_onboarded')
     .eq('slug', params.slug)
     .single()
 
@@ -57,6 +58,7 @@ export default async function PublicBookingPage({ params }: Props) {
         amenities:  vt.amenities ?? [],
         imageUrl:   vt.base_image_url ?? null,
       }))}
+      onlinePaymentsEnabled={isStripeConfigured() && Boolean(company.stripe_connect_onboarded)}
     />
   )
 }

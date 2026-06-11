@@ -5,6 +5,11 @@ import {
   updateBookingSettingsAction,
   updateGratuitySettingsAction,
 } from '@/app/actions/settings'
+import {
+  createConnectOnboardingAction,
+  refreshConnectStatusAction,
+} from '@/app/actions/payments'
+import { isStripeConfigured } from '@/lib/stripe/server'
 
 const TIMEZONES = [
   'America/New_York', 'America/Chicago', 'America/Denver', 'America/Los_Angeles',
@@ -37,7 +42,7 @@ export default async function SettingsPage() {
   const admin = createAdminClient()
   const { data: company } = await admin
     .from('companies')
-    .select('name, phone, email, address, city, country, timezone, currency, settings')
+    .select('name, phone, email, address, city, country, timezone, currency, settings, stripe_connect_account_id, stripe_connect_onboarded')
     .eq('id', user.company_id)
     .single()
 
@@ -64,6 +69,12 @@ export default async function SettingsPage() {
   const infoAction:     (fd: FormData) => void = updateCompanyInfoAction
   const bookingAction:  (fd: FormData) => void = updateBookingSettingsAction
   const gratuityAction: (fd: FormData) => void = updateGratuitySettingsAction
+  const connectAction:  () => void = createConnectOnboardingAction
+  const refreshAction:  () => void = refreshConnectStatusAction
+
+  const stripeReady = isStripeConfigured()
+  const hasConnect  = Boolean(company.stripe_connect_account_id)
+  const onboarded   = Boolean(company.stripe_connect_onboarded)
 
   return (
     <div className="p-8 max-w-3xl space-y-8">
@@ -202,6 +213,68 @@ export default async function SettingsPage() {
             </button>
           </div>
         </form>
+      </section>
+
+      {/* ── Payments / Stripe Connect ── */}
+      <section className="bg-sl-surface border border-sl-outline-variant rounded-xl p-6">
+        <h2 className="text-sm font-semibold text-sl-on-surface mb-2">Payments — Stripe Connect</h2>
+        <p className="text-xs text-sl-on-surface-muted mb-5">
+          Conecta tu cuenta de Stripe para recibir pagos online de tus clientes directamente.
+        </p>
+
+        {!stripeReady ? (
+          <div className="rounded-lg border border-yellow-200 bg-yellow-50 px-4 py-3">
+            <p className="text-sm text-yellow-800 font-medium">Stripe no está configurado</p>
+            <p className="text-xs text-yellow-700 mt-1">
+              El administrador de la plataforma debe configurar las API keys de Stripe
+              (STRIPE_SECRET_KEY) para habilitar pagos online.
+            </p>
+          </div>
+        ) : (
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <span
+                className={`inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-semibold ${
+                  onboarded
+                    ? 'bg-green-100 text-green-700'
+                    : hasConnect
+                      ? 'bg-yellow-100 text-yellow-700'
+                      : 'bg-gray-100 text-gray-600'
+                }`}
+              >
+                {onboarded ? '✓ Conectado' : hasConnect ? 'Onboarding incompleto' : 'No conectado'}
+              </span>
+              {hasConnect && (
+                <span className="text-xs font-mono text-sl-on-surface-muted">
+                  {company.stripe_connect_account_id}
+                </span>
+              )}
+            </div>
+
+            <div className="flex gap-3">
+              {!onboarded && (
+                <form action={connectAction}>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 text-sm font-medium bg-gold text-gray-900 rounded-lg hover:bg-gold/90 transition-colors"
+                  >
+                    {hasConnect ? 'Continuar onboarding →' : 'Conectar con Stripe →'}
+                  </button>
+                </form>
+              )}
+              {hasConnect && (
+                <form action={refreshAction}>
+                  <button
+                    type="submit"
+                    className="px-4 py-2 text-sm font-medium border border-sl-outline-variant text-sl-on-surface rounded-lg hover:border-gold transition-colors"
+                  >
+                    Actualizar estado
+                  </button>
+                </form>
+              )}
+            </div>
+          </div>
+        )}
       </section>
 
       {/* ── Gratuity Settings ── */}

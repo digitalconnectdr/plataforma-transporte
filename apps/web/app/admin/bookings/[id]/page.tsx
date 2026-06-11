@@ -5,6 +5,8 @@ import { requireRole } from '@/lib/auth/session'
 import { createAdminClient } from '@/lib/supabase/server'
 import { BookingStatusBadge } from '@/components/bookings/booking-status-badge'
 import { BookingActions } from './booking-actions'
+import { BookingPayments } from '@/components/admin/booking-payments'
+import { isStripeConfigured } from '@/lib/stripe/server'
 import type { BookingStatus } from '@/lib/supabase/database.types'
 
 export const metadata: Metadata = { title: 'Reservación | LuxeRide' }
@@ -59,7 +61,7 @@ export default async function BookingDetailPage({
   if (!booking) return notFound()
 
   // Datos relacionados
-  const [{ data: fees }, { data: drivers }, { data: vehicleType }] = await Promise.all([
+  const [{ data: fees }, { data: drivers }, { data: vehicleType }, { data: payments }] = await Promise.all([
     admin
       .from('booking_fees')
       .select('*')
@@ -79,6 +81,11 @@ export default async function BookingDetailPage({
           .eq('id', booking.vehicle_type_id)
           .single()
       : Promise.resolve({ data: null, error: null }),
+    admin
+      .from('payments')
+      .select('id, amount, currency, status, payment_method, description, failure_message, captured_at, created_at')
+      .eq('booking_id', booking.id)
+      .order('created_at', { ascending: false }),
   ])
 
   // Conductor asignado
@@ -260,6 +267,14 @@ export default async function BookingDetailPage({
           </div>
         </div>
       )}
+
+      {/* Pagos */}
+      <BookingPayments
+        bookingId={booking.id}
+        payments={payments ?? []}
+        stripeConfigured={isStripeConfigured()}
+        canRefund={['company_owner', 'company_admin', 'accounting'].includes(user.role)}
+      />
 
       {/* Timestamps */}
       <div className="bg-sl-surface-high border border-sl-outline-variant rounded-2xl p-5">

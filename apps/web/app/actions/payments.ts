@@ -1,0 +1,344 @@
+'use server'
+// ── F1.9 — Stripe + Stripe Connect: Server Actions ────────────────────────────
+// SECURITY: Montos SIEMPRE del booking (server-side) — nunca del cliente.
+// Placeholder-safe: si Stripe no está configurado, las acciones degradan limpio.
+
+import { redirect } from 'next/navigation'
+import { revalidatePath } from 'next/cache'
+import { createAdminClient } from '@/lib/supabase/server'
+import { requireRole } from '@/lib/auth/session'
+import { getStripe } from '@/lib/stripe/server'
+
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
+
+type ActionResult<T = undefined> = { success: boolean; error?: string; data?: T }
+
+// ─── Helper: platform fee desde settings de la empresa ────────────────────────
+
+function platformFeePct(settings: unknown): number {
+  const s = settings as { payments?: { platform_fee_pct?: number } } | null
+  const pct = s?.payments?.platform_fee_pct
+  if (typeof pct !== 'number' || pct < 0 || pct > 50) return 0
+  return pct
+}
+
+// ─── Connect: iniciar onboarding (Express) ────────────────────────────────────
+
+export async function createConnectOnboardingAction(): Promise<void> {
+  const user = await requireRole('company_owner')
+  if (!user.company_id) return
+
+  const stripe = getStripe()
+  if (!stripe) return // sin keys reales — el UI muestra el estado "no configurado"
+
+  const admin = createAdminClient()
+  const { data: company } = await admin
+    .from('companies')
+    .select('id, name, email, country, stripe_connect_account_id')
+    .eq('id', user.company_id)
+    .single()
+
+  if (!company) return
+
+  let accountId = company.stripe_connect_account_id
+
+  if (!accountId) {
+    const account = await stripe.accounts.create({
+      type: 'express',
+      country: company.country ?? 'US',
+      email: company.email ?? user.email,
+      business_profile: { name: company.name },
+      capabilities: {
+        card_payments: { requested: true },
+        transfers: { requested: true },
+      },
+      metadata: { company_id: company.id },
+    })
+    accountId = account.id
+    await admin
+      .from('companies')
+      .update({ stripe_connect_account_id: accountId })
+      .eq('id', company.id)
+  }
+
+  const link = await stripe.accountLinks.create({
+    account: accountId,
+    refresh_url: `${APP_URL}/admin/settings?connect=refresh`,
+    return_url: `${APP_URL}/admin/settings?connect=return`,
+    type: 'account_onboarding',
+  })
+
+  redirect(link.url)
+}
+
+// ─── Connect: refrescar estado de onboarding ──────────────────────────────────
+
+export async function refreshConnectStatusAction(): Promise<ActionResult> {
+  const user = await requireRole('company_owner')
+  if (!user.company_id) return { success: false, error: 'Sin empresa asignada' }
+
+  const stripe = getStripe()
+  if (!stripe) return { success: false, error: 'Stripe no está configurado' }
+
+  const admin = createAdminClient()
+  const { data: company } = await admin
+    .from('companies')
+    .select('stripe_connect_account_id')
+    .eq('id', user.company_id)
+    .single()
+
+  if (!company?.stripe_connect_account_id) {
+    return { success: false, error: 'No hay cuenta de Stripe Connect' }
+  }
+
+  const account = await stripe.accounts.retrieve(company.stripe_connect_account_id)
+  const onboarded = Boolean(account.charges_enabled && account.details_submitted)
+
+  await admin
+    .from('companies')
+    .update({ stripe_connect_onboarded: onboarded })
+    .eq('id', user.company_id)
+
+  revalidatePath('/admin/settings')
+  return { success: true }
+}
+
+// ─── Checkout: link de pago para una reservación (staff) ──────────────────────
+
+export async function createPaymentLinkAction(
+  bookingId: string,
+): Promise<ActionResult<{ url: string }>> {
+  const user = await requireRole('company_owner', 'company_admin', 'dispatcher', 'accounting')
+  if (!user.company_id) return { success: false, error: 'Sin empresa asignada' }
+
+  const admin = createAdminClient()
+  const { data: booking } = await admin
+    .from('bookings')
+    .select('id, booking_number, status, total_amount, currency, passenger_email, passenger_name, company_id')
+    .eq('id', bookingId)
+    .eq('company_id', user.company_id)
+    .single()
+
+  if (!booking) return { success: false, error: 'Reservación no encontrada' }
+
+  return createCheckoutForBooking(booking.company_id, booking)
+}
+
+// ─── Checkout: pago online del portal público (guest) ─────────────────────────
+
+export async function createPublicCheckoutAction(
+  slug: string,
+  bookingId: string,
+): Promise<ActionResult<{ url: string }>> {
+  const admin = createAdminClient()
+
+  const { data: company } = await admin
+    .from('companies')
+    .select('id, status')
+    .eq('slug', slug)
+    .single()
+
+  if (!company || company.status !== 'active') {
+    return { success: false, error: 'Empresa no disponible' }
+  }
+
+  const { data: booking } = await admin
+    .from('bookings')
+    .select('id, booking_number, status, total_amount, currency, passenger_email, passenger_name, company_id')
+    .eq('id', bookingId)
+    .eq('company_id', company.id)
+    .single()
+
+  if (!booking) return { success: false, error: 'Reservación no encontrada' }
+
+  return createCheckoutForBooking(company.id, booking)
+}
+
+// ─── Helper compartido: crear Checkout Session ────────────────────────────────
+
+async function createCheckoutForBooking(
+  companyId: string,
+  booking: {
+    id: string
+    booking_number: string
+    status: string
+    total_amount: number | null
+    currency: string | null
+    passenger_email: string | null
+    passenger_name: string | null
+  },
+): Promise<ActionResult<{ url: string }>> {
+  const stripe = getStripe()
+  if (!stripe) {
+    return { success: false, error: 'Pagos online no disponibles — Stripe no configurado' }
+  }
+
+  if (!booking.total_amount || booking.total_amount <= 0) {
+    return { success: false, error: 'La reservación no tiene monto a cobrar' }
+  }
+  if (['cancelled', 'no_show', 'failed'].includes(booking.status)) {
+    return { success: false, error: 'No se puede cobrar una reservación cancelada' }
+  }
+
+  const admin = createAdminClient()
+
+  // Evitar doble cobro: ¿ya hay un pago exitoso?
+  const { data: existing } = await admin
+    .from('payments')
+    .select('id, status')
+    .eq('booking_id', booking.id)
+    .in('status', ['succeeded', 'processing'])
+    .limit(1)
+
+  if (existing?.length) {
+    return { success: false, error: 'Esta reservación ya tiene un pago registrado' }
+  }
+
+  const { data: company } = await admin
+    .from('companies')
+    .select('stripe_connect_account_id, stripe_connect_onboarded, settings')
+    .eq('id', companyId)
+    .single()
+
+  const currency = (booking.currency ?? 'USD').toLowerCase()
+  const amountCents = Math.round(booking.total_amount * 100)
+
+  // Destination charge si la empresa completó Connect onboarding
+  const useConnect = Boolean(
+    company?.stripe_connect_account_id && company?.stripe_connect_onboarded,
+  )
+  const feePct = platformFeePct(company?.settings)
+  const feeCents = useConnect ? Math.round(amountCents * (feePct / 100)) : 0
+
+  // Registrar pago pendiente ANTES de crear la sesión (idempotencia vía metadata)
+  const { data: payment, error: payErr } = await admin
+    .from('payments')
+    .insert({
+      company_id: companyId,
+      booking_id: booking.id,
+      amount: booking.total_amount,
+      currency: currency.toUpperCase(),
+      platform_fee: feeCents / 100,
+      net_amount: (amountCents - feeCents) / 100,
+      status: 'pending',
+      payment_method: 'card',
+      description: `Booking ${booking.booking_number}`,
+      stripe_connect_account_id: useConnect ? company!.stripe_connect_account_id : null,
+    })
+    .select('id')
+    .single()
+
+  if (payErr || !payment) {
+    console.error('[createCheckoutForBooking] payment insert', payErr)
+    return { success: false, error: 'Error al registrar el pago' }
+  }
+
+  try {
+    const session = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      customer_email: booking.passenger_email ?? undefined,
+      line_items: [
+        {
+          quantity: 1,
+          price_data: {
+            currency,
+            unit_amount: amountCents,
+            product_data: {
+              name: `Reservación ${booking.booking_number}`,
+              description: booking.passenger_name
+                ? `Pasajero: ${booking.passenger_name}`
+                : undefined,
+            },
+          },
+        },
+      ],
+      payment_intent_data: useConnect
+        ? {
+            transfer_data: { destination: company!.stripe_connect_account_id! },
+            application_fee_amount: feeCents > 0 ? feeCents : undefined,
+            metadata: { payment_id: payment.id, booking_id: booking.id },
+          }
+        : { metadata: { payment_id: payment.id, booking_id: booking.id } },
+      metadata: {
+        payment_id: payment.id,
+        booking_id: booking.id,
+        company_id: companyId,
+      },
+      success_url: `${APP_URL}/payment/success?booking=${encodeURIComponent(booking.booking_number)}`,
+      cancel_url: `${APP_URL}/payment/cancelled?booking=${encodeURIComponent(booking.booking_number)}`,
+      expires_at: Math.floor(Date.now() / 1000) + 60 * 60 * 24, // 24h
+    })
+
+    await admin
+      .from('payments')
+      .update({ metadata: { checkout_session_id: session.id } })
+      .eq('id', payment.id)
+
+    revalidatePath(`/admin/bookings/${booking.id}`)
+    return { success: true, data: { url: session.url! } }
+  } catch (err) {
+    console.error('[createCheckoutForBooking] stripe error', err)
+    // Limpiar el pago pendiente que no llegó a tener sesión
+    await admin.from('payments').update({ status: 'cancelled' }).eq('id', payment.id)
+    return { success: false, error: 'Error al crear la sesión de pago' }
+  }
+}
+
+// ─── Reembolso ────────────────────────────────────────────────────────────────
+
+export async function refundPaymentAction(
+  paymentId: string,
+  reason?: string,
+): Promise<ActionResult> {
+  const user = await requireRole('company_owner', 'company_admin', 'accounting')
+  if (!user.company_id) return { success: false, error: 'Sin empresa asignada' }
+
+  const stripe = getStripe()
+  if (!stripe) return { success: false, error: 'Stripe no está configurado' }
+
+  const admin = createAdminClient()
+  const { data: payment } = await admin
+    .from('payments')
+    .select('id, booking_id, company_id, amount, status, stripe_payment_intent_id')
+    .eq('id', paymentId)
+    .eq('company_id', user.company_id)
+    .single()
+
+  if (!payment) return { success: false, error: 'Pago no encontrado' }
+  if (payment.status !== 'succeeded') {
+    return { success: false, error: 'Solo pagos exitosos pueden reembolsarse' }
+  }
+  if (!payment.stripe_payment_intent_id) {
+    return { success: false, error: 'Pago sin PaymentIntent de Stripe' }
+  }
+
+  try {
+    const refund = await stripe.refunds.create({
+      payment_intent: payment.stripe_payment_intent_id,
+      reason: 'requested_by_customer',
+      metadata: { payment_id: payment.id, initiated_by: user.id },
+    })
+
+    await admin.from('refunds').insert({
+      company_id: payment.company_id,
+      payment_id: payment.id,
+      booking_id: payment.booking_id,
+      stripe_refund_id: refund.id,
+      amount: payment.amount,
+      reason: reason?.trim() || 'requested_by_customer',
+      status: refund.status === 'succeeded' ? 'succeeded' : 'pending',
+      initiated_by: user.id,
+    })
+
+    await admin
+      .from('payments')
+      .update({ status: 'refunded' })
+      .eq('id', payment.id)
+
+    if (payment.booking_id) revalidatePath(`/admin/bookings/${payment.booking_id}`)
+    return { success: true }
+  } catch (err) {
+    console.error('[refundPaymentAction]', err)
+    return { success: false, error: 'Error al procesar el reembolso' }
+  }
+}
