@@ -18,7 +18,7 @@ export default async function NewBookingPage() {
 
   const admin = createAdminClient()
 
-  const [{ data: vehicleTypes }, { data: drivers }] = await Promise.all([
+  const [{ data: vehicleTypes }, { data: drivers }, { data: corporateAccounts }] = await Promise.all([
     admin
       .from('vehicle_types')
       .select('id, name, class, capacity')
@@ -32,6 +32,12 @@ export default async function NewBookingPage() {
       .eq('role', 'driver')
       .eq('is_active', true)
       .order('first_name'),
+    admin
+      .from('corporate_accounts')
+      .select('id, name')
+      .eq('company_id', user.company_id)
+      .eq('is_active', true)
+      .order('name'),
   ])
 
   return (
@@ -45,6 +51,7 @@ export default async function NewBookingPage() {
       <NewBookingForm
         vehicleTypes={vehicleTypes ?? []}
         drivers={drivers ?? []}
+        corporateAccounts={corporateAccounts ?? []}
       />
     </div>
   )

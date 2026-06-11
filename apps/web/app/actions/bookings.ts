@@ -290,11 +290,26 @@ export async function createBookingAction(
   const specialInstructions = (formData.get('special_instructions') as string)?.trim()
   const internalNotes = (formData.get('internal_notes') as string)?.trim()
   const flightNumber  = (formData.get('flight_number') as string)?.trim()
+  const corporateAccountId = (formData.get('corporate_account_id') as string)?.trim() || null
 
   if (!passengerName) return { success: false, error: 'Nombre del pasajero requerido' }
   if (!scheduledAt)   return { success: false, error: 'Fecha y hora requeridas' }
   if (!pickupAddr)    return { success: false, error: 'Dirección de pickup requerida' }
   if (!dropoffAddr)   return { success: false, error: 'Dirección de dropoff requerida' }
+
+  // F1.11 — validar que la cuenta corporativa pertenece a la empresa y está activa
+  if (corporateAccountId) {
+    const { data: corpAccount } = await admin
+      .from('corporate_accounts')
+      .select('id, is_active')
+      .eq('id', corporateAccountId)
+      .eq('company_id', user.company_id)
+      .single()
+
+    if (!corpAccount || !corpAccount.is_active) {
+      return { success: false, error: 'Cuenta corporativa no válida o inactiva' }
+    }
+  }
 
   const { data: booking, error } = await admin
     .from('bookings')
@@ -303,6 +318,7 @@ export async function createBookingAction(
       status:           'pending',
       type:             bookingType,
       vehicle_type_id:  quote.vehicle_type_id,
+      corporate_account_id: corporateAccountId,
       passenger_count:  passengerCount,
       passenger_name:   passengerName,
       passenger_phone:  passengerPhone || null,

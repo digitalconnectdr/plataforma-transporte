@@ -117,6 +117,7 @@ export default async function AdminLayout({
               <p className="px-3 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-widest text-sl-on-surface-muted">
                 Management
               </p>
+              <NavLink href="/admin/corporate" label="Corporate" />
               <NavLink href="/admin/team" label="Team" />
               {isOwner && <NavLink href="/admin/settings" label="Settings" />}
             </>

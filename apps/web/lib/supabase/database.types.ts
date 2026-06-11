@@ -1154,14 +1154,21 @@ export type Database = {
           name: string
           contact_name: string | null
           contact_email: string | null
-          contact_phone: string | null
-          billing_address: string | null
+          billing_email: string | null
+          phone: string | null
+          address: string | null
+          tax_id: string | null
           credit_limit: number | null
           current_balance: number | null
           payment_terms: number | null
-          is_active: boolean
+          billing_cycle: string | null
+          require_approval: boolean | null
+          approval_threshold: number | null
+          allow_personal_trips: boolean | null
+          cost_center_required: boolean | null
+          stripe_customer_id: string | null
           notes: string | null
-          metadata: Json
+          is_active: boolean
           created_at: string
           updated_at: string
         }
@@ -1171,14 +1178,21 @@ export type Database = {
           name: string
           contact_name?: string | null | undefined
           contact_email?: string | null | undefined
-          contact_phone?: string | null | undefined
-          billing_address?: string | null | undefined
+          billing_email?: string | null | undefined
+          phone?: string | null | undefined
+          address?: string | null | undefined
+          tax_id?: string | null | undefined
           credit_limit?: number | null | undefined
           current_balance?: number | null | undefined
           payment_terms?: number | null | undefined
-          is_active?: boolean | undefined
+          billing_cycle?: string | null | undefined
+          require_approval?: boolean | null | undefined
+          approval_threshold?: number | null | undefined
+          allow_personal_trips?: boolean | null | undefined
+          cost_center_required?: boolean | null | undefined
+          stripe_customer_id?: string | null | undefined
           notes?: string | null | undefined
-          metadata?: Json | undefined
+          is_active?: boolean | undefined
           created_at?: string | undefined
           updated_at?: string | undefined
         }
@@ -1188,35 +1202,128 @@ export type Database = {
           name?: string | undefined
           contact_name?: string | null | undefined
           contact_email?: string | null | undefined
-          contact_phone?: string | null | undefined
-          billing_address?: string | null | undefined
+          billing_email?: string | null | undefined
+          phone?: string | null | undefined
+          address?: string | null | undefined
+          tax_id?: string | null | undefined
           credit_limit?: number | null | undefined
           current_balance?: number | null | undefined
           payment_terms?: number | null | undefined
-          is_active?: boolean | undefined
+          billing_cycle?: string | null | undefined
+          require_approval?: boolean | null | undefined
+          approval_threshold?: number | null | undefined
+          allow_personal_trips?: boolean | null | undefined
+          cost_center_required?: boolean | null | undefined
+          stripe_customer_id?: string | null | undefined
           notes?: string | null | undefined
-          metadata?: Json | undefined
+          is_active?: boolean | undefined
           created_at?: string | undefined
           updated_at?: string | undefined
         }
         Relationships: []
       }
 
-      // ── notifications (stub) ────────────────────────────────────────────────
+      // ── corporate_members ───────────────────────────────────────────────────
+      corporate_members: {
+        Row: {
+          id: string
+          company_id: string
+          corporate_account_id: string
+          user_id: string
+          role: string
+          spending_limit: number | null
+          monthly_limit: number | null
+          cost_center: string | null
+          is_active: boolean
+          created_at: string
+        }
+        Insert: {
+          id?: string | undefined
+          company_id: string
+          corporate_account_id: string
+          user_id: string
+          role?: string | undefined
+          spending_limit?: number | null | undefined
+          monthly_limit?: number | null | undefined
+          cost_center?: string | null | undefined
+          is_active?: boolean | undefined
+          created_at?: string | undefined
+        }
+        Update: {
+          id?: string | undefined
+          company_id?: string | undefined
+          corporate_account_id?: string | undefined
+          user_id?: string | undefined
+          role?: string | undefined
+          spending_limit?: number | null | undefined
+          monthly_limit?: number | null | undefined
+          cost_center?: string | null | undefined
+          is_active?: boolean | undefined
+          created_at?: string | undefined
+        }
+        Relationships: []
+      }
+
+      // ── notification_templates ──────────────────────────────────────────────
+      notification_templates: {
+        Row: {
+          id: string
+          company_id: string | null
+          channel: NotificationChannel
+          type: string
+          subject: string | null
+          body: string
+          variables: string[] | null
+          is_active: boolean
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          id?: string | undefined
+          company_id?: string | null | undefined
+          channel: NotificationChannel
+          type: string
+          subject?: string | null | undefined
+          body: string
+          variables?: string[] | null | undefined
+          is_active?: boolean | undefined
+          created_at?: string | undefined
+          updated_at?: string | undefined
+        }
+        Update: {
+          id?: string | undefined
+          company_id?: string | null | undefined
+          channel?: NotificationChannel | undefined
+          type?: string | undefined
+          subject?: string | null | undefined
+          body?: string | undefined
+          variables?: string[] | null | undefined
+          is_active?: boolean | undefined
+          created_at?: string | undefined
+          updated_at?: string | undefined
+        }
+        Relationships: []
+      }
+
+      // ── notifications ───────────────────────────────────────────────────────
       notifications: {
         Row: {
           id: string
           company_id: string
           user_id: string | null
           booking_id: string | null
+          template_id: string | null
           channel: NotificationChannel
           type: string
+          recipient: string
           subject: string | null
           body: string
           status: string
+          provider_id: string | null
+          error_message: string | null
           sent_at: string | null
-          error: string | null
-          metadata: Json
+          delivered_at: string | null
+          opened_at: string | null
           created_at: string
         }
         Insert: {
@@ -1224,14 +1331,18 @@ export type Database = {
           company_id: string
           user_id?: string | null | undefined
           booking_id?: string | null | undefined
+          template_id?: string | null | undefined
           channel: NotificationChannel
           type: string
+          recipient: string
           subject?: string | null | undefined
           body: string
           status?: string | undefined
+          provider_id?: string | null | undefined
+          error_message?: string | null | undefined
           sent_at?: string | null | undefined
-          error?: string | null | undefined
-          metadata?: Json | undefined
+          delivered_at?: string | null | undefined
+          opened_at?: string | null | undefined
           created_at?: string | undefined
         }
         Update: {
@@ -1239,33 +1350,40 @@ export type Database = {
           company_id?: string | undefined
           user_id?: string | null | undefined
           booking_id?: string | null | undefined
+          template_id?: string | null | undefined
           channel?: NotificationChannel | undefined
           type?: string | undefined
+          recipient?: string | undefined
           subject?: string | null | undefined
           body?: string | undefined
           status?: string | undefined
+          provider_id?: string | null | undefined
+          error_message?: string | null | undefined
           sent_at?: string | null | undefined
-          error?: string | null | undefined
-          metadata?: Json | undefined
+          delivered_at?: string | null | undefined
+          opened_at?: string | null | undefined
           created_at?: string | undefined
         }
         Relationships: []
       }
 
-      // ── documents (stub) ────────────────────────────────────────────────────
+      // ── documents ───────────────────────────────────────────────────────────
       documents: {
         Row: {
           id: string
           company_id: string
-          user_id: string | null
+          driver_id: string | null
           vehicle_id: string | null
           type: DocumentType
-          name: string
-          url: string
+          file_url: string
+          file_name: string
+          file_size_bytes: number | null
+          mime_type: string | null
           expires_at: string | null
-          is_verified: boolean
-          verified_by: string | null
           verified_at: string | null
+          verified_by: string | null
+          is_verified: boolean | null
+          rejection_reason: string | null
           notes: string | null
           created_at: string
           updated_at: string
@@ -1273,15 +1391,18 @@ export type Database = {
         Insert: {
           id?: string | undefined
           company_id: string
-          user_id?: string | null | undefined
+          driver_id?: string | null | undefined
           vehicle_id?: string | null | undefined
           type: DocumentType
-          name: string
-          url: string
+          file_url: string
+          file_name: string
+          file_size_bytes?: number | null | undefined
+          mime_type?: string | null | undefined
           expires_at?: string | null | undefined
-          is_verified?: boolean | undefined
-          verified_by?: string | null | undefined
           verified_at?: string | null | undefined
+          verified_by?: string | null | undefined
+          is_verified?: boolean | null | undefined
+          rejection_reason?: string | null | undefined
           notes?: string | null | undefined
           created_at?: string | undefined
           updated_at?: string | undefined
@@ -1289,15 +1410,18 @@ export type Database = {
         Update: {
           id?: string | undefined
           company_id?: string | undefined
-          user_id?: string | null | undefined
+          driver_id?: string | null | undefined
           vehicle_id?: string | null | undefined
           type?: DocumentType | undefined
-          name?: string | undefined
-          url?: string | undefined
+          file_url?: string | undefined
+          file_name?: string | undefined
+          file_size_bytes?: number | null | undefined
+          mime_type?: string | null | undefined
           expires_at?: string | null | undefined
-          is_verified?: boolean | undefined
-          verified_by?: string | null | undefined
           verified_at?: string | null | undefined
+          verified_by?: string | null | undefined
+          is_verified?: boolean | null | undefined
+          rejection_reason?: string | null | undefined
           notes?: string | null | undefined
           created_at?: string | undefined
           updated_at?: string | undefined
@@ -1314,10 +1438,11 @@ export type Database = {
           action: string
           table_name: string | null
           record_id: string | null
-          old_data: Json | null
-          new_data: Json | null
+          old_values: Json | null
+          new_values: Json | null
           ip_address: string | null
           user_agent: string | null
+          metadata: Json | null
           created_at: string
         }
         Insert: {
@@ -1327,10 +1452,11 @@ export type Database = {
           action: string
           table_name?: string | null | undefined
           record_id?: string | null | undefined
-          old_data?: Json | null | undefined
-          new_data?: Json | null | undefined
+          old_values?: Json | null | undefined
+          new_values?: Json | null | undefined
           ip_address?: string | null | undefined
           user_agent?: string | null | undefined
+          metadata?: Json | null | undefined
           created_at?: string | undefined
         }
         Update: {
@@ -1340,10 +1466,11 @@ export type Database = {
           action?: string | undefined
           table_name?: string | null | undefined
           record_id?: string | null | undefined
-          old_data?: Json | null | undefined
-          new_data?: Json | null | undefined
+          old_values?: Json | null | undefined
+          new_values?: Json | null | undefined
           ip_address?: string | null | undefined
           user_agent?: string | null | undefined
+          metadata?: Json | null | undefined
           created_at?: string | undefined
         }
         Relationships: []

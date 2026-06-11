@@ -22,9 +22,15 @@ interface Driver {
   last_name: string
 }
 
+interface CorporateAccount {
+  id: string
+  name: string
+}
+
 interface Props {
   vehicleTypes: VehicleType[]
   drivers: Driver[]
+  corporateAccounts?: CorporateAccount[]
 }
 
 const BOOKING_TYPE_LABELS = [
@@ -35,7 +41,7 @@ const BOOKING_TYPE_LABELS = [
   { value: 'hourly',          label: 'Por hora' },
 ]
 
-export function NewBookingForm({ vehicleTypes, drivers }: Props) {
+export function NewBookingForm({ vehicleTypes, drivers, corporateAccounts = [] }: Props) {
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
   const [phase, setPhase] = useState<'route' | 'passenger'>('route')
@@ -316,6 +322,25 @@ export function NewBookingForm({ vehicleTypes, drivers }: Props) {
             className="w-28 rounded-xl border border-sl-outline-variant bg-white px-4 py-2.5 text-sm text-sl-on-surface focus:border-[#0071e3] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20"
           />
         </div>
+
+        {/* Cuenta corporativa (F1.11) */}
+        {corporateAccounts.length > 0 && (
+          <div>
+            <label className="block text-xs font-semibold uppercase tracking-widest text-sl-on-surface-muted mb-2">
+              Cuenta corporativa <span className="font-normal normal-case">(opcional — factura a crédito)</span>
+            </label>
+            <select
+              name="corporate_account_id"
+              defaultValue=""
+              className="w-full rounded-xl border border-sl-outline-variant bg-white px-4 py-2.5 text-sm text-sl-on-surface focus:border-[#0071e3] focus:outline-none focus:ring-2 focus:ring-[#0071e3]/20"
+            >
+              <option value="">— Cliente particular —</option>
+              {corporateAccounts.map((acc) => (
+                <option key={acc.id} value={acc.id}>{acc.name}</option>
+              ))}
+            </select>
+          </div>
+        )}
 
         {/* Instrucciones especiales */}
         <div>
