@@ -19,7 +19,10 @@ export default async function AdminDashboardPage() {
   // Fetch fleet + driver + booking stats
   let stats = { vehicles: 0, driversAvail: 0, fleet: 0 }
   let bookingStats = { pending: 0, active: 0, today: 0, completedMonth: 0 }
+  let revenue = { month: 0, today: 0 }
   let recentBookings: { id: string; booking_number: string; status: string; passenger_name: string | null; scheduled_at: string; total_amount: number | null }[] = []
+  let upcomingBookings: { id: string; booking_number: string; status: string; passenger_name: string | null; scheduled_at: string }[] = []
+  let weekTrend: { day: string; count: number }[] = []
 
   if (companyId) {
     const admin = createAdminClient()
@@ -28,22 +31,34 @@ export default async function AdminDashboardPage() {
     const monthStart = new Date()
     monthStart.setDate(1)
     monthStart.setHours(0, 0, 0, 0)
+    const next24h = new Date(Date.now() + 24 * 3_600_000)
+    const weekAgo = new Date(todayStart.getTime() - 6 * 24 * 3_600_000)
 
     const [
       { data: vehicles },
       { data: drivers },
       { data: bookings },
       { data: recent },
+      { data: upcoming },
     ] = await Promise.all([
       admin.from('vehicles').select('id, status').eq('company_id', companyId),
       admin.from('drivers').select('id, is_available').eq('company_id', companyId),
-      admin.from('bookings').select('id, status, scheduled_at, completed_at').eq('company_id', companyId),
+      admin.from('bookings').select('id, status, scheduled_at, completed_at, total_amount, created_at').eq('company_id', companyId),
       admin
         .from('bookings')
         .select('id, booking_number, status, passenger_name, scheduled_at, total_amount')
         .eq('company_id', companyId)
         .order('created_at', { ascending: false })
         .limit(5),
+      admin
+        .from('bookings')
+        .select('id, booking_number, status, passenger_name, scheduled_at')
+        .eq('company_id', companyId)
+        .in('status', ['pending', 'assigned', 'en_route', 'arrived'])
+        .gte('scheduled_at', new Date().toISOString())
+        .lte('scheduled_at', next24h.toISOString())
+        .order('scheduled_at')
+        .limit(6),
     ])
 
     stats = {
@@ -53,14 +68,39 @@ export default async function AdminDashboardPage() {
     }
 
     const activeStatuses = ['pending', 'assigned', 'en_route', 'arrived', 'in_progress']
+    const completedMonth = (bookings ?? []).filter(
+      (b) => b.status === 'completed' && b.completed_at && new Date(b.completed_at) >= monthStart,
+    )
     bookingStats = {
       pending:        bookings?.filter((b) => b.status === 'pending').length ?? 0,
       active:         bookings?.filter((b) => activeStatuses.includes(b.status)).length ?? 0,
       today:          bookings?.filter((b) => new Date(b.scheduled_at) >= todayStart).length ?? 0,
-      completedMonth: bookings?.filter((b) => b.status === 'completed' && b.completed_at && new Date(b.completed_at) >= monthStart).length ?? 0,
+      completedMonth: completedMonth.length,
     }
 
+    revenue = {
+      month: completedMonth.reduce((s, b) => s + Number(b.total_amount ?? 0), 0),
+      today: completedMonth
+        .filter((b) => b.completed_at && new Date(b.completed_at) >= todayStart)
+        .reduce((s, b) => s + Number(b.total_amount ?? 0), 0),
+    }
+
+    // Tendencia: reservaciones creadas por día, últimos 7 días
+    const DAY_LABELS = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb']
+    weekTrend = Array.from({ length: 7 }, (_, i) => {
+      const dayStart = new Date(weekAgo.getTime() + i * 24 * 3_600_000)
+      const dayEnd = new Date(dayStart.getTime() + 24 * 3_600_000)
+      return {
+        day: DAY_LABELS[dayStart.getDay()],
+        count: (bookings ?? []).filter((b) => {
+          const created = new Date(b.created_at)
+          return created >= dayStart && created < dayEnd
+        }).length,
+      }
+    })
+
     recentBookings = recent ?? []
+    upcomingBookings = upcoming ?? []
   }
 
   const STATUS_COLORS: Record<string, string> = {
@@ -112,6 +152,26 @@ export default async function AdminDashboardPage() {
         ))}
       </div>
 
+      {/* Revenue (F1.12) */}
+      <div className="grid grid-cols-2 gap-4">
+        <div className="bg-sl-surface-high border border-sl-outline-variant rounded-2xl p-6">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-sl-on-surface-muted">
+            Ingresos del mes (completados)
+          </p>
+          <p className="text-4xl font-playfair font-semibold text-sl-on-surface mt-2">
+            ${revenue.month.toFixed(2)}
+          </p>
+        </div>
+        <div className="bg-sl-surface-high border border-sl-outline-variant rounded-2xl p-6">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-sl-on-surface-muted">
+            Ingresos de hoy
+          </p>
+          <p className="text-4xl font-playfair font-semibold text-sl-on-surface mt-2">
+            ${revenue.today.toFixed(2)}
+          </p>
+        </div>
+      </div>
+
       {/* Booking stats */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         {[
@@ -133,6 +193,64 @@ export default async function AdminDashboardPage() {
             </p>
           </Link>
         ))}
+      </div>
+
+      {/* Tendencia 7 días + Próximos viajes */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Tendencia */}
+        <div className="bg-sl-surface-high border border-sl-outline-variant rounded-2xl p-6">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-sl-on-surface-muted mb-4">
+            Reservaciones — últimos 7 días
+          </p>
+          <div className="flex items-end justify-between gap-2 h-28">
+            {weekTrend.map((d, i) => {
+              const max = Math.max(1, ...weekTrend.map((x) => x.count))
+              const h = Math.round((d.count / max) * 100)
+              return (
+                <div key={i} className="flex-1 flex flex-col items-center gap-1.5">
+                  <span className="text-[10px] text-sl-on-surface-muted">{d.count || ''}</span>
+                  <div
+                    className="w-full rounded-t-md bg-gold/80 min-h-[3px] transition-all"
+                    style={{ height: `${Math.max(3, h)}%` }}
+                  />
+                  <span className="text-[10px] text-sl-on-surface-muted">{d.day}</span>
+                </div>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Próximos viajes */}
+        <div className="bg-sl-surface-high border border-sl-outline-variant rounded-2xl overflow-hidden">
+          <div className="px-6 py-4 border-b border-sl-outline-variant">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-sl-on-surface-muted">
+              Próximas 24 horas
+            </p>
+          </div>
+          {upcomingBookings.length === 0 ? (
+            <p className="p-6 text-sm text-sl-on-surface-muted text-center">
+              Sin viajes programados.
+            </p>
+          ) : (
+            <div className="divide-y divide-sl-outline-variant">
+              {upcomingBookings.map((b) => (
+                <Link
+                  key={b.id}
+                  href={`/admin/bookings/${b.id}`}
+                  className="flex items-center justify-between px-5 py-2.5 hover:bg-sl-bg/50 transition-colors"
+                >
+                  <div className="flex items-center gap-2 min-w-0">
+                    <span className="font-mono text-[11px] text-[#0071e3] shrink-0">{b.booking_number}</span>
+                    <span className="text-xs text-sl-on-surface-muted truncate">{b.passenger_name ?? '—'}</span>
+                  </div>
+                  <span className="text-xs font-medium text-sl-on-surface shrink-0">
+                    {new Date(b.scheduled_at).toLocaleTimeString('es-DO', { hour: '2-digit', minute: '2-digit' })}
+                  </span>
+                </Link>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
 
       {/* Reservaciones recientes */}
