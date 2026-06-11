@@ -75,6 +75,7 @@ export default async function AdminLayout({
               <p className="px-3 pt-4 pb-1 text-[10px] font-semibold uppercase tracking-widest text-sl-on-surface-muted">
                 Operations
               </p>
+              <NavLink href="/dispatcher/dashboard" label="Dispatch (Live)" />
               <NavLink href="/admin/fleet"   label="Fleet"   />
               <NavLink href="/admin/drivers" label="Drivers" />
             </>

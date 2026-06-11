@@ -1,0 +1,267 @@
+'use client'
+// ── F1.13 — Dispatch Board (Real-time) ─────────────────────────────────────────
+// Columnas por estado con updates en vivo vía Supabase Realtime.
+// Las mutaciones usan las server actions existentes (máquina de estados +
+// notificaciones incluidas). Realtime → router.refresh() para re-fetch server.
+
+import { useEffect, useState, useTransition } from 'react'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase/client'
+import { updateBookingStatusAction, assignDriverAction } from '@/app/actions/bookings'
+import type { BookingStatus } from '@/lib/supabase/database.types'
+
+export interface DispatchBooking {
+  id: string
+  booking_number: string
+  status: string
+  passenger_name: string | null
+  passenger_phone: string | null
+  scheduled_at: string
+  pickup_address: string
+  dropoff_address: string
+  total_amount: number | null
+  currency: string
+  driver_id: string | null
+}
+
+interface Driver {
+  id: string
+  first_name: string
+  last_name: string
+}
+
+interface Props {
+  companyId: string
+  initialBookings: DispatchBooking[]
+  drivers: Driver[]
+}
+
+// ─── Columnas del board ───────────────────────────────────────────────────────
+
+const COLUMNS: { key: string; title: string; statuses: string[]; accent: string }[] = [
+  { key: 'pending',  title: 'Pendientes',  statuses: ['pending'],                            accent: 'border-t-yellow-400' },
+  { key: 'assigned', title: 'Asignados',   statuses: ['assigned'],                           accent: 'border-t-blue-400' },
+  { key: 'active',   title: 'En curso',    statuses: ['en_route', 'arrived', 'in_progress'], accent: 'border-t-orange-400' },
+  { key: 'done',     title: 'Finalizados', statuses: ['completed', 'cancelled', 'no_show'],  accent: 'border-t-green-400' },
+]
+
+const STATUS_LABELS: Record<string, string> = {
+  pending: 'Pendiente', assigned: 'Asignado', en_route: 'En ruta',
+  arrived: 'Llegó', in_progress: 'En viaje', completed: 'Completado',
+  cancelled: 'Cancelado', no_show: 'No show',
+}
+
+// Siguiente acción del flujo operativo por estado
+const NEXT_ACTION: Record<string, { to: BookingStatus; label: string } | undefined> = {
+  assigned:    { to: 'en_route',    label: '→ En ruta' },
+  en_route:    { to: 'arrived',     label: '→ Llegó' },
+  arrived:     { to: 'in_progress', label: '→ Iniciar viaje' },
+  in_progress: { to: 'completed',   label: '✓ Completar' },
+}
+
+export function DispatchBoard({ companyId, initialBookings, drivers }: Props) {
+  const router = useRouter()
+  const [isPending, startTransition] = useTransition()
+  const [error, setError] = useState('')
+  const [lastUpdate, setLastUpdate] = useState<Date | null>(null)
+
+  // ── Realtime: refrescar el board ante cualquier cambio en bookings ──────────
+  useEffect(() => {
+    const supabase = createClient()
+    const channel = supabase
+      .channel(`dispatch-${companyId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'bookings',
+          filter: `company_id=eq.${companyId}`,
+        },
+        () => {
+          setLastUpdate(new Date())
+          router.refresh()
+        },
+      )
+      .subscribe()
+
+    return () => {
+      supabase.removeChannel(channel)
+    }
+  }, [companyId, router])
+
+  // ── Acciones ────────────────────────────────────────────────────────────────
+
+  function advance(bookingId: string, to: BookingStatus) {
+    setError('')
+    startTransition(async () => {
+      const result = await updateBookingStatusAction(bookingId, to)
+      if (!result.success) setError(result.error ?? 'Error al actualizar')
+      router.refresh()
+    })
+  }
+
+  function cancel(bookingId: string) {
+    const reason = window.prompt('Razón de cancelación:')
+    if (reason === null) return
+    setError('')
+    startTransition(async () => {
+      const result = await updateBookingStatusAction(bookingId, 'cancelled', { reason })
+      if (!result.success) setError(result.error ?? 'Error al cancelar')
+      router.refresh()
+    })
+  }
+
+  function assign(bookingId: string, driverId: string) {
+    if (!driverId) return
+    setError('')
+    startTransition(async () => {
+      const result = await assignDriverAction(bookingId, driverId)
+      if (!result.success) setError(result.error ?? 'Error al asignar')
+      router.refresh()
+    })
+  }
+
+  const driverName = (id: string | null) => {
+    if (!id) return null
+    const d = drivers.find((x) => x.id === id)
+    return d ? `${d.first_name} ${d.last_name}` : null
+  }
+
+  return (
+    <div className="p-6 space-y-4">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="font-playfair text-2xl font-semibold text-sl-on-surface">
+            Dispatch Board
+          </h1>
+          <p className="text-xs text-sl-on-surface-muted mt-0.5">
+            Actualización en tiempo real
+            {lastUpdate &&
+              ` · último cambio ${lastUpdate.toLocaleTimeString('es-DO', { hour: '2-digit', minute: '2-digit', second: '2-digit' })}`}
+          </p>
+        </div>
+        {isPending && (
+          <span className="text-xs text-sl-on-surface-muted animate-pulse">Guardando…</span>
+        )}
+      </div>
+
+      {error && (
+        <p className="rounded-xl border border-red-200 bg-red-50 px-4 py-2.5 text-sm text-red-600">
+          {error}
+        </p>
+      )}
+
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        {COLUMNS.map((col) => {
+          const items = initialBookings.filter((b) => col.statuses.includes(b.status))
+          return (
+            <div
+              key={col.key}
+              className={`bg-sl-surface-high border border-sl-outline-variant border-t-4 ${col.accent} rounded-2xl flex flex-col max-h-[calc(100vh-180px)]`}
+            >
+              <div className="px-4 py-3 border-b border-sl-outline-variant flex items-center justify-between shrink-0">
+                <p className="text-xs font-semibold uppercase tracking-widest text-sl-on-surface-muted">
+                  {col.title}
+                </p>
+                <span className="text-xs font-bold text-sl-on-surface bg-sl-bg rounded-full w-6 h-6 flex items-center justify-center">
+                  {items.length}
+                </span>
+              </div>
+
+              <div className="p-3 space-y-3 overflow-y-auto flex-1">
+                {items.length === 0 ? (
+                  <p className="text-xs text-sl-on-surface-muted text-center py-6">—</p>
+                ) : (
+                  items.map((b) => (
+                    <div
+                      key={b.id}
+                      className="bg-sl-bg border border-sl-outline-variant rounded-xl p-3 space-y-2"
+                    >
+                      <div className="flex items-center justify-between">
+                        <a
+                          href={`/admin/bookings/${b.id}`}
+                          className="font-mono text-[11px] text-[#0071e3] hover:underline"
+                        >
+                          {b.booking_number}
+                        </a>
+                        <span className="text-[10px] font-semibold text-sl-on-surface-muted uppercase">
+                          {STATUS_LABELS[b.status] ?? b.status}
+                        </span>
+                      </div>
+
+                      <div className="text-xs space-y-1">
+                        <p className="font-semibold text-sl-on-surface">
+                          {new Date(b.scheduled_at).toLocaleString('es-DO', {
+                            month: 'short', day: 'numeric',
+                            hour: '2-digit', minute: '2-digit',
+                          })}
+                          <span className="font-normal text-sl-on-surface-muted">
+                            {' '}· {b.passenger_name ?? 'Sin nombre'}
+                          </span>
+                        </p>
+                        <p className="text-sl-on-surface-muted truncate" title={b.pickup_address}>
+                          ▲ {b.pickup_address || '—'}
+                        </p>
+                        <p className="text-sl-on-surface-muted truncate" title={b.dropoff_address}>
+                          ▼ {b.dropoff_address || '—'}
+                        </p>
+                        {driverName(b.driver_id) && (
+                          <p className="text-[#0071e3]">⊙ {driverName(b.driver_id)}</p>
+                        )}
+                        {b.total_amount != null && (
+                          <p className="font-semibold text-sl-on-surface">
+                            ${Number(b.total_amount).toFixed(2)} {b.currency}
+                          </p>
+                        )}
+                      </div>
+
+                      {/* Asignar conductor (pendientes y asignados) */}
+                      {['pending', 'assigned'].includes(b.status) && drivers.length > 0 && (
+                        <select
+                          defaultValue={b.driver_id ?? ''}
+                          disabled={isPending}
+                          onChange={(e) => assign(b.id, e.target.value)}
+                          className="w-full text-[11px] bg-white border border-sl-outline-variant rounded-lg px-2 py-1.5 text-sl-on-surface focus:border-gold focus:outline-none disabled:opacity-50"
+                        >
+                          <option value="">— Asignar conductor —</option>
+                          {drivers.map((d) => (
+                            <option key={d.id} value={d.id}>
+                              {d.first_name} {d.last_name}
+                            </option>
+                          ))}
+                        </select>
+                      )}
+
+                      {/* Acciones de avance */}
+                      <div className="flex gap-1.5">
+                        {NEXT_ACTION[b.status] && (
+                          <button
+                            disabled={isPending}
+                            onClick={() => advance(b.id, NEXT_ACTION[b.status]!.to)}
+                            className="flex-1 text-[11px] font-medium px-2 py-1.5 bg-gold text-gray-900 rounded-lg hover:bg-gold/90 disabled:opacity-50 transition-colors"
+                          >
+                            {NEXT_ACTION[b.status]!.label}
+                          </button>
+                        )}
+                        {['pending', 'assigned', 'en_route'].includes(b.status) && (
+                          <button
+                            disabled={isPending}
+                            onClick={() => cancel(b.id)}
+                            className="text-[11px] px-2 py-1.5 text-red-500 border border-red-200 rounded-lg hover:bg-red-50 disabled:opacity-50 transition-colors"
+                          >
+                            ✕
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          )
+        })}
+      </div>
+    </div>
+  )
+}
