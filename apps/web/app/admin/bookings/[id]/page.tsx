@@ -274,6 +274,7 @@ export default async function BookingDetailPage({
         payments={payments ?? []}
         stripeConfigured={isStripeConfigured()}
         canRefund={['company_owner', 'company_admin', 'accounting'].includes(user.role)}
+        bookingTotal={booking.total_amount}
       />
 
       {/* Timestamps */}

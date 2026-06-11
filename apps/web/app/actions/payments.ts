@@ -367,6 +367,77 @@ async function createCheckoutForBooking(
   }
 }
 
+// ─── Pago manual (cash / Zelle / transferencia) ───────────────────────────────
+// Para cobros fuera de Stripe: el staff registra el pago recibido y queda
+// auditado en payments (el trigger de audit_logs lo captura).
+
+const MANUAL_METHOD_LABELS: Record<string, 'cash' | 'bank_transfer'> = {
+  cash: 'cash',
+  zelle: 'bank_transfer',
+  bank_transfer: 'bank_transfer',
+}
+
+export async function recordManualPaymentAction(params: {
+  bookingId: string
+  method: string // 'cash' | 'zelle' | 'bank_transfer'
+  amount: number
+  reference?: string
+}): Promise<ActionResult> {
+  const user = await requireRole('company_owner', 'company_admin', 'accounting', 'dispatcher')
+  if (!user.company_id) return { success: false, error: 'Sin empresa asignada' }
+
+  const method = MANUAL_METHOD_LABELS[params.method]
+  if (!method) return { success: false, error: 'Método de pago inválido' }
+
+  const amount = Math.round(Number(params.amount) * 100) / 100
+  if (!Number.isFinite(amount) || amount <= 0) {
+    return { success: false, error: 'Monto inválido' }
+  }
+
+  const admin = createAdminClient()
+  const { data: booking } = await admin
+    .from('bookings')
+    .select('id, booking_number, status, total_amount, currency, company_id')
+    .eq('id', params.bookingId)
+    .eq('company_id', user.company_id)
+    .single()
+
+  if (!booking) return { success: false, error: 'Reservación no encontrada' }
+  if (['cancelled', 'no_show', 'failed'].includes(booking.status)) {
+    return { success: false, error: 'No se puede registrar pago en una reservación cancelada' }
+  }
+
+  // Tope sano: hasta 2x el total (cubre propinas/extras) para evitar typos
+  const total = Number(booking.total_amount ?? 0)
+  if (total > 0 && amount > total * 2) {
+    return { success: false, error: `El monto excede el doble del total ($${total.toFixed(2)})` }
+  }
+
+  const methodLabel =
+    params.method === 'zelle' ? 'Zelle' : params.method === 'cash' ? 'Efectivo' : 'Transferencia'
+  const reference = params.reference?.trim().slice(0, 120)
+
+  const { error } = await admin.from('payments').insert({
+    company_id: user.company_id,
+    booking_id: booking.id,
+    amount,
+    currency: booking.currency ?? 'USD',
+    status: 'succeeded',
+    payment_method: method,
+    description: `${methodLabel} — Booking ${booking.booking_number}${reference ? ` (ref: ${reference})` : ''} — registrado por staff`,
+    captured_at: new Date().toISOString(),
+    metadata: { manual: true, method: params.method, reference: reference ?? null, recorded_by: user.id },
+  })
+
+  if (error) {
+    console.error('[recordManualPaymentAction]', error)
+    return { success: false, error: 'Error al registrar el pago' }
+  }
+
+  revalidatePath(`/admin/bookings/${booking.id}`)
+  return { success: true }
+}
+
 // ─── Reembolso ────────────────────────────────────────────────────────────────
 
 export async function refundPaymentAction(
