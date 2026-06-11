@@ -138,87 +138,89 @@ export default async function AdminDashboardPage() {
     cancelled: 'Cancelado', no_show: 'No apareció',
   }
 
+  // ── Diseño "Ivory": claro refinado, acento bronce #8a6520 (legible sobre
+  // fondo claro, reemplaza al dorado #e9c176 que no contrastaba), tarjetas
+  // blancas con borde fino, ancho completo y KPIs compactos en una fila.
   return (
-    <div className="p-8 max-w-4xl space-y-6">
+    <div className="min-h-full bg-[#f6f4ef] p-6 lg:p-8">
+      <div className="max-w-[1400px] mx-auto space-y-5">
+
       {/* Header */}
-      <div>
-        <h1 className="font-playfair text-3xl font-semibold text-sl-on-surface">Dashboard</h1>
-        <p className="text-sm text-sl-on-surface-muted mt-1">
-          Bienvenido, {user.profile.first_name} —{' '}
-          <span className="text-gold">{user.role.replace(/_/g, ' ')}</span>
+      <div className="flex items-end justify-between flex-wrap gap-2">
+        <div>
+          <h1 className="font-playfair text-3xl font-semibold text-[#1d1b18]">Dashboard</h1>
+          <p className="text-sm text-[#75716a] mt-1">
+            Bienvenido, {user.profile.first_name} —{' '}
+            <span className="text-[#8a6520] font-medium capitalize">{user.role.replace(/_/g, ' ')}</span>
+          </p>
+        </div>
+        <p className="text-xs font-medium text-[#8a6520] capitalize">
+          {new Date().toLocaleDateString('es-DO', {
+            weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+          })}
         </p>
       </div>
 
-      {/* Fleet + driver cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      {/* KPIs — fila compacta de 6 */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-6 gap-3">
         {[
-          { label: 'Vehículos en flota', value: stats.vehicles,     href: '/admin/fleet'   },
-          { label: 'Disponibles ahora',  value: stats.fleet,        href: '/admin/fleet'   },
-          { label: 'Conductores activos', value: stats.driversAvail, href: '/admin/drivers' },
+          { label: 'Vehículos',   value: stats.vehicles,            href: '/admin/fleet' },
+          { label: 'Disponibles', value: stats.fleet,               href: '/admin/fleet' },
+          { label: 'Conductores', value: stats.driversAvail,        href: '/admin/drivers' },
+          { label: 'Pendientes',  value: bookingStats.pending,      href: '/admin/bookings?status=pending', accent: true },
+          { label: 'Activas',     value: bookingStats.active,       href: '/admin/bookings' },
+          { label: 'Hoy',         value: bookingStats.today,        href: '/admin/bookings' },
         ].map((card) => (
           <Link
             key={card.label}
             href={card.href}
-            className="bg-sl-surface-high border border-sl-outline-variant rounded-2xl p-6 hover:border-gold/30 transition-colors group"
+            className="bg-white border border-[#e5e1d8] rounded-xl px-4 py-3.5 hover:border-[#8a6520]/50 transition-colors group"
           >
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-sl-on-surface-muted">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-[#75716a]">
               {card.label}
             </p>
-            <p className="text-4xl font-playfair font-semibold text-sl-on-surface mt-2 group-hover:text-gold transition-colors">
+            <p className={`text-2xl font-playfair font-semibold mt-1 transition-colors group-hover:text-[#8a6520] ${'accent' in card && card.accent ? 'text-[#8a6520]' : 'text-[#1d1b18]'}`}>
               {companyId ? card.value : '—'}
             </p>
           </Link>
         ))}
       </div>
 
-      {/* Revenue (F1.12) */}
-      <div className="grid grid-cols-2 gap-4">
-        <div className="bg-sl-surface-high border border-sl-outline-variant rounded-2xl p-6">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-sl-on-surface-muted">
+      {/* Ingresos — tarjeta hero con acento bronce */}
+      <div className="bg-white border border-[#e5e1d8] border-l-[3px] border-l-[#8a6520] rounded-r-xl px-6 py-5 flex flex-wrap items-center gap-x-10 gap-y-4">
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-[#8a6520]">
             Ingresos del mes (completados)
           </p>
-          <p className="text-4xl font-playfair font-semibold text-sl-on-surface mt-2">
+          <p className="text-4xl font-playfair font-semibold text-[#1d1b18] mt-1">
             ${revenue.month.toFixed(2)}
           </p>
         </div>
-        <div className="bg-sl-surface-high border border-sl-outline-variant rounded-2xl p-6">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-sl-on-surface-muted">
+        <div className="h-10 w-px bg-[#e5e1d8] hidden sm:block" />
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-[#75716a]">
             Ingresos de hoy
           </p>
-          <p className="text-4xl font-playfair font-semibold text-sl-on-surface mt-2">
+          <p className="text-2xl font-playfair font-semibold text-[#1d1b18] mt-1">
             ${revenue.today.toFixed(2)}
           </p>
         </div>
-      </div>
-
-      {/* Booking stats */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-        {[
-          { label: 'Pendientes',       value: bookingStats.pending,        href: '/admin/bookings?status=pending' },
-          { label: 'Activas',          value: bookingStats.active,         href: '/admin/bookings' },
-          { label: 'Hoy',              value: bookingStats.today,          href: '/admin/bookings' },
-          { label: 'Completadas (mes)', value: bookingStats.completedMonth, href: '/admin/bookings?status=completed' },
-        ].map((card) => (
-          <Link
-            key={card.label}
-            href={card.href}
-            className="bg-sl-surface-high border border-sl-outline-variant rounded-2xl p-5 hover:border-[#0071e3]/30 transition-colors group"
-          >
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-sl-on-surface-muted">
-              {card.label}
-            </p>
-            <p className="text-3xl font-playfair font-semibold text-sl-on-surface mt-2 group-hover:text-[#0071e3] transition-colors">
-              {companyId ? card.value : '—'}
-            </p>
-          </Link>
-        ))}
+        <div className="h-10 w-px bg-[#e5e1d8] hidden sm:block" />
+        <Link href="/admin/bookings?status=completed" className="group">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-[#75716a]">
+            Completadas (mes)
+          </p>
+          <p className="text-2xl font-playfair font-semibold text-[#1d1b18] mt-1 group-hover:text-[#8a6520] transition-colors">
+            {companyId ? bookingStats.completedMonth : '—'}
+          </p>
+        </Link>
       </div>
 
       {/* Tendencia 7 días + Próximos viajes */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Tendencia */}
-        <div className="bg-sl-surface-high border border-sl-outline-variant rounded-2xl p-6">
-          <p className="text-[10px] font-semibold uppercase tracking-widest text-sl-on-surface-muted mb-4">
+        <div className="bg-white border border-[#e5e1d8] rounded-xl p-6">
+          <p className="text-[10px] font-semibold uppercase tracking-widest text-[#75716a] mb-4">
             Reservaciones — últimos 7 días
           </p>
           <div className="flex items-end justify-between gap-2 h-28">
@@ -227,12 +229,12 @@ export default async function AdminDashboardPage() {
               const h = Math.round((d.count / max) * 100)
               return (
                 <div key={i} className="flex-1 flex flex-col items-center gap-1.5">
-                  <span className="text-[10px] text-sl-on-surface-muted">{d.count || ''}</span>
+                  <span className="text-[10px] text-[#75716a]">{d.count || ''}</span>
                   <div
-                    className="w-full rounded-t-md bg-gold/80 min-h-[3px] transition-all"
+                    className="w-full rounded-t-md bg-[#8a6520]/70 min-h-[3px] transition-all"
                     style={{ height: `${Math.max(3, h)}%` }}
                   />
-                  <span className="text-[10px] text-sl-on-surface-muted">{d.day}</span>
+                  <span className="text-[10px] text-[#75716a]">{d.day}</span>
                 </div>
               )
             })}
@@ -240,29 +242,29 @@ export default async function AdminDashboardPage() {
         </div>
 
         {/* Próximos viajes */}
-        <div className="bg-sl-surface-high border border-sl-outline-variant rounded-2xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-sl-outline-variant">
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-sl-on-surface-muted">
+        <div className="bg-white border border-[#e5e1d8] rounded-xl overflow-hidden">
+          <div className="px-6 py-4 border-b border-[#f0ede5]">
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-[#75716a]">
               Próximas 24 horas
             </p>
           </div>
           {upcomingBookings.length === 0 ? (
-            <p className="p-6 text-sm text-sl-on-surface-muted text-center">
+            <p className="p-6 text-sm text-[#75716a] text-center">
               Sin viajes programados.
             </p>
           ) : (
-            <div className="divide-y divide-sl-outline-variant">
+            <div className="divide-y divide-[#f0ede5]">
               {upcomingBookings.map((b) => (
                 <Link
                   key={b.id}
                   href={`/admin/bookings/${b.id}`}
-                  className="flex items-center justify-between px-5 py-2.5 hover:bg-sl-bg/50 transition-colors"
+                  className="flex items-center justify-between px-5 py-2.5 hover:bg-[#faf8f3] transition-colors"
                 >
                   <div className="flex items-center gap-2 min-w-0">
-                    <span className="font-mono text-[11px] text-[#0071e3] shrink-0">{b.booking_number}</span>
-                    <span className="text-xs text-sl-on-surface-muted truncate">{b.passenger_name ?? '—'}</span>
+                    <span className="font-mono text-[11px] text-[#8a6520] shrink-0">{b.booking_number}</span>
+                    <span className="text-xs text-[#75716a] truncate">{b.passenger_name ?? '—'}</span>
                   </div>
-                  <span className="text-xs font-medium text-sl-on-surface shrink-0">
+                  <span className="text-xs font-medium text-[#1d1b18] shrink-0">
                     {new Date(b.scheduled_at).toLocaleTimeString('es-DO', { hour: '2-digit', minute: '2-digit' })}
                   </span>
                 </Link>
@@ -273,43 +275,43 @@ export default async function AdminDashboardPage() {
       </div>
 
       {/* Reservaciones recientes */}
-      <div className="bg-sl-surface-high border border-sl-outline-variant rounded-2xl overflow-hidden">
-        <div className="flex items-center justify-between px-6 py-4 border-b border-sl-outline-variant">
-          <p className="text-xs font-semibold uppercase tracking-widest text-sl-on-surface-muted">
+      <div className="bg-white border border-[#e5e1d8] rounded-xl overflow-hidden">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-[#f0ede5]">
+          <p className="text-xs font-semibold uppercase tracking-widest text-[#75716a]">
             Reservaciones recientes
           </p>
-          <Link href="/admin/bookings" className="text-xs text-[#0071e3] hover:underline">
+          <Link href="/admin/bookings" className="text-xs font-medium text-[#8a6520] hover:underline">
             Ver todas →
           </Link>
         </div>
 
         {recentBookings.length === 0 ? (
           <div className="p-6 text-center">
-            <p className="text-sm text-sl-on-surface-muted">No hay reservaciones aún.</p>
+            <p className="text-sm text-[#75716a]">No hay reservaciones aún.</p>
             <Link
               href="/admin/bookings/new"
-              className="mt-2 inline-block text-sm text-[#0071e3] hover:underline"
+              className="mt-2 inline-block text-sm font-medium text-[#8a6520] hover:underline"
             >
               Crear primera reservación →
             </Link>
           </div>
         ) : (
-          <div className="divide-y divide-sl-outline-variant">
+          <div className="divide-y divide-[#f0ede5]">
             {recentBookings.map((b) => (
               <Link
                 key={b.id}
                 href={`/admin/bookings/${b.id}`}
-                className="flex items-center justify-between px-6 py-3.5 hover:bg-sl-bg/50 transition-colors"
+                className="flex items-center justify-between px-6 py-3.5 hover:bg-[#faf8f3] transition-colors"
               >
                 <div className="flex items-center gap-3">
-                  <span className="font-mono text-xs text-[#0071e3]">{b.booking_number}</span>
+                  <span className="font-mono text-xs text-[#8a6520]">{b.booking_number}</span>
                   <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-[11px] font-semibold ${STATUS_COLORS[b.status] ?? 'bg-gray-100 text-gray-600'}`}>
                     {STATUS_LABELS[b.status] ?? b.status}
                   </span>
                 </div>
                 <div className="flex items-center gap-4 text-sm">
-                  <span className="text-sl-on-surface-muted">{b.passenger_name ?? '—'}</span>
-                  <span className="font-semibold text-sl-on-surface">
+                  <span className="text-[#75716a]">{b.passenger_name ?? '—'}</span>
+                  <span className="font-semibold text-[#1d1b18]">
                     {b.total_amount != null ? `$${Number(b.total_amount).toFixed(2)}` : '—'}
                   </span>
                 </div>
@@ -317,6 +319,8 @@ export default async function AdminDashboardPage() {
             ))}
           </div>
         )}
+      </div>
+
       </div>
     </div>
   )
