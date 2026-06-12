@@ -1,8 +1,12 @@
 import type { Metadata, Viewport } from 'next'
 import { Playfair_Display, Inter } from 'next/font/google'
+import Script from 'next/script'
 import '@/styles/globals.css'
 import { Toaster } from 'sonner'
 import { Providers } from './providers'
+
+// Google Analytics 4 — solo se inyecta si hay measurement ID configurado
+const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -39,6 +43,10 @@ export const metadata: Metadata = {
     index: true,
     follow: true,
   },
+  // Google Search Console — meta de verificación (solo si está configurada)
+  verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+    ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+    : undefined,
   openGraph: {
     type: 'website',
     locale: 'en_US',
@@ -67,6 +75,21 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className="bg-le-bg font-sans text-le-on-surface dark:bg-sl-bg dark:text-sl-on-surface antialiased">
+        {/* Google Analytics 4 (placeholder-safe: sin GA_ID no carga nada) */}
+        {GA_ID && (
+          <>
+            <Script
+              src={`https://www.googletagmanager.com/gtag/js?id=${GA_ID}`}
+              strategy="afterInteractive"
+            />
+            <Script id="ga4-init" strategy="afterInteractive">
+              {`window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '${GA_ID}');`}
+            </Script>
+          </>
+        )}
         <Providers>
           {children}
           <Toaster
