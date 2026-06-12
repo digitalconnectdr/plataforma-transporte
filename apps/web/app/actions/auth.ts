@@ -179,7 +179,9 @@ export async function signupAction(
   const { data: authUser, error: authError } = await admin.auth.admin.createUser({
     email: parsed.data.email,
     password: parsed.data.password,
-    email_confirm: false, // Send confirmation email
+    // admin.createUser NO envía correos: con false el usuario quedaba sin
+    // confirmar para siempre. Confirmamos directo y lo logueamos al terminar.
+    email_confirm: true,
     user_metadata: {
       company_id: company.id,
       role: 'company_owner',
@@ -193,7 +195,8 @@ export async function signupAction(
     // Rollback: delete the company
     await admin.from('companies').delete().eq('id', company.id)
     console.error('Auth user creation error:', authError)
-    if (authError?.message?.includes('already registered')) {
+    // GoTrue dice "A user with this email address has already been registered"
+    if (authError?.message?.toLowerCase().includes('already')) {
       return { success: false, error: 'An account with this email already exists.' }
     }
     return { success: false, error: 'Failed to create account. Please try again.' }
@@ -214,7 +217,20 @@ export async function signupAction(
     // Non-fatal — trigger may have already created it
   }
 
-  redirect('/auth/verify-email')
+  // 5. Iniciar sesión directo (la cuenta ya quedó confirmada arriba)
+  const supabase = await createClient()
+  const { error: signInError } = await supabase.auth.signInWithPassword({
+    email: parsed.data.email,
+    password: parsed.data.password,
+  })
+
+  if (signInError) {
+    // Cuenta creada pero el auto-login falló: que entre manualmente
+    redirect('/auth/login')
+  }
+
+  revalidatePath('/', 'layout')
+  redirect(getDefaultRoute('company_owner'))
 }
 
 // ─── Logout ────────────────────────────────────────────────────────────────────
