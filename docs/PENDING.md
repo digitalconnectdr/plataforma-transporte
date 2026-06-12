@@ -23,16 +23,25 @@
 - Bloqueo real de usuarios (is_active en middleware + login) y banner.
 - Reset de contraseña: ya existía ("Forgot password?" en login).
 - Tests Vitest (29) en CI. Fix crash Stripe Connect. Fix timezone recargos.
+- Google Maps funcionando (faltaba habilitar Maps JS/Places/Routes API).
+- **Signup arreglado** (2026-06-11): handle_new_user() sin search_path fijo
+  hacía fallar a GoTrue con "Database error creating new user". Fix aplicado
+  en producción + migración 16. signupAction ahora confirma el email
+  (email_confirm: true) y hace auto-login al dashboard.
+- GA4 + Search Console + sitemap.xml + robots.txt (faltan las 2 env vars).
+- **Producción viva**: main ahora contiene todo develop (historias unidas
+  con merge -s ours). Push a main = deploy de producción en
+  https://luxeride.vercel.app (público, sin login de Vercel).
 
 ## ⬜ Pendientes del USUARIO (configuración)
 
-1. **Migración 14** en Supabase SQL Editor (13 ✅ y 15 ✅ confirmadas;
-   la 14 = columnas flight_status/flight_delay_minutes/flight_checked_at).
-   SQL en supabase/migrations/20260611000014_flight_tracking.sql.
-2. **Probar autocomplete de Google** tras configurar referrers (Key 1 ✅).
-   Key 2 (server): dejar "Ninguno" en app restrictions; opcional restringir
-   APIs a Routes API. Verificar en Biblioteca: Maps JavaScript API, Places
-   API y Routes API habilitadas + billing activo.
+1. **Google Analytics + Search Console**: crear propiedad GA4 → env var
+   NEXT_PUBLIC_GA_MEASUREMENT_ID; verificación HTML tag de Search Console →
+   NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION; redeploy y enviar
+   https://luxeride.vercel.app/sitemap.xml en Search Console.
+2. (Opcional) Vercel → Settings → Deployment Protection → desactivar
+   "Vercel Authentication" si se quiere compartir previews de develop sin
+   login de Vercel. Producción (luxeride.vercel.app) ya es pública.
 3. **Vercel env vars** (opcionales, activan features): RESEND_API_KEY +
    RESEND_FROM_EMAIL (key ya existe, dominio por verificar en resend.com),
    CRON_SECRET (facturación corporativa + alertas de documentos),
@@ -63,8 +72,9 @@
 
 ## Datos operativos
 
-- Deploy: push a develop → Vercel auto-deploy
-  (https://luxeride-git-develop-digitalconnectdrs-projects.vercel.app).
+- Deploy: push a develop → preview (requiere login de Vercel salvo que se
+  desactive Deployment Protection); push a main → PRODUCCIÓN
+  (https://luxeride.vercel.app, pública). Para promover: merge develop→main.
 - Migraciones: SQL Editor de Supabase (proyecto iwjtjwryhtpzuvwmlpjk) o
   `supabase db push`.
 - Flujo de solicitudes: signup del landing crea empresa en `trial` →
