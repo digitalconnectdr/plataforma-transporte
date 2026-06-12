@@ -65,8 +65,13 @@
    cotizaciones abandonadas (Moovs-style).
 5. **Notificar al super admin** (email) cuando entra una solicitud nueva
    desde el landing + cron aviso de suscripciones por vencer.
-6. **Fase 2 móvil** (driver app primero) — plan en docs/PHASE-2-MOBILE.md.
-7. Gaps mayores: QuickBooks, e-signatures, farm-in/farm-out, promo codes,
+6. **PWA del sistema** (DECIDIDO 2026-06-11: va ANTES que las apps nativas;
+   si funciona bien, recién entonces se hace la versión nativa) —
+   manifest.json + service worker + installable en iOS/Android, push web,
+   offline básico para el driver. Detalle en docs/PHASE-2-MOBILE.md (Fase 2A).
+7. **Fase 2B móvil nativo** (driver app primero, SOLO si la PWA valida bien)
+   — plan en docs/PHASE-2-MOBILE.md.
+8. Gaps mayores: QuickBooks, e-signatures, farm-in/farm-out, promo codes,
    detección de conflictos de vehículo, nómina de conductores, WhatsApp.
 
 ## Datos operativos

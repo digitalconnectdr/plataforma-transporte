@@ -4,6 +4,31 @@
 > dispatch realtime, pagos Stripe+manuales, policy engine, corporate,
 > notificaciones, tracking público, flight tracking, i18n EN/ES/PT).
 
+> **DECISIÓN 2026-06-11 — Fase 2A primero: PWA.** Antes de invertir en apps
+> nativas, el sistema se convierte en PWA instalable. Si la PWA valida bien
+> con usuarios reales, recién entonces se ejecuta el plan nativo de abajo
+> (Fase 2B). Ventaja: 90% del valor con ~15% del esfuerzo, sin app stores.
+
+## Fase 2A — PWA (va primero)
+
+1. **Manifest + íconos**: app/manifest.ts (name, short_name, theme_color
+   #1d1b18, background #f6f4ef, display: standalone, start_url por rol),
+   íconos 192/512 + maskable + apple-touch-icon.
+2. **Service worker**: cache de shell y assets (next-pwa o serwist),
+   estrategia network-first para datos, offline fallback elegante.
+3. **Instalable**: banner propio "Instala LuxeRide" (beforeinstallprompt en
+   Android/desktop; instrucciones para iOS Safari "Compartir → Añadir a
+   pantalla de inicio").
+4. **Web Push** (sustituye Expo push de 2B): tabla device_tokens +
+   Notification API + VAPID; hooks existentes (driver_assigned, en_route…)
+   disparan push web además de email/SMS. iOS lo soporta desde 16.4 en
+   PWAs instaladas.
+5. **Driver-first**: vista /driver optimizada móvil (botón gigante de
+   avance de viaje ya existe), cola offline de acciones del conductor
+   (IndexedDB) para aeropuertos con mala señal.
+6. **Medir**: GA4 eventos de instalación y uso standalone → criterio para
+   decidir si se hace la Fase 2B nativa.
+
 ## Por qué las apps son EL diferenciador
 
 | | Limo Anywhere | Moovs | LuxeRide Phase 2 |
@@ -26,6 +51,10 @@ Las apps NO necesitan un backend nuevo. Reutilizan lo ya construido:
   (driverAdvanceTripAction), pricing y policies vive en el servidor
 - **i18n**: los diccionarios EN/ES/PT se comparten con las apps
 - **Flight tracking + tracking público**: ya operativos
+
+---
+
+# Fase 2B — Apps nativas (solo si la PWA valida bien)
 
 ## Sprint 0 — Fundaciones (1 semana)
 
