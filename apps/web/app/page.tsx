@@ -52,7 +52,7 @@ export default async function LandingPage() {
     <div className="min-h-screen bg-[#0c0b0a] text-white antialiased overflow-x-hidden">
       {/* ── Nav ── */}
       <header className="sticky top-0 z-50 border-b border-white/[0.06] bg-[#0c0b0a]/90 backdrop-blur">
-        <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-[1400px] mx-auto px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#f3d9a4] to-[#c89b4f] flex items-center justify-center shadow-[0_0_18px_rgba(233,193,118,0.35)]">
               <span className="text-[#141313] font-playfair font-bold text-sm leading-none">L</span>
@@ -101,7 +101,7 @@ export default async function LandingPage() {
               'radial-gradient(ellipse 60% 45% at 50% -5%, rgba(233,193,118,0.14), transparent 70%)',
           }}
         />
-        <div className="relative max-w-6xl mx-auto px-6 pt-16 sm:pt-20 pb-16 grid lg:grid-cols-2 gap-12 items-center">
+        <div className="relative max-w-[1400px] mx-auto px-6 pt-16 sm:pt-20 pb-16 grid lg:grid-cols-2 gap-12 items-center">
           <div>
             <Reveal>
               <div className="inline-flex items-center gap-3 mb-7">
@@ -150,7 +150,7 @@ export default async function LandingPage() {
         </div>
 
         {/* Stats band */}
-        <div className="relative max-w-3xl mx-auto px-6 pb-20">
+        <div className="relative max-w-4xl mx-auto px-6 pb-20">
           <RevealStagger className="grid grid-cols-2 sm:grid-cols-4 gap-px bg-white/[0.06] border border-white/[0.06] rounded-2xl overflow-hidden">
             {t.stats.map((s) => (
               <RevealItem key={s.label} className="bg-[#0c0b0a] px-6 py-6">
@@ -166,7 +166,7 @@ export default async function LandingPage() {
 
       {/* ── Features ── */}
       <section id="features" className="border-t border-white/[0.06]">
-        <div className="max-w-6xl mx-auto px-6 py-24">
+        <div className="max-w-[1400px] mx-auto px-6 py-24">
           <Reveal className="max-w-2xl mb-16">
             <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-[#e9c176] mb-4">
               {t.nav.platform}
@@ -196,7 +196,7 @@ export default async function LandingPage() {
 
       {/* ── Showcase: filas alternadas con fotografía ── */}
       <section id="showcase" className="border-t border-white/[0.06] bg-[#0a0908]">
-        <div className="max-w-6xl mx-auto px-6 py-24 space-y-24">
+        <div className="max-w-[1400px] mx-auto px-6 py-24 space-y-24">
           {t.showcase.map((row, i) => (
             <div
               key={row.title}
@@ -247,7 +247,7 @@ export default async function LandingPage() {
 
       {/* ── Flota por clase de vehículo ── */}
       <section id="fleet" className="border-t border-white/[0.06]">
-        <div className="max-w-6xl mx-auto px-6 py-24">
+        <div className="max-w-[1400px] mx-auto px-6 py-24">
           <Reveal className="text-center mb-14">
             <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-[#e9c176] mb-4">
               {t.fleet.kicker}
@@ -299,7 +299,7 @@ export default async function LandingPage() {
 
       {/* ── Testimonios ── */}
       <section className="border-t border-white/[0.06]">
-        <div className="max-w-6xl mx-auto px-6 py-24">
+        <div className="max-w-[1400px] mx-auto px-6 py-24">
           <Reveal className="text-center mb-14">
             <h2 className="font-playfair text-3xl sm:text-4xl font-semibold">
               {t.testimonialsTitle}
@@ -335,7 +335,7 @@ export default async function LandingPage() {
               'radial-gradient(ellipse 50% 50% at 50% 0%, rgba(233,193,118,0.07), transparent 70%)',
           }}
         />
-        <div className="relative max-w-6xl mx-auto px-6 py-24">
+        <div className="relative max-w-[1400px] mx-auto px-6 py-24">
           <Reveal className="text-center mb-14">
             <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-[#e9c176] mb-4">
               {t.nav.pricing}
@@ -396,7 +396,7 @@ export default async function LandingPage() {
 
       {/* ── FAQ ── */}
       <section id="faq" className="border-t border-white/[0.06]">
-        <div className="max-w-3xl mx-auto px-6 py-24">
+        <div className="max-w-4xl mx-auto px-6 py-24">
           <Reveal className="text-center mb-12">
             <h2 className="font-playfair text-3xl sm:text-4xl font-semibold">{t.faqTitle}</h2>
           </Reveal>
@@ -420,7 +420,7 @@ export default async function LandingPage() {
 
       {/* ── Directorio de reservas ── */}
       <section id="book" className="border-t border-white/[0.06] bg-[#0a0908]">
-        <div className="max-w-5xl mx-auto px-6 py-24 text-center">
+        <div className="max-w-[1200px] mx-auto px-6 py-24 text-center">
           <Reveal>
             <p className="text-[11px] font-semibold uppercase tracking-[0.35em] text-[#e9c176] mb-4">
               {t.nav.book}
@@ -485,7 +485,7 @@ export default async function LandingPage() {
 
       {/* ── Footer ── */}
       <footer className="border-t border-white/[0.06]">
-        <div className="max-w-6xl mx-auto px-6 py-10">
+        <div className="max-w-[1400px] mx-auto px-6 py-10">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-5">
             <div className="flex items-center gap-2.5">
               <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#f3d9a4] to-[#c89b4f] flex items-center justify-center">
