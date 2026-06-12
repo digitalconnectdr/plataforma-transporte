@@ -1,7 +1,8 @@
 import type { MetadataRoute } from 'next'
 import { createAdminClient } from '@/lib/supabase/server'
+import { getAppUrl } from '@/lib/app-url'
 
-const BASE = process.env.NEXT_PUBLIC_APP_URL ?? 'https://luxeride.vercel.app'
+const BASE = getAppUrl()
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const entries: MetadataRoute.Sitemap = [

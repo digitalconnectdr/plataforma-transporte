@@ -9,8 +9,9 @@ import { createAdminClient } from '@/lib/supabase/server'
 import { requireRole } from '@/lib/auth/session'
 import { getStripe } from '@/lib/stripe/server'
 import { checkRateLimit, RATE_LIMIT_ERROR } from '@/lib/security/rate-limit'
+import { getAppUrl } from '@/lib/app-url'
 
-const APP_URL = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
+const APP_URL = getAppUrl()
 
 type ActionResult<T = undefined> = { success: boolean; error?: string; data?: T }
 

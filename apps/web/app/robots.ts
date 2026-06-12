@@ -1,6 +1,7 @@
 import type { MetadataRoute } from 'next'
+import { getAppUrl } from '@/lib/app-url'
 
-const BASE = process.env.NEXT_PUBLIC_APP_URL ?? 'https://luxeride.vercel.app'
+const BASE = getAppUrl()
 
 export default function robots(): MetadataRoute.Robots {
   return {

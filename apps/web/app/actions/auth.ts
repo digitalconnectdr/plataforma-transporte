@@ -5,6 +5,7 @@ import { revalidatePath } from 'next/cache'
 import { headers } from 'next/headers'
 import { z } from 'zod'
 import { createClient, createAdminClient } from '@/lib/supabase/server'
+import { getAppUrl } from '@/lib/app-url'
 import { getDefaultRoute } from '@/lib/auth/permissions'
 import { checkRateLimit, RATE_LIMIT_ERROR } from '@/lib/security/rate-limit'
 import type { UserRole } from '@/lib/auth/permissions'
@@ -255,7 +256,7 @@ export async function resetPasswordAction(
   }
 
   const headersList = await headers()
-  const origin = headersList.get('origin') ?? process.env.NEXT_PUBLIC_APP_URL
+  const origin = headersList.get('origin') ?? getAppUrl()
 
   const supabase = await createClient()
   const { error } = await supabase.auth.resetPasswordForEmail(parsed.data.email, {

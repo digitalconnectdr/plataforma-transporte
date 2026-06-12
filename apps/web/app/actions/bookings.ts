@@ -17,6 +17,7 @@ import { waitUntil } from '@vercel/functions'
 import { notifyBookingEventInBackground } from '@/lib/notifications'
 import { trackBookingFlight } from '@/lib/flights/refresh'
 import { checkRateLimit, RATE_LIMIT_ERROR } from '@/lib/security/rate-limit'
+import { getAppUrl } from '@/lib/app-url'
 import { calculateFare, bestRule, type PricingRuleFields } from '@/lib/pricing/engine'
 import type { BookingStatus, BookingType, Json } from '@/lib/supabase/database.types'
 
@@ -554,7 +555,7 @@ export async function assignDriverAction(
     vehicle_make: vehicle?.make ?? '',
     vehicle_model: vehicle?.model ?? '',
     plate_number: vehicle?.plate_number ?? '',
-    tracking_url: `${process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'}/track/${booking.id}`,
+    tracking_url: `${getAppUrl()}/track/${booking.id}`,
   }))
 
   revalidatePath('/admin/bookings')

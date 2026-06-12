@@ -4,9 +4,16 @@ import Script from 'next/script'
 import '@/styles/globals.css'
 import { Toaster } from 'sonner'
 import { Providers } from './providers'
+import { getAppUrl } from '@/lib/app-url'
 
 // Google Analytics 4 — solo se inyecta si hay measurement ID configurado
 const GA_ID = process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID
+
+// Search Console — tolera que se pegue la etiqueta <meta .../> completa en la
+// env var: extraemos solo el valor de content="..."
+const RAW_VERIFICATION = (process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION ?? '').trim()
+const GOOGLE_VERIFICATION =
+  RAW_VERIFICATION.match(/content=["']([^"']+)["']/)?.[1] ?? RAW_VERIFICATION
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -23,9 +30,7 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
-  ),
+  metadataBase: new URL(getAppUrl()),
   title: {
     default: 'LuxeRide — Premium Transportation Platform',
     template: '%s | LuxeRide',
@@ -44,9 +49,7 @@ export const metadata: Metadata = {
     follow: true,
   },
   // Google Search Console — meta de verificación (solo si está configurada)
-  verification: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
-    ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
-    : undefined,
+  verification: GOOGLE_VERIFICATION ? { google: GOOGLE_VERIFICATION } : undefined,
   openGraph: {
     type: 'website',
     locale: 'en_US',
