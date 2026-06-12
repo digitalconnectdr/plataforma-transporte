@@ -67,7 +67,7 @@ export default async function CompanyDetailPage({ params }: PageProps) {
   ]
 
   return (
-    <div className="p-8 space-y-8 max-w-4xl">
+    <div className="p-8 space-y-8 max-w-[1400px] mx-auto">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-2 text-sm text-sl-on-surface-muted">
         <Link href="/super-admin/companies" className="hover:text-bronze transition-colors">

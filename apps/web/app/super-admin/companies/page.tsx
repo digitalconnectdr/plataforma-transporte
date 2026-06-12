@@ -55,7 +55,7 @@ export default async function CompaniesPage({ searchParams }: PageProps) {
   })
 
   return (
-    <div className="p-8 space-y-6 max-w-6xl">
+    <div className="p-8 space-y-6 max-w-[1400px] mx-auto">
       {/* Header */}
       <div>
         <h1 className="font-playfair text-3xl font-semibold text-sl-on-surface">Companies</h1>

@@ -45,7 +45,7 @@ export default async function SuperAdminDashboardPage() {
   const recent = all.slice(0, 8)
 
   return (
-    <div className="p-8 space-y-8 max-w-5xl">
+    <div className="p-8 space-y-8 max-w-[1400px] mx-auto">
       {/* Header */}
       <div>
         <h1 className="font-playfair text-3xl font-semibold text-sl-on-surface">
